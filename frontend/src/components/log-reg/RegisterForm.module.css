@@ -8,7 +8,7 @@
 .modal {
   background-color: white;
   z-index: 20;
-  width: 40%;
+  width: 30%;
 }
 
 .form-control {
@@ -21,20 +21,33 @@
   margin-bottom: 0.25rem;
   display: block;
 }
-.form-control input {
+.form-control input,
+.form-control select {
+  font: inherit;
+  padding: 0.75rem;
   width: 20rem;
   border: 1px solid grey;
   border-radius: 5px;
   height: 2rem;
   display: block;
 }
+
+.form-control input:focus {
+  outline: none;
+  border-color: #240370;
+  background-color: #e0d4fd;
+}
 .header {
   width: 100%;
   padding: 20px 25px;
   border-bottom: 1px solid black;
+  background-color: #30396b;
+  border-radius: 5px;
 }
 .header h2 {
   font-size: 1.5rem;
+  font-weight:bold;
+  color:white;
 }
 
 .form-actions {
@@ -45,27 +58,44 @@
 }
 
 .form-actions button {
-  color: red;
-  background-color: transparent;
+  background-color: #240370;
+  color: white;
+  border: 1px solid #240370;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 25px;
-  padding: 0.5rem 2rem;
 }
 
 .form-actions button:hover,
 .form-actions button:active {
-  background-color: rgb(253, 123, 123);
+  background-color: #33059e;
+  border-color: #33059e;
 }
 
 .form-actions .submit {
-  border: 1px solid red;
-  background-color: red;
+  border: 1px solid #33059e;
+  background-color:#33059e;
   color: white;
 }
+.submit:disabled,
+.form-actions button:disabled,
+.form-actions button:disabled:hover,
+.form-actions button:disabled:active {
+  background-color: #ccc;
+  color: rgb(114, 113, 113);
+  border-color: #ccc;
+  cursor: not-allowed;
+}
 
+.form-actions .submit:hover {
+  background-color:#2a0483;
+  color: white;
+}
 .form-control p {
   display: inline;
 }
+
+
 
 .form-control .signin {
   color: blue;
@@ -74,16 +104,16 @@
   cursor: pointer;
 }
 
-.invalid input{
-    border: 1px solid #b40e0e !important;
-    background-color: #fddddd;
+.invalid input {
+  border: 1px solid #b40e0e !important;
+  background-color: #fddddd;
 }
 
-.invalid input:focus{
-    border-color:#ff8800 !important;
-    background-color:#fbe8d2;
+.invalid input:focus {
+  border-color: #ff8800 !important;
+  background-color: #fbe8d2;
 }
 
-.error-text{
-    color: #b40e0e;
+.error-text {
+  color: #b40e0e;
 }

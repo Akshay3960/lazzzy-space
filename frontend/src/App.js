@@ -5,7 +5,7 @@ import LoginForm from "./components/log-reg/LoginForm";
 import RegisterForm from "./components/log-reg/RegisterForm";
 import Navbar from "./components/navbar/Navbar";
 function App() {
-  const [toLogin, setToLogin] = useState(true);
+  const [toLogin, setToLogin] = useState(false);
   const [toReg, setToReg] = useState(false);
 
   const toRegisterHandler = () => {
