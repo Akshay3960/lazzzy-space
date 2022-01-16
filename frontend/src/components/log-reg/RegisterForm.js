@@ -8,11 +8,11 @@ const Backdrop = (props) => {
   return <div className={styles.backdrop} onClick={props.onClose} />;
 };
 
-const isEmpty = (value) => {
-  return value === "";
-};
-
 const ModalOverlay = (props) => {
+  const isNotEmpty = (value) => {
+    return value.trim() !== "";
+  };
+
   const {
     value: name,
     isValid: nameIsValid,
@@ -20,7 +20,7 @@ const ModalOverlay = (props) => {
     valueChangeHandler: nameChangeHandler,
     inputBlurHandler: nameBlurHandler,
     reset: resetName,
-  } = useInput(isEmpty);
+  } = useInput(isNotEmpty);
 
   const {
     value: email,
@@ -40,7 +40,7 @@ const ModalOverlay = (props) => {
     valueChangeHandler: passwordChangeHandler,
     inputBlurHandler: passwordBlurHandler,
     reset: resetPassword,
-  } = useInput(isEmpty);
+  } = useInput(isNotEmpty);
 
   let formIsValid = false;
 
@@ -57,13 +57,13 @@ const ModalOverlay = (props) => {
   };
 
   const nameInputClasses = nameHasError
-    ? `${styles["form-control"]} ${styles["invalid"]}}`
+    ? `${styles["form-control"]} ${styles["invalid"]}`
     : `${styles["form-control"]}`;
   const emailInputClasses = emailHasError
-    ? `${styles["form-control"]} ${styles["invalid"]}}`
+    ? `${styles["form-control"]} ${styles["invalid"]}`
     : `${styles["form-control"]}`;
   const passwordInputClasses = passwordHasError
-    ? `${styles["form-control"]} ${styles["invalid"]}}`
+    ? `${styles["form-control"]} ${styles["invalid"]}`
     : `${styles["form-control"]}`;
 
   return (
@@ -97,7 +97,7 @@ const ModalOverlay = (props) => {
             value={email}
           />
           {emailHasError ? (
-            <p className={styles["error-text"]}>Put Something here for email</p>
+            <p className={styles["error-text"]}>Email must include @</p>
           ) : (
             <p />
           )}
@@ -123,7 +123,7 @@ const ModalOverlay = (props) => {
           <button type="button" onClick={props.onClose}>
             Close
           </button>
-          <button className={styles.submit} onClick={props.onClose}>
+          <button disabled={!formIsValid} className={styles.submit}>
             Register
           </button>
         </div>
