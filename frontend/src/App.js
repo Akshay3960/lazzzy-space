@@ -3,7 +3,7 @@ import { useState, Fragment } from "react";
 import "./App.css";
 import LoginForm from "./components/log-reg/LoginForm";
 import RegisterForm from "./components/log-reg/RegisterForm";
-
+import Navbar from "./components/navbar/Navbar";
 function App() {
   const [toLogin, setToLogin] = useState(true);
   const [toReg, setToReg] = useState(false);
@@ -24,9 +24,9 @@ function App() {
   const loginCloseHandler = () => {
     setToLogin(false);
   };
-
   return (
     <Fragment>
+      <Navbar onLogin={loginHandler} onRegister= {toRegisterHandler}/>
       <div className="App">
         {toReg && <RegisterForm onClose={registerCloseHandler} />}
         {toLogin && (
