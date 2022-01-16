@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+ import { Fragment } from "react";
 
 import styles from "./RegisterForm.module.css";
 import Card from "../UI/Card";
