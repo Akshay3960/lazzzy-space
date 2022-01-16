@@ -1,0 +1,21 @@
+.tasks-container {
+  margin: 12px;
+  padding: 9px;
+}
+.tasks-container header {
+  font-weight: bold;
+  font-size:15px;
+  color: white;
+  padding:10px;
+}
+.tasks-container footer {
+  color: white;
+  font-size: 13px;
+}
+.tasks-container button{
+    padding-right:8rem;
+    border-radius: 6px;
+}
+.tasks-container button:hover {
+  background-color: #41455cab;
+}

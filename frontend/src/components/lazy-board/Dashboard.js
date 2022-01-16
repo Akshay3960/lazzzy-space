@@ -1,5 +1,6 @@
 import styles from "./Dashboard.module.css";
-import Tasks from "./Tasks";
+import Tasks from "../tasks/Tasks";
+
 const Dashboard = () => {
   const DUMMY_TASKS = [
     {
@@ -24,14 +25,11 @@ const Dashboard = () => {
     },
   ];
 
-//   const OrderTasks = DUMMY_TASKS.map((taskList) => (
-//     <Tasks title={taskList.name} tasks={taskList.tasks} />
-//   ));
-  return (
-    <section className={styles["dashboard"]}>
-      {/* <OrderTasks /> */}
-    </section>
-  );
+
+  const dashboard = DUMMY_TASKS.map((item) => (
+    <Tasks key={item.id} id={item.id} title={item.name} tasks={item.tasks} />
+  ));
+  return <div className={styles["dashboard"]}>{dashboard}</div>;
 };
 
 export default Dashboard;

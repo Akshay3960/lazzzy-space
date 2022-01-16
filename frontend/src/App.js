@@ -38,7 +38,7 @@ function App() {
             onRegister={toRegisterHandler}
           />
         )}
-        <BoardPage/>
+        <BoardPage />
       </div>
     </Fragment>
   );
