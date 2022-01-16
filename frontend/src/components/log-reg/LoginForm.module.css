@@ -8,7 +8,7 @@
 .modal{
     background-color: white;
     z-index: 20;
-    width:40%;
+    width:30%;
 }
 
 .form-control{
@@ -61,6 +61,10 @@
     border:1px solid red;
     background-color: red;
     color:white;
+}
+.form-actions .submit:hover,
+.form-actions .submit:active{
+    background-color:rgba(255, 0, 0, 0.363)
 }
 
 .form-control p{

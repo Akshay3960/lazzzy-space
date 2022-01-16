@@ -13,7 +13,6 @@ function App() {
     setToReg(true);
   };
 
-
   const registerCloseHandler = () => {
     setToReg(false);
   };
@@ -36,7 +35,12 @@ function App() {
             onRegister={toRegisterHandler}
           />
         )}
-        <button onClick={loginHandler} onClose> log in </button>
+        {!toLogin && !toReg && (
+          <button onClick={loginHandler} onClose>
+            {" "}
+            log in{" "}
+          </button>
+        )}
       </div>
     </Fragment>
   );

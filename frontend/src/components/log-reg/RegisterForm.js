@@ -1,15 +1,70 @@
 import { Fragment } from "react";
+
 import styles from "./RegisterForm.module.css";
 import Card from "../UI/Card";
+import useInput from "../../hooks/use-input";
 
 const Backdrop = (props) => {
   return <div className={styles.backdrop} onClick={props.onClose} />;
 };
 
+const isEmpty = (value) => {
+  return value === "";
+};
+
 const ModalOverlay = (props) => {
+  const {
+    value: name,
+    isValid: nameIsValid,
+    hasError: nameHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetName,
+  } = useInput(isEmpty);
+
+  const {
+    value: email,
+    isValid: emailIsValid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    reset: resetEmail,
+  } = useInput((value) => {
+    return value.includes("@");
+  });
+
+  const {
+    value: password,
+    isValid: passwordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    reset: resetPassword,
+  } = useInput(isEmpty);
+
+  let formIsValid = false;
+
+  if (nameIsValid && passwordIsValid && emailIsValid) formIsValid = true;
+
   const submitHandler = (event) => {
     event.preventDefault();
+
+    if (!formIsValid) return;
+
+    resetName();
+    resetEmail();
+    resetPassword();
   };
+
+  const nameInputClasses = nameHasError
+    ? `${styles["form-control"]} ${styles["invalid"]}}`
+    : `${styles["form-control"]}`;
+  const emailInputClasses = emailHasError
+    ? `${styles["form-control"]} ${styles["invalid"]}}`
+    : `${styles["form-control"]}`;
+  const passwordInputClasses = passwordHasError
+    ? `${styles["form-control"]} ${styles["invalid"]}}`
+    : `${styles["form-control"]}`;
 
   return (
     <Card className={styles.modal}>
@@ -17,25 +72,57 @@ const ModalOverlay = (props) => {
         <h2>Register Page</h2>
       </header>
       <form onSubmit={submitHandler}>
-        <div className={styles["form-control"]}>
+        <div className={nameInputClasses}>
           <label htmlFor="name">Your Name</label>
-          <input type="name" id="name" />
+          <input
+            type="name"
+            id="name"
+            onBlur={nameBlurHandler}
+            onChange={nameChangeHandler}
+            value={name}
+          />
+          {nameHasError ? (
+            <p className={styles["error-text"]}>Put Something here for name</p>
+          ) : (
+            <p />
+          )}
         </div>
-        <div className={styles["form-control"]}>
+        <div className={emailInputClasses}>
           <label htmlFor="email">Your E-mail</label>
-          <input type="email" id="email" />
+          <input
+            type="email"
+            id="email"
+            onBlur={emailBlurHandler}
+            onChange={emailChangeHandler}
+            value={email}
+          />
+          {emailHasError ? (
+            <p className={styles["error-text"]}>Put Something here for email</p>
+          ) : (
+            <p />
+          )}
         </div>
-        <div className={styles["form-control"]}>
+        <div className={passwordInputClasses}>
           <label htmlFor="password">Password</label>
-          <input type="password" id="password" />
-        </div>
-        <div className={styles["form-control"]}>
-          <section>
-            <p>You don't have an account?</p>
-          </section>
+          <input
+            type="password"
+            id="password"
+            onBlur={passwordBlurHandler}
+            onChange={passwordChangeHandler}
+            value={password}
+          />
+          {passwordHasError ? (
+            <p className={styles["error-text"]}>
+              Put Something here for password
+            </p>
+          ) : (
+            <p />
+          )}
         </div>
         <div className={styles["form-actions"]}>
-          <button type="button" onClick = {props.onClose}>Close</button>
+          <button type="button" onClick={props.onClose}>
+            Close
+          </button>
           <button className={styles.submit} onClick={props.onClose}>
             Register
           </button>
