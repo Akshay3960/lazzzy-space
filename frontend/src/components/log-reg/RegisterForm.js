@@ -1,5 +1,5 @@
- import { Fragment } from "react";
-
+import { Fragment, useState } from "react";
+import axios from "axios"
 import styles from "./RegisterForm.module.css";
 import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
@@ -13,6 +13,7 @@ const ModalOverlay = (props) => {
     return value.trim() !== "";
   };
 
+  const [error, setError] = useState("");
   const {
     value: name,
     isValid: nameIsValid,
@@ -46,11 +47,38 @@ const ModalOverlay = (props) => {
 
   if (nameIsValid && passwordIsValid && emailIsValid) formIsValid = true;
 
-  const submitHandler = (event) => {
+  const BACKEND_URL = process.env.REACT_APP_API_URL;
+
+  const submitHandler = async(event) => {
     event.preventDefault();
 
     if (!formIsValid) return;
 
+    // const data = new FormData();
+    // data.append("username", name);
+    // data.append("email", email);
+    // data.append("password", password);
+    const data = {
+      username: name,
+      email: email,
+      password: password
+    };
+
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // };
+
+    try {
+    await axios.post(BACKEND_URL+"api/auth/signup", data);
+      
+    } catch (e) {
+      console.log(e);
+      setError("Username already exists...");
+      
+    }
+    props.onClose()
     resetName();
     resetEmail();
     resetPassword();
@@ -71,6 +99,7 @@ const ModalOverlay = (props) => {
       <header className={styles.header}>
         <h2>Register Page</h2>
       </header>
+      {error && <p className={styles["error-text"]}>{error}</p>}
       <form onSubmit={submitHandler}>
         <div className={nameInputClasses}>
           <label htmlFor="name">Your Name</label>
@@ -132,6 +161,8 @@ const ModalOverlay = (props) => {
   );
 };
 const RegisterForm = (props) => {
+
+
   return (
     <Fragment>
       <Backdrop onClose={props.onClose} />
