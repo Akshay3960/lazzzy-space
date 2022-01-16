@@ -1,9 +1,11 @@
 import { useState, Fragment } from "react";
 
 import "./App.css";
+import BoardPage from "./components/lazy-board/BoardPage";
 import LoginForm from "./components/log-reg/LoginForm";
 import RegisterForm from "./components/log-reg/RegisterForm";
 import Navbar from "./components/navbar/Navbar";
+
 function App() {
   const [toLogin, setToLogin] = useState(false);
   const [toReg, setToReg] = useState(false);
@@ -24,9 +26,10 @@ function App() {
   const loginCloseHandler = () => {
     setToLogin(false);
   };
+
   return (
     <Fragment>
-      <Navbar onLogin={loginHandler} onRegister= {toRegisterHandler}/>
+      <Navbar onLogin={loginHandler} onRegister={toRegisterHandler} />
       <div className="App">
         {toReg && <RegisterForm onClose={registerCloseHandler} />}
         {toLogin && (
@@ -35,12 +38,7 @@ function App() {
             onRegister={toRegisterHandler}
           />
         )}
-        {!toLogin && !toReg && (
-          <button onClick={loginHandler} onClose>
-            {" "}
-            log in{" "}
-          </button>
-        )}
+        <BoardPage/>
       </div>
     </Fragment>
   );

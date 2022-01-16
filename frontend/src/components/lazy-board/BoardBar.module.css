@@ -1,0 +1,32 @@
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  background-color: #24037086;
+  height: 55px;
+}
+
+.nav-left,.nav-right {
+  display: flex;
+}
+
+.nav-item {
+  margin: 8px 10px;
+  padding-right:10px;
+  border-right: 1px solid #ffffff18
+}
+.nav-item h2{
+    font-weight:bold;
+    padding:8px;
+    font-size: 1.2rem;
+}
+
+.nav-item button{
+    box-sizing:border-box;
+    background-color:#ffffff18;
+    padding:7px;
+    margin-top:2px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+}
