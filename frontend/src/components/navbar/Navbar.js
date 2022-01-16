@@ -5,7 +5,7 @@ const Navbar = (props) => {
 
     return (
         <Fragment>
-            <nav className=" flex px-8 bg-purple-800 justify-between h-12">
+            <nav className=" flex px-8 bg-purple-800 justify-between h-14 drop-shadow-xl">
                 <div className="flex items-center space-x-3">
                 <img
                 className="h-8 w-8"
