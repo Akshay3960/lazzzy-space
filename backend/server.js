@@ -6,6 +6,7 @@ const cors = require('cors');
 const items = require('./routes/api/items');
 const users = require('./routes/api/users');
 const auth = require('./routes/api/auth');
+const list = require('./routes/api/list')
 const app = express();
 
 dotenv.config()
@@ -22,8 +23,9 @@ mongoose
     .catch(err => console.log(err));
 
 app.use('/api/items', items);
-app.use('/api/users',users);
+app.use('/api/users', users);
 app.use('/api/auth', auth);
+app.use('/api/list', list)
 const port = 5000;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
