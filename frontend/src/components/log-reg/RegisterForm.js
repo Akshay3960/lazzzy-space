@@ -9,7 +9,7 @@ const Backdrop = (props) => {
 };
 
 const ModalOverlay = (props) => {
-  
+
   const isNotEmpty = (value) => {
     return value.trim() !== "";
   };
@@ -50,7 +50,7 @@ const ModalOverlay = (props) => {
 
   const BACKEND_URL = process.env.REACT_APP_API_URL;
 
-  const submitHandler = async(event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
 
     if (!formIsValid) return;
@@ -72,12 +72,12 @@ const ModalOverlay = (props) => {
     // };
 
     try {
-    await axios.post(BACKEND_URL+"api/auth/signup", data);
-      
+      await axios.post(BACKEND_URL + "api/auth/signup", data);
+
     } catch (e) {
       console.log(e);
       setError("Username already exists...");
-      
+      return false;
     }
     props.onClose()
     resetName();
