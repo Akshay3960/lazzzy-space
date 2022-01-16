@@ -17,6 +17,8 @@ bower_components
 
 *.sublime*
 
+package-lock.json
+
 psd
 thumb
 sketch
