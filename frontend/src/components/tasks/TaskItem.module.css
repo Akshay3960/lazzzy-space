@@ -1,0 +1,13 @@
+.header{
+    color:white;
+}
+li{
+    font-size:13px;
+    width:250px;
+    height:60px;
+    background-color:#41455cab;
+    margin-bottom:12px;
+    padding:8px 8px 2px 8px;
+    border-radius:6px;
+    box-shadow: 0 0 10 rgba(0,0,0,0.7);
+}
