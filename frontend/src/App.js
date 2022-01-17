@@ -29,8 +29,8 @@ function App() {
 
   return (
     <Fragment>
-      <Navbar onLogin={loginHandler} onRegister={toRegisterHandler} />
       <div className="App">
+        <Navbar onLogin={loginHandler} onRegister={toRegisterHandler} />
         {toReg && <RegisterForm onClose={registerCloseHandler} />}
         {toLogin && (
           <LoginForm

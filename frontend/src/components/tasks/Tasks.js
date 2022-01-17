@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import Card from "../UI/Card";
 import styles from "./Tasks.module.css";
 import TaskItem from "./TaskItem";
+
 const Tasks = (props) => {
   const [toAddTask, setToAddTask] = useState(false);
+  const taskInputRef = useRef();
+
+  
   const taskList = props.tasks.map((task) => (
     <TaskItem key={Math.random()} title={task} />
   ));
 
-  const addTaskHandler = (event) => {
-    props.task.push(event.target.value);
+  const addTaskHandler = () => {
+    props.tasks.push(taskInputRef.current.value);
     setToAddTask(false);
   };
 
@@ -23,8 +27,11 @@ const Tasks = (props) => {
   const AddTaskForm = () => {
     return (
       <li>
-        <div className={styles.backdrop} />
-        <input type="text" id="title" />
+        <div className={styles["form-control"]}>
+          <label htmlFor="value">Enter Value:</label>
+          <input type="text" id="title" ref={taskInputRef} />
+        </div>
+
         <div className={styles["form-actions"]}>
           <button type="button" onClick={closeAddTaskHandler}>
             Close

@@ -1,12 +1,14 @@
-import { Fragment } from "react";
-
 import BoardBar from "./BoardBar";
-import Dashboard from './Dashboard';
+import Dashboard from "./Dashboard";
+import styles from "./BoardBar.module.css";
+
 const BoardPage = () => {
-  return <Fragment>
-      <BoardBar title = "Academic Tasks"/>
-      <Dashboard/>
-  </Fragment>;
+  return (
+    <div className={styles["board-container"]}>
+      <BoardBar title="Academic Tasks" />
+      <Dashboard />
+    </div>
+  );
 };
 
 export default BoardPage;
