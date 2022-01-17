@@ -1,21 +1,55 @@
 .tasks-container {
-  margin: 12px;
   padding: 9px;
+  position: relative;
+  margin: 10px 8px 200px 8px;
 }
 .tasks-container header {
   font-weight: bold;
-  font-size:15px;
+  font-size: 15px;
   color: white;
-  padding:10px;
+  padding: 10px;
 }
 .tasks-container footer {
   color: white;
   font-size: 13px;
 }
-.tasks-container button{
-    padding-right:8rem;
-    border-radius: 6px;
+.tasks-container button {
+  padding-right: 8rem;
+  border-radius: 6px;
 }
 .tasks-container button:hover {
   background-color: #41455cab;
+}
+
+.form-actions {
+  position: absolute;
+  bottom: -35px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.form-actions button {
+  color: #240370;
+  border: 1px solid #240370;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-control input {
+  height: 23px;
+  border-radius: 6px;
+  margin-top: 5px;
+  padding: 10px;
+}
+.form-control label {
+  color: white;
+}
+
+.form-actions button:hover,
+.form-actions button:active {
+  background-color: #33059e;
+  border-color: #33059e;
+  color: white;
 }
