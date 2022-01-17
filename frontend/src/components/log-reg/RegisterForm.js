@@ -9,6 +9,7 @@ const Backdrop = (props) => {
 };
 
 const ModalOverlay = (props) => {
+  
   const isNotEmpty = (value) => {
     return value.trim() !== "";
   };
