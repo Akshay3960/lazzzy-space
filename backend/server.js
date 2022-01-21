@@ -8,8 +8,10 @@ const users = require('./routes/api/users');
 const auth = require('./routes/api/auth');
 const app = express();
 
-app.use(bodyParser.json());
-dotenv.config();
+dotenv.config()
+app.use(express.json());
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true }))
 
 const db = require('./config/keys').mongoURI;
