@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post("/signup", async(req, res) => {
     try {
+        console.log(req.body);
 
         const cryptsalt = await bcrypt.genSalt(10);
         const hashedpass = await bcrypt.hash(req.body.password, cryptsalt);
