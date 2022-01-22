@@ -2,6 +2,7 @@
   padding: 9px;
   position: relative;
   margin: 10px 8px 200px 8px;
+  min-width:268px;
 }
 .tasks-container header {
   font-weight: bold;

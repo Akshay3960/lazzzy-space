@@ -1,17 +1,15 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
+import axios from "axios";
+
 import styles from "./LoginForm.module.css";
 import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
-import axios from "axios"
 
 const Backdrop = (props) => {
   return <div className={styles.backdrop} onClick={props.onClose} />;
 };
 
 const ModalOverlay = (props) => {
-
-  const [error, setError] = useState("");
-
   const isNotEmpty = (value) => {
     return value.trim() !== "";
   };
@@ -26,7 +24,7 @@ const ModalOverlay = (props) => {
   } = useInput((value) => {
     return value.includes("@");
   });
-  
+
   const {
     value: password,
     isValid: passwordIsValid,
@@ -42,31 +40,33 @@ const ModalOverlay = (props) => {
 
   const BACKEND_URL = process.env.REACT_APP_API_URL;
 
-
-  const submitHandler = async(event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
 
     if (!formIsValid) return;
 
     const data = {
       email: email,
-      password: password
+      password: password,
     };
 
     try {
-      await axios.post(BACKEND_URL+"api/auth/login", data);
-        
-      } 
-      catch (e) {
-        console.log(e);
-        setError("Account doesn't exist/wrong user info..");
-        resetEmail();
-        resetPassword();
-        return false;
-        
-      }
+      await axios.post(BACKEND_URL + "api/auth/login", data);
+    } catch (e) {
+      console.log(e);
+      props.onStatus({
+        type: "error",
+        message: "Account doesn't exist",
+      });
+      resetEmail();
+      resetPassword();
+      return false;
+    }
     props.onClose();
-
+    props.onStatus({
+      type: "success",
+      message: "Login Successful",
+    });
   };
 
   return (
@@ -74,15 +74,15 @@ const ModalOverlay = (props) => {
       <header className={styles.header}>
         <h2>Login Page</h2>
       </header>
-      {error && <p className={styles["error-text"]}>{error}</p>}
       <form onSubmit={submitHandler}>
         <div className={styles["form-control"]}>
           <label htmlFor="email">Your E-mail</label>
           <input
-          type="email" 
-          id="email" 
-          onChange={emailChangeHandler}
-          value={email}/>
+            type="email"
+            id="email"
+            onChange={emailChangeHandler}
+            value={email}
+          />
           {emailHasError ? (
             <p className={styles["error-text"]}>Email must include @</p>
           ) : (
@@ -92,10 +92,10 @@ const ModalOverlay = (props) => {
         <div className={styles["form-control"]}>
           <label htmlFor="password">Password</label>
           <input
-          type="password" 
-          id="password" 
-          onChange={passwordChangeHandler}
-          value={password}
+            type="password"
+            id="password"
+            onChange={passwordChangeHandler}
+            value={password}
           />
           {passwordHasError ? (
             <p className={styles["error-text"]}>
@@ -129,7 +129,11 @@ const Login = (props) => {
   return (
     <Fragment>
       <Backdrop onClose={props.onClose} />
-      <ModalOverlay onClose={props.onClose} onRegister={props.onRegister} />
+      <ModalOverlay
+        onClose={props.onClose}
+        onRegister={props.onRegister}
+        onStatus={props.onStatus}
+      />
     </Fragment>
   );
 };

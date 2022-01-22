@@ -1,0 +1,44 @@
+.container {
+  position: absolute;
+  height: 60px;
+  width: 280px;
+  right: 0;
+  top: 110px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  color: white;
+}
+.container i {
+  font-size: 25px;
+  padding: 17px 15px;
+}
+.container h2 {
+  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+  width: 100%;
+}
+.container div i {
+  font-size: 18px;
+}
+.success {
+  background-color: #0ac74f;
+}
+.success i {
+  background-color: #05aa41;
+}
+
+.error {
+  background-color: #b40e0e;
+}
+.error i {
+  background-color: #9c0a0a;
+}
+
+.success div i {
+  background-color: #0ac74f;
+}
+.error div i {
+  background-color: #b40e0e;
+}

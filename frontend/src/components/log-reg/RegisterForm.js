@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import axios from "axios"
 import styles from "./RegisterForm.module.css";
 import Card from "../UI/Card";
@@ -14,7 +14,6 @@ const ModalOverlay = (props) => {
     return value.trim() !== "";
   };
 
-  const [error, setError] = useState("");
   const {
     value: name,
     isValid: nameIsValid,
@@ -76,13 +75,20 @@ const ModalOverlay = (props) => {
 
     } catch (e) {
       console.log(e);
-      setError("Username already exists...");
-      return false;
+      props.onStatus({
+        type: 'error',
+        message:'Username does not exist'
+      });
+      return;
     }
     props.onClose()
     resetName();
     resetEmail();
     resetPassword();
+    props.onStatus({
+      type: 'success',
+      message: 'Registration Success'
+    });
   };
 
   const nameInputClasses = nameHasError
@@ -100,7 +106,6 @@ const ModalOverlay = (props) => {
       <header className={styles.header}>
         <h2>Register Page</h2>
       </header>
-      {error && <p className={styles["error-text"]}>{error}</p>}
       <form onSubmit={submitHandler}>
         <div className={nameInputClasses}>
           <label htmlFor="name">Your Name</label>
@@ -167,7 +172,7 @@ const RegisterForm = (props) => {
   return (
     <Fragment>
       <Backdrop onClose={props.onClose} />
-      <ModalOverlay onClose={props.onClose} />
+      <ModalOverlay onClose={props.onClose} onStatus = {props.onStatus} />
     </Fragment>
   );
 };
