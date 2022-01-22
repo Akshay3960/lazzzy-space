@@ -1,15 +1,18 @@
-import { Fragment } from "react";
-import axios from "axios"
+import { Fragment, useContext } from "react";
+import { store } from "react-notifications-component";
+import axios from "axios";
+
 import styles from "./RegisterForm.module.css";
 import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
+import AuthContext from '../../store/auth-context';
 
 const Backdrop = (props) => {
-  return <div className={styles.backdrop} onClick={props.onClose} />;
+  return <div className={styles.backdrop}/>;
 };
 
 const ModalOverlay = (props) => {
-
+  const authCtx = useContext(AuthContext);
   const isNotEmpty = (value) => {
     return value.trim() !== "";
   };
@@ -61,7 +64,7 @@ const ModalOverlay = (props) => {
     const data = {
       username: name,
       email: email,
-      password: password
+      password: password,
     };
 
     // const config = {
@@ -72,22 +75,39 @@ const ModalOverlay = (props) => {
 
     try {
       await axios.post(BACKEND_URL + "api/auth/signup", data);
-
     } catch (e) {
       console.log(e);
-      props.onStatus({
-        type: 'error',
-        message:'Username does not exist'
+      store.addNotification({
+        title: "Error",
+        message: "Account already Exist",
+        type: "danger",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate_animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 5000,
+          onScreen: true,
+        },
       });
       return;
     }
-    props.onClose()
+    authCtx.onCloseRegister();
     resetName();
     resetEmail();
     resetPassword();
-    props.onStatus({
-      type: 'success',
-      message: 'Registration Success'
+    store.addNotification({
+      title: "Success",
+      message: "Registration Successful",
+      type: "success",
+      insert: "top",
+      container: "bottom-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate_animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
     });
   };
 
@@ -154,10 +174,13 @@ const ModalOverlay = (props) => {
             <p />
           )}
         </div>
+        <section>
+            <p>Already have an account! </p>
+            <p className={styles["signin"]} onClick={authCtx.onCloseRegister}>
+              Log In
+            </p>
+          </section>
         <div className={styles["form-actions"]}>
-          <button type="button" onClick={props.onClose}>
-            Close
-          </button>
           <button disabled={!formIsValid} className={styles.submit}>
             Register
           </button>
@@ -167,12 +190,10 @@ const ModalOverlay = (props) => {
   );
 };
 const RegisterForm = (props) => {
-
-
   return (
     <Fragment>
-      <Backdrop onClose={props.onClose} />
-      <ModalOverlay onClose={props.onClose} onStatus = {props.onStatus} />
+      <Backdrop  />
+      <ModalOverlay />
     </Fragment>
   );
 };
