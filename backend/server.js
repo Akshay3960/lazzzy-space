@@ -7,6 +7,7 @@ const items = require('./routes/api/items');
 const users = require('./routes/api/users');
 const auth = require('./routes/api/auth');
 const list = require('./routes/api/list')
+const upload = require('./routes/api/upload')
 const app = express();
 
 dotenv.config()
@@ -14,6 +15,7 @@ app.use(express.json());
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true }))
+app.use('/images', express.static(__dirname +'/images'));
 
 const db = require('./config/keys').mongoURI;
 
@@ -25,7 +27,8 @@ mongoose
 app.use('/api/items', items);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
-app.use('/api/list', list)
+app.use('/api/list', list);
+app.use('/api/upload', upload);
 const port = 5000;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
