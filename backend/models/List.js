@@ -6,14 +6,16 @@ const ListSchema = new Schema({
         type: String,
         required: true
     },
-    card: [{
+    cardList: [{
         cardname: {
             type: String,
-            required: true
+            required: false
         },
         description: {
             type: String,
-            required: true
+            required: false
         }
     }]
 })
+
+module.exports = List = mongoose.model('list',ListSchema);

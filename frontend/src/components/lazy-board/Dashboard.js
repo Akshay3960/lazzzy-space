@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
-
+import axios from "axios";
 import styles from "./Dashboard.module.css";
 import Tasks from "../tasks/Tasks";
+
 
 const Dashboard = () => {
   const taskListInputRef = useRef();
@@ -41,7 +42,7 @@ const Dashboard = () => {
     setEnterTaskList(false);
   };
 
-  const addTaskListHandler = () => {
+  const addTaskListHandler = async() => {
     setTaskList((prevState) => {
       return [
         ...prevState,
@@ -52,6 +53,24 @@ const Dashboard = () => {
         },
       ];
     });
+
+    const BACKEND_URL = process.env.REACT_APP_API_URL;
+    const data ={
+            listname:taskListInputRef.current.value,
+    };
+
+    try{
+      await axios.post(BACKEND_URL+"api/list/create_list", data);   
+    }    
+    
+    catch(e) {
+      console.log(e);
+
+      return false;
+    }
+   
+    
+
     setEnterTaskList(false);
   };
 
