@@ -2,13 +2,16 @@
   display: flex;
   margin-left: 12px;
   width: 99%;
-  height: 100vh;
-  overflow: auto;
+  height: 88vh;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .dash-button {
   height: fit-content;
   width: 264px;
+  min-width:264px;
+  margin-right:100px;
   height: 32px;
   margin-top: 10px;
   padding: 6px 8px;
