@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 
 const AuthContext = React.createContext({
   name: "",
@@ -7,56 +7,81 @@ const AuthContext = React.createContext({
   openRegister: false,
   isLoggedIn: false,
   onLogout: () => {},
-  onLogin: (name,email, password) => {},
+  onLogin: (name, email, password) => {},
   onOpenRegister: () => {},
   onCloseRegister: () => {},
 });
 
+const defaultUserState = {
+  isLoggedIn: false,
+  name: "",
+  email: "",
+  password: "",
+};
+
+const userReducer = (state, action) => {
+  if (action.type === "LOG_IN") {
+    return {
+      isLoggedIn: true,
+      name: action.name,
+      email: action.email,
+      password: action.password,
+    };
+  }
+  if (action.type === "LOG_OUT") {
+    return { isLoggedIn: false, name: "", email: "", password: "" };
+  }
+
+  return defaultUserState;
+};
+
 export const AuthContextProvider = (props) => {
-  const [openRegister, setOpenRegister] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [enteredName, setIsEnteredName] = useState('');
-  const [enteredEmail, setIsEnteredEmail] = useState('');
-  const [enteredPassword, setIsEnteredPassword] = useState('');
+  const [openRegister, setOpenRegister] = useState(false);
+
+  const [userState, dispatchUserAction] = useReducer(
+    userReducer,
+    defaultUserState
+  );
 
   const onOpenRegisterHandler = () => {
     setOpenRegister(true);
-  }
+  };
 
   const onCloseRegisterHandler = () => {
     setOpenRegister(false);
-  }
-
- 
+  };
 
   const logoutHandler = () => {
-      setIsLoggedIn(false);
-      setIsEnteredName('');
-      setIsEnteredEmail('');
-      setIsEnteredPassword('');
-  }
+    dispatchUserAction({
+      type: "LOG_OUT",
+    });
+  };
 
-  const loginHandler = (name,email,password) => {
-      setIsLoggedIn(true);
-      setIsEnteredName(name);
-      setIsEnteredEmail(email);
-      setIsEnteredPassword(password);
-  }
+  const loginHandler = (name, email, password) => {
+    dispatchUserAction({
+      type: "LOG_IN",
+      name,
+      email,
+      password,
+    });
+  };
 
   return (
-      <AuthContext.Provider value = {{
-        name: enteredName,
-        email: enteredEmail,
+    <AuthContext.Provider
+      value={{
+        name: userState.name,
+        email: userState.email,
+        password: userState.password,
+        isLoggedIn: userState.isLoggedIn,
         openRegister: openRegister,
-        password:enteredPassword,
-        isLoggedIn: isLoggedIn,
-        onLogOut: logoutHandler,
+        onLogout: logoutHandler,
         onLogin: loginHandler,
-        onOpenRegister:onOpenRegisterHandler,
-        onCloseRegister:onCloseRegisterHandler,
-      }}>
-        {props.children}
-      </AuthContext.Provider>
+        onOpenRegister: onOpenRegisterHandler,
+        onCloseRegister: onCloseRegisterHandler,
+      }}
+    >
+      {props.children}
+    </AuthContext.Provider>
   );
 };
 export default AuthContext;

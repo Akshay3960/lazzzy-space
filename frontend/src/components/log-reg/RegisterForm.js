@@ -5,10 +5,10 @@ import axios from "axios";
 import styles from "./RegisterForm.module.css";
 import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
-import AuthContext from '../../store/auth-context';
+import AuthContext from "../../store/auth-context";
 
 const Backdrop = (props) => {
-  return <div className={styles.backdrop}/>;
+  return <div className={styles.backdrop} />;
 };
 
 const ModalOverlay = (props) => {
@@ -174,12 +174,14 @@ const ModalOverlay = (props) => {
             <p />
           )}
         </div>
-        <section>
-            <p>Already have an account! </p>
+        <div className={styles["form-control"]}>
+          <section>
+            <p>Don't have an account?</p>
             <p className={styles["signin"]} onClick={authCtx.onCloseRegister}>
               Log In
             </p>
           </section>
+        </div>
         <div className={styles["form-actions"]}>
           <button disabled={!formIsValid} className={styles.submit}>
             Register
@@ -192,7 +194,7 @@ const ModalOverlay = (props) => {
 const RegisterForm = (props) => {
   return (
     <Fragment>
-      <Backdrop  />
+      <Backdrop />
       <ModalOverlay />
     </Fragment>
   );
