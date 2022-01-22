@@ -74,7 +74,7 @@ const ModalOverlay = (props) => {
       resetPassword();
       return false;
     }
-    authCtx.loginHandler('',email,password)
+    authCtx.onLogin('',email,password)
     store.addNotification({
       title: "Success",
       message: "Login Successful",
