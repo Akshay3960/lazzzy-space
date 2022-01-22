@@ -1,15 +1,18 @@
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
+import { store } from "react-notifications-component";
 import axios from "axios";
 
 import styles from "./LoginForm.module.css";
 import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
+import AuthContext from "../../store/auth-context";
 
 const Backdrop = (props) => {
-  return <div className={styles.backdrop} onClick={props.onClose} />;
+  return <div className={styles.backdrop} />;
 };
 
 const ModalOverlay = (props) => {
+  const authCtx = useContext(AuthContext);
   const isNotEmpty = (value) => {
     return value.trim() !== "";
   };
@@ -54,18 +57,36 @@ const ModalOverlay = (props) => {
       await axios.post(BACKEND_URL + "api/auth/login", data);
     } catch (e) {
       console.log(e);
-      props.onStatus({
-        type: "error",
-        message: "Account doesn't exist",
+      store.addNotification({
+        title: "Error",
+        message: "Account doesn't exist/User Info incorrect",
+        type: "danger",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate_animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 5000,
+          onScreen: true,
+        },
       });
       resetEmail();
       resetPassword();
       return false;
     }
-    props.onClose();
-    props.onStatus({
-      type: "success",
+    authCtx.loginHandler('',email,password)
+    store.addNotification({
+      title: "Success",
       message: "Login Successful",
+      type: "success",
+      insert: "top",
+      container: "bottom-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate_animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
     });
   };
 
@@ -107,16 +128,13 @@ const ModalOverlay = (props) => {
         </div>
         <div className={styles["form-control"]}>
           <section>
-            <p>You don't have an account?</p>
-            <p className={styles["signin"]} onClick={props.onRegister}>
+            <p>Don't have an account?</p>
+            <p className={styles["signin"]} onClick={authCtx.onOpenRegister}>
               Sign In
             </p>
           </section>
         </div>
         <div className={styles["form-actions"]}>
-          <button type="button" onClick={props.onClose}>
-            Close
-          </button>
           <button className={styles.submit} disabled={!formIsValid}>
             Log in
           </button>
@@ -128,12 +146,8 @@ const ModalOverlay = (props) => {
 const Login = (props) => {
   return (
     <Fragment>
-      <Backdrop onClose={props.onClose} />
-      <ModalOverlay
-        onClose={props.onClose}
-        onRegister={props.onRegister}
-        onStatus={props.onStatus}
-      />
+      <Backdrop />
+      <ModalOverlay/>
     </Fragment>
   );
 };
