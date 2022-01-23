@@ -1,38 +1,43 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./Dashboard.module.css";
 import Tasks from "../tasks/Tasks";
 
 
 const Dashboard = () => {
+
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
   const taskListInputRef = useRef();
   const [enterTaskList, setEnterTaskList] = useState(false);
 
-  const [taskList, setTaskList] = useState([
-    {
-      id: "t1",
-      name: "Resources",
-      tasks: ["Paper with Code", "Connected Paper", "Doc For PPL"],
-    },
-    {
-      id: "t2",
-      name: "Weekly Assignments",
-      tasks: ["Doc for Computer Science", "doc For distributed system"],
-    },
-    {
-      id: "t3",
-      name: "Projects",
-      tasks: ["Project A", "Project FU", "Project B"],
-    },
-    {
-      id: "t4",
-      name: "Exams",
-      tasks: ["PPL exam", "distributed System", "Computer Security"],
-    },
-  ]);
+
+  const [taskList, setTaskList] = useState([]);
+
+  //Fetch the list, Card data
+  useEffect(()=> {
+    let Res;
+    const API_FETCH = async()=> {
+      const BACKEND_URL = process.env.REACT_APP_API_URL;
+
+      try {
+        Res = await axios.get(BACKEND_URL + "api/list/get_list");
+        console.log(Res.data);
+      } catch (e) {
+        console.log(e);
+        return;
+      }
+      const loadedTasks = [...Res.data];
+      setTaskList(loadedTasks);
+
+
+    }
+    API_FETCH();
+
+  },[])
 
   const dashboard = taskList.map((item) => (
-    <Tasks key={item.id} id={item.id} title={item.name} tasks={item.tasks} />
+    <Tasks key={item._id} id={item._id} title={item.listname} tasks={item.cardList} />
   ));
 
   const openAddTaskListHandler = () => {
@@ -47,9 +52,9 @@ const Dashboard = () => {
       return [
         ...prevState,
         {
-          id: Math.random(),
-          name: taskListInputRef.current.value,
-          tasks: [],
+          _id: Math.random(),
+          listname: taskListInputRef.current.value,
+          cardList: [],
         },
       ];
     });
@@ -57,6 +62,7 @@ const Dashboard = () => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     const data ={
             listname:taskListInputRef.current.value,
+            cardList: []
     };
 
     try{
@@ -68,7 +74,7 @@ const Dashboard = () => {
 
       return false;
     }
-   
+
     
 
     setEnterTaskList(false);
