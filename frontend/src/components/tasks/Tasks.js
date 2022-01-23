@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import Card from "../UI/Card";
 import styles from "./Tasks.module.css";
 import TaskItem from "./TaskItem";
+import axios from "axios";
 
 const Tasks = (props) => {
   const [toAddTask, setToAddTask] = useState(false);
@@ -10,11 +11,30 @@ const Tasks = (props) => {
 
   
   const taskList = props.tasks.map((task) => (
-    <TaskItem key={Math.random()} title={task} />
+    <TaskItem key={Math.random()} title={task.cardname} />
   ));
 
-  const addTaskHandler = () => {
-    props.tasks.push(taskInputRef.current.value);
+  const addTaskHandler = async() => {
+    props.tasks.push({"cardname":taskInputRef.current.value, "description": ""});
+    //update list with data cardname, description, list id.
+    const BACKEND_URL = process.env.REACT_APP_API_URL;
+    const data ={
+      "cardList": {
+          "cardname": taskInputRef.current.value,
+          "description": ""
+        }
+    }
+
+    try{
+      const Res = await axios.put(BACKEND_URL+"api/list/"+ props?.id, data);
+      console.log(Res.data);
+    }    
+    
+    catch(e) {
+      console.log(e);
+      return false;
+    }
+    
     setToAddTask(false);
   };
 

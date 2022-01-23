@@ -31,5 +31,18 @@ router.get('/get_list',async(req,res)=>{
     }
 })
 
+router.put('/:id',async(req,res)=>{
+    try{
+        await List.findByIdAndUpdate(
+            {_id:req.params.id},
+            {$push: {cardList:req.body.cardList}}
+        );
+        res.status(200).json("List updated")
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+})
+
 
 module.exports = router;
