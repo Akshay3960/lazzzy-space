@@ -44,5 +44,29 @@ router.put('/:id',async(req,res)=>{
     }
 })
 
+//Delete list
+router.delete('/:id', async(req, res) => {
+    try {
+        await List.findByIdAndDelete(req.params.id);
+        res.status(200).json("List deleted");
+    }
+    catch(e){
+        res.status(500)("Deletion not successful", e);
+    }
+});
+//Delete cardList element
+router.delete('/:list/:card', async(req, res) => {
+    try {
+        await List.findByIdAndUpdate(
+            {_id:req.params.list},
+            {$pull:{cardList:{_id:req.params.card}}}
+            );
+            res.status(200).json("deletion successful")
+    }
+    catch(e){
+        res.status(500).json("Deletion not successful");
+    }
+});
+
 
 module.exports = router;
