@@ -1,23 +1,20 @@
 import { useRef, useState, useEffect } from "react";
 import axios from "axios";
+import { store } from "react-notifications-component";
+
 import styles from "./Dashboard.module.css";
 import Tasks from "../tasks/Tasks";
 
-
 const Dashboard = () => {
-
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
   const taskListInputRef = useRef();
   const [enterTaskList, setEnterTaskList] = useState(false);
-
 
   const [taskList, setTaskList] = useState([]);
 
   //Fetch the list, Card data
-  useEffect(()=> {
+  useEffect(() => {
     let Res;
-    const API_FETCH = async()=> {
+    const API_FETCH = async () => {
       const BACKEND_URL = process.env.REACT_APP_API_URL;
 
       try {
@@ -29,16 +26,9 @@ const Dashboard = () => {
       }
       const loadedTasks = [...Res.data];
       setTaskList(loadedTasks);
-
-
-    }
+    };
     API_FETCH();
-
-  },[])
-
-  const dashboard = taskList.map((item) => (
-    <Tasks key={item._id} id={item._id} title={item.listname} tasks={item.cardList} />
-  ));
+  }, []);
 
   const openAddTaskListHandler = () => {
     setEnterTaskList(true);
@@ -47,7 +37,23 @@ const Dashboard = () => {
     setEnterTaskList(false);
   };
 
-  const addTaskListHandler = async() => {
+  const addTaskListHandler = async () => {
+    if (taskListInputRef.current.value.trim() === "") {
+      store.addNotification({
+        title: "Error",
+        message: "The title of the list cannot be empty",
+        type: "danger",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate_animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 5000,
+          onScreen: true,
+        },
+      });
+      return;
+    }
     setTaskList((prevState) => {
       return [
         ...prevState,
@@ -60,25 +66,36 @@ const Dashboard = () => {
     });
 
     const BACKEND_URL = process.env.REACT_APP_API_URL;
-    const data ={
-            listname:taskListInputRef.current.value,
-            cardList: []
+    const data = {
+      listname: taskListInputRef.current.value,
+      cardList: [],
     };
 
-    try{
-      await axios.post(BACKEND_URL+"api/list/create_list", data);   
-    }    
-    
-    catch(e) {
+    try {
+      await axios.post(BACKEND_URL + "api/list/create_list", data);
+    } catch (e) {
       console.log(e);
 
       return false;
     }
 
-    
-
     setEnterTaskList(false);
   };
+
+  const deleteTaskListHandler = (id) => {
+    console.log(id);
+    setTaskList((state) => state.filter((taskList) => taskList._id !== id));
+  };
+
+  const dashboard = taskList.map((item) => (
+    <Tasks
+      key={item._id}
+      id={item._id}
+      onDelete={deleteTaskListHandler}
+      title={item.listname}
+      tasks={item.cardList}
+    />
+  ));
 
   const EnterTaskListForm = () => {
     return (

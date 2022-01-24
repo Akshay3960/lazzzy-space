@@ -1,0 +1,33 @@
+.dropdown-container{
+  height:fit-content;
+  position:absolute;
+  min-width:60px;
+  background-color:white;
+  border-radius:10px;
+  padding:5px;
+  display:flex;
+  flex-direction:column;
+  padding-bottom:10px;
+  flex-wrap:wrap;
+  align-content:flex-start;
+}
+
+.dropdown-container li{
+  width:100%;
+  background-color:white;
+  color:black;
+  height:fit-content;
+  font-weight:lighter;
+  margin-bottom:0;
+  padding-top:5px;
+  display:flex;
+  justify-content: space-evenly;
+  cursor:pointer;
+}
+.dropdown-container li i{
+  font-size:15px;
+}
+
+.dropdown-container li:hover{
+  background-color:aliceblue;
+}
