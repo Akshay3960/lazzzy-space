@@ -2,12 +2,24 @@
     color:white;
 }
 li{
+    position: relative;
     font-size:13px;
-    width:250px;
+    width:245px;
     height:60px;
     background-color:#41455cab;
     margin-bottom:12px;
     padding:8px 8px 2px 8px;
     border-radius:6px;
     box-shadow: 0 0 10 rgba(0,0,0,0.7);
+}
+
+.header button{
+    position:absolute;
+    right:5px;
+    top:5px;
+    padding:5px;
+}
+
+.header button:hover{
+    background-color:#282a368e;
 }

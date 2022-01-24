@@ -13,7 +13,7 @@ const AuthContext = React.createContext({
 });
 
 const defaultUserState = {
-  isLoggedIn: false,
+  isLoggedIn: true,
   name: "",
   email: "",
   password: "",

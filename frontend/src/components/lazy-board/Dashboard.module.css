@@ -3,8 +3,7 @@
   margin-left: 12px;
   width: 99%;
   height: 88vh;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow:auto;
 }
 
 .dash-button {

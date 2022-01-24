@@ -7,11 +7,8 @@ import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
 import AuthContext from "../../store/auth-context";
 
-const Backdrop = (props) => {
-  return <div className={styles.backdrop} />;
-};
-
-const ModalOverlay = (props) => {
+const ModalOverlay = (props) => {};
+const Login = (props) => {
   const authCtx = useContext(AuthContext);
   const isNotEmpty = (value) => {
     return value.trim() !== "";
@@ -74,7 +71,7 @@ const ModalOverlay = (props) => {
       resetPassword();
       return false;
     }
-    authCtx.onLogin('',email,password)
+    authCtx.onLogin("", email, password);
     store.addNotification({
       title: "Success",
       message: "Login Successful",
@@ -89,7 +86,6 @@ const ModalOverlay = (props) => {
       },
     });
   };
-
   return (
     <Card className={styles.modal}>
       <header className={styles.header}>
@@ -141,14 +137,6 @@ const ModalOverlay = (props) => {
         </div>
       </form>
     </Card>
-  );
-};
-const Login = (props) => {
-  return (
-    <Fragment>
-      <Backdrop />
-      <ModalOverlay/>
-    </Fragment>
   );
 };
 
