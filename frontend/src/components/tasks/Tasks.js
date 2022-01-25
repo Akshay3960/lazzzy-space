@@ -4,7 +4,6 @@ import { MdModeEdit } from "react-icons/md";
 import { IoTrashSharp } from "react-icons/io5";
 import { store } from "react-notifications-component";
 
-import Card from "../UI/Card";
 import DropdownMenu from "../UI/DropdownMenu";
 import styles from "./Tasks.module.css";
 import TaskItem from "./TaskItem";
@@ -14,8 +13,6 @@ const Tasks = (props) => {
   const [toAddTask, setToAddTask] = useState(false);
   const taskInputRef = useRef();
   const [isEdit, setIsEdit] = useState(false);
-  const [tasks, setTasks] = useState(props.tasks);
-
   const isEditList = [
     { title: "Edit List", icon: <MdModeEdit />, onClick: () => {} },
     {
@@ -27,16 +24,18 @@ const Tasks = (props) => {
     },
   ];
 
-  const deleteCardHandler = (id) => {
-    setTasks((state) => state.filter((task) => task._id !== id));
-  };
-
-  const taskList = tasks.map((task) => (
+  const taskList = props.tasks.map((task, taskIndex) => (
     <TaskItem
       key={task._id}
+      tasksIndex={props.tasksIndex}
+      taskIndex={taskIndex}
       id={task._id}
-      onDelete={deleteCardHandler}
       title={task.cardname}
+      isDrag={props.isDrag}
+      onDragStart={props.onDragStart}
+      onDragging={props.onDragging}
+      onDragEnter={props.onDragEnter}
+      onDelete={props.onDeleteCard}
     />
   ));
 
@@ -80,12 +79,11 @@ const Tasks = (props) => {
   const toEnterTaskHandler = () => {
     setToAddTask(true);
   };
-
   const closeAddTaskHandler = () => setToAddTask(false);
 
   const AddTaskForm = () => {
     return (
-      <li>
+      <div>
         <div className={styles["form-control"]}>
           <label htmlFor="value">Enter Value:</label>
           <input type="text" id="title" ref={taskInputRef} />
@@ -97,7 +95,7 @@ const Tasks = (props) => {
           </button>
           <button onClick={addTaskHandler}> Save </button>
         </div>
-      </li>
+      </div>
     );
   };
 
@@ -112,10 +110,23 @@ const Tasks = (props) => {
           <DropdownMenu className={styles["editmenu"]} items={isEditList} />
         ) : undefined}
       </header>
-      <ul>
+      <div
+        className={styles["groups"]}
+        onDragEnter={
+          props.isDrag && !props.tasks.length
+            ? (e) => {
+                return props.onDragEnter(e, {
+                  tasksIndex: props.tasksIndex,
+                  taskIndex: 0,
+                });
+              }
+            : null
+        }
+      >
+        <div></div>
         {taskList}
         {toAddTask && <AddTaskForm />}
-      </ul>
+      </div>
       <footer>
         {!toAddTask && <button onClick={toEnterTaskHandler}>Add a card</button>}
       </footer>
