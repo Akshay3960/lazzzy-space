@@ -1,13 +1,11 @@
 .tasks-container {
-  background-color:#282a36;
-  border-radius:6px;
-  box-shadow:0 0 15px rgba(0,0,0,0.5);
+  background-color: #282a36;
+  border-radius: 6px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   padding: 9px;
-  height:fit-content;
+  height: fit-content;
   position: relative;
-  margin: 10px 8px 200px 8px;
-  min-width:268px;
-  max-width:268px;
+  min-width: 268px;
 }
 .tasks-container header {
   font-weight: bold;
@@ -60,25 +58,31 @@
   color: white;
 }
 
-.tasks-container header{
-  display:flex;
-  justify-content:space-between;
-  width:100%
+.tasks-container header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.tasks-container header button{
+.tasks-container header button {
   padding: 4px;
-  background-color:rgba(172, 172, 172, 0.363);
-  font-size:16px;
+  background-color: rgba(172, 172, 172, 0.363);
+  font-size: 16px;
 }
 
-.editmenu{
+.editmenu {
   position: absolute;
-  right:-60px;
-  top:28px;
-  z-index:10;
+  right: -60px;
+  top: 28px;
+  z-index: 10;
 }
-.dropdown{
-  height:fit-content;
-  width:fit-content;
+.dropdown {
+  height: fit-content;
+  width: fit-content;
+}
+
+.groups {
+  width: 100%;
+  min-height: 2rem;
+  background-color: #282a36;
 }

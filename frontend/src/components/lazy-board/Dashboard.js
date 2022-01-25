@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   const [taskList, setTaskList] = useState([]);
 
-  //Fetch the list, Card data
+  // Fetch the list, Card data
   useEffect(() => {
     let Res;
     const API_FETCH = async () => {
@@ -86,14 +86,81 @@ const Dashboard = () => {
     console.log(id);
     setTaskList((state) => state.filter((taskList) => taskList._id !== id));
   };
+  const deleteCardHandler = (ord, id) => {
+    // console.log("deleteCard", ord);
+    // let changedList = {
+    //   _id: taskList[ord.tasksIndex]._id,
+    //   listname: taskList[ord.tasksIndex].listname,
+    //   cardList: taskList[ord.tasksIndex].cardList.filter(
+    //     (card) => card._id !== id
+    //   ),
+    // };
+    // console.log(changedList);
+    // setTaskList((state) => {
+    //   state.pop(ord.tasksIndex);
+    //   return [...state, changedList];
+    // });
+  };
 
-  const dashboard = taskList.map((item) => (
+  const dragItem = useRef();
+  const dragItemNode = useRef();
+  const [dragging, setDragging] = useState(false);
+
+  const dragStartHandler = (e, item) => {
+    dragItemNode.current = e.target;
+    dragItemNode.current.addEventListener("dragend", dragEndHandler);
+    dragItem.current = item;
+
+    setTimeout(() => {
+      setDragging(true);
+    }, 0);
+  };
+  const dragEnterHandler = (e, targetItem) => {
+    if (dragItemNode.current !== e.target) {
+      setTaskList((oldList) => {
+        let newList = [...oldList];
+        newList[targetItem.tasksIndex].cardList.splice(
+          targetItem.taskIndex,
+          0,
+          newList[dragItem.current.tasksIndex].cardList.splice(
+            dragItem.current.taskIndex,
+            1
+          )[0]
+        );
+        dragItem.current = targetItem;
+        return newList;
+      });
+    }
+  };
+  const dragEndHandler = (e) => {
+    setDragging(false);
+    dragItem.current = null;
+    dragItemNode.current.removeEventListener("dragend", dragEndHandler);
+    dragItemNode.current = null;
+  };
+  const onDraggingHandler = (item) => {
+    if (
+      dragItem.current.tasksIndex === item.tasksIndex &&
+      dragItem.current.taskIndex === item.taskIndex
+    ) {
+      return "drag";
+    }
+    return "";
+  };
+
+  const dashboard = taskList.map((item, itemIndex) => (
     <Tasks
       key={item._id}
       id={item._id}
-      onDelete={deleteTaskListHandler}
+      tasksIndex={itemIndex}
       title={item.listname}
       tasks={item.cardList}
+      isDrag={dragging}
+      onDragStart={dragStartHandler}
+      onDragging={onDraggingHandler}
+      onDragEnter={dragEnterHandler}
+      onDelete={deleteTaskListHandler}
+      onDeleteCard={deleteCardHandler}
     />
   ));
 
