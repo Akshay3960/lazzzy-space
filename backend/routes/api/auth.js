@@ -1,13 +1,43 @@
 const express = require('express');
 const User = require('../../models/User');
 const bcrypt = require('bcrypt')
+const multer = require('multer');
 
 
 const router = express.Router();
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'images')
+    },
+    filename: function (req, file, cb) {
+        cb(null, new Date().toISOString() + file.originalname)
+    }
+})
+
+const fileFilter = (req, file, cb) => {
+    const fileTypesAllowed = ['image/jpeg', 'image/jpg', 'image/png'];
+
+    //check whether filetype allowed is acceptable
+    if (fileTypesAllowed.includes(file.mimetype)) {
+        cb(null, true);
+
+    }
+    else {
+        cb(null, false);
+    }
+}
+
+const profile = multer({
+    storage, fileFilter, limits: {
+        fileSize: 20 * 1024 * 1024 // 20 MB
+    }
+}
+)
+
 /*User registration */
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", profile.single("pic"), async (req, res) => {
     try {
         //check if user already exist
         const fetched_user = await User.findOne({
@@ -17,16 +47,37 @@ router.post("/signup", async (req, res) => {
             console.log("user already exist")
             return res.status(500).json("User already exist")
         }
-        const cryptsalt = await bcrypt.genSalt(10);
-        const hashedpass = await bcrypt.hash(req.body.password, cryptsalt);
-        const new_user = await new User({
-            email: req.body.email,
-            username: req.body.username,
-            password: hashedpass,
-        });
+        if (req.file) {
+            const cryptsalt = await bcrypt.genSalt(10);
+            const hashedpass = await bcrypt.hash(req.body.password, cryptsalt);
+            const new_user = await new User({
+                email: req.body.email,
+                username: req.body.username,
+                password: hashedpass,
+                image:
+                {
+                    file: {
 
-        const result = await new_user.save();
-        res.status(200).json(result);
+                        path: req.file.path
+                    }
+                }
+            });
+
+            const result = await new_user.save();
+            res.status(200).json(result);
+        }
+        else {
+            const cryptsalt = await bcrypt.genSalt(10);
+            const hashedpass = await bcrypt.hash(req.body.password, cryptsalt);
+            const new_user = await new User({
+                email: req.body.email,
+                username: req.body.username,
+                password: hashedpass,
+            });
+
+            const result = await new_user.save();
+            res.status(200).json(result);
+        }
 
     } catch (err) {
         console.log(err)

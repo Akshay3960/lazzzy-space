@@ -5,7 +5,7 @@ const UserSchema = new Schema({
     username: {
         type: String,
         required: false,
-        
+
     },
     fullname: {
         type: String,
@@ -23,11 +23,11 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    image: [{
-        file : {
-            path: String, 
+    image: {
+        file: {
+            path: String,
         }
-    }]
+    }
 });
 
 module.exports = User = mongoose.model('user', UserSchema);
