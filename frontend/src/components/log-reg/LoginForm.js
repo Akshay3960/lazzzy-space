@@ -1,4 +1,4 @@
-import { Fragment, useContext } from "react";
+import { useContext } from "react";
 import { store } from "react-notifications-component";
 import axios from "axios";
 
@@ -7,7 +7,6 @@ import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
 import AuthContext from "../../store/auth-context";
 
-const ModalOverlay = (props) => {};
 const Login = (props) => {
   const authCtx = useContext(AuthContext);
   const isNotEmpty = (value) => {

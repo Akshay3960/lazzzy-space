@@ -1,4 +1,10 @@
-.board-container {
-  height: 100%;
-  width: 100%;
+.container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
 }
+.content {
+  position: absolute;
+  top: 0;
+}
+
