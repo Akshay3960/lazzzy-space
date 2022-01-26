@@ -24,18 +24,24 @@ const Tasks = (props) => {
     },
   ];
 
+  const deleteCardHandler = (ord,tasksId,taskId) =>{
+    props.onDeleteCard(tasksId).cardList.splice(ord.taskIndex,1)
+    
+  }
+
   const taskList = props.tasks.map((task, taskIndex) => (
     <TaskItem
       key={task._id}
       tasksIndex={props.tasksIndex}
       taskIndex={taskIndex}
+      tasksId = {props.id}
       id={task._id}
       title={task.cardname}
       isDrag={props.isDrag}
       onDragStart={props.onDragStart}
       onDragging={props.onDragging}
       onDragEnter={props.onDragEnter}
-      onDelete={props.onDeleteCard}
+      onDelete={deleteCardHandler}
     />
   ));
 
@@ -71,7 +77,6 @@ const Tasks = (props) => {
       console.log(Res.data);
     } catch (e) {
       console.log(e);
-      return false;
     }
     setToAddTask(false);
   };
@@ -93,7 +98,7 @@ const Tasks = (props) => {
           <button type="button" onClick={closeAddTaskHandler}>
             Close
           </button>
-          <button onClick={addTaskHandler}> Save </button>
+          <button type = "submit" onClick={addTaskHandler}> Save </button>
         </div>
       </div>
     );
