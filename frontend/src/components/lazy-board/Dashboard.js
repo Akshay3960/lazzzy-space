@@ -9,7 +9,40 @@ const Dashboard = () => {
   const taskListInputRef = useRef();
   const [enterTaskList, setEnterTaskList] = useState(false);
 
-  const [taskList, setTaskList] = useState([]);
+  const [taskList, setTaskList] = useState([
+    {
+      _id: Math.random(),
+      listname: "Group 1",
+      cardList: [
+        {
+          cardname: "1",
+          description: "",
+        },
+        {
+          cardname: "2",
+          description: "",
+        },
+        {
+          cardname: "3",
+          description: "",
+        },
+      ],
+    },
+    {
+      _id: Math.random(),
+      listname: "Group 2",
+      cardList: [
+        {
+          cardname: "1",
+          description: "",
+        },
+        {
+          cardname: "2",
+          description: "",
+        },
+      ],
+    },
+  ]);
 
   // Fetch the list, Card data
   useEffect(() => {
@@ -86,20 +119,9 @@ const Dashboard = () => {
     console.log(id);
     setTaskList((state) => state.filter((taskList) => taskList._id !== id));
   };
-  const deleteCardHandler = (ord, id) => {
-    // console.log("deleteCard", ord);
-    // let changedList = {
-    //   _id: taskList[ord.tasksIndex]._id,
-    //   listname: taskList[ord.tasksIndex].listname,
-    //   cardList: taskList[ord.tasksIndex].cardList.filter(
-    //     (card) => card._id !== id
-    //   ),
-    // };
-    // console.log(changedList);
-    // setTaskList((state) => {
-    //   state.pop(ord.tasksIndex);
-    //   return [...state, changedList];
-    // });
+  const deleteCardHandler = (tasksId) => {
+    console.log(taskList.find((item) => item._id === tasksId));
+    return taskList.find((item) => item._id === tasksId);
   };
 
   const dragItem = useRef();

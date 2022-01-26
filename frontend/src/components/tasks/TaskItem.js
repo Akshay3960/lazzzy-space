@@ -39,7 +39,7 @@ const TaskItem = (props) => {
             props.onDelete({
               tasksIndex: props.tasksIndex,
               taskIndex: props.taskIndex,
-            },props.id)
+            },props.tasksId,props.id)
           }
         >
           {" "}
