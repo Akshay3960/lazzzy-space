@@ -14,7 +14,7 @@ const Tasks = (props) => {
   const taskInputRef = useRef();
   const [isEdit, setIsEdit] = useState(false);
   const isEditList = [
-    { title: "Edit List", icon: <MdModeEdit />, onClick: () => {} },
+    { title: "Edit List", icon: <MdModeEdit />, onClick: () => { } },
     {
       title: "Delete List",
       icon: <IoTrashSharp />,
@@ -120,11 +120,11 @@ const Tasks = (props) => {
         onDragEnter={
           props.isDrag && !props.tasks.length
             ? (e) => {
-                return props.onDragEnter(e, {
-                  tasksIndex: props.tasksIndex,
-                  taskIndex: 0,
-                });
-              }
+              return props.onDragEnter(e, {
+                tasksIndex: props.tasksIndex,
+                taskIndex: 0,
+              });
+            }
             : null
         }
       >

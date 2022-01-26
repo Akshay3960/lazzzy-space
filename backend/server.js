@@ -15,7 +15,7 @@ app.use(express.json());
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true }))
-app.use('/images', express.static(__dirname +'/images'));
+app.use('/images', express.static(__dirname + '/images'));
 
 const db = require('./config/keys').mongoURI;
 
