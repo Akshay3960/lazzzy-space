@@ -1,83 +1,69 @@
 import { useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RiEditBoxLine } from "react-icons/ri";
 import { MdModeEdit } from "react-icons/md";
 import { IoTrashSharp } from "react-icons/io5";
-import { store } from "react-notifications-component";
 
+import { pushCardToGroup } from "../../store/board-actions";
+import { boardActions } from "../../store/board-slice";
 import DropdownMenu from "../UI/DropdownMenu";
 import styles from "./Tasks.module.css";
 import TaskItem from "./TaskItem";
-import axios from "axios";
 
 const Tasks = (props) => {
+  const dispatch = useDispatch();
+  const group = useSelector((state) => state.board.groups).find(
+    (item) => item._id === props.id
+  );
   const [toAddTask, setToAddTask] = useState(false);
   const taskInputRef = useRef();
   const [isEdit, setIsEdit] = useState(false);
+
+  const deleteTaskListHandler = (tasksId) => {
+    dispatch(boardActions.removeGroupFromBoard(tasksId));
+  };
+
   const isEditList = [
-    { title: "Edit List", icon: <MdModeEdit />, onClick: () => { } },
+    { title: "Edit List", icon: <MdModeEdit />, onClick: () => {} },
     {
       title: "Delete List",
       icon: <IoTrashSharp />,
       onClick: () => {
-        props.onDelete(props.id);
+        deleteTaskListHandler(props.id);
       },
     },
   ];
 
-  const deleteCardHandler = (ord,tasksId,taskId) =>{
-    props.onDeleteCard(tasksId).cardList.splice(ord.taskIndex,1)
-    
-  }
 
-  const taskList = props.tasks.map((task, taskIndex) => (
+  const removeTaskHandler = (taskId) => {
+    console.log("124");
+    dispatch(
+      boardActions.removeCardFromGroup({
+        groupId: props.id,
+        cardId: taskId,
+      })
+    );
+  };
+
+  const taskList = group.cardList.map((task, taskIndex) => (
     <TaskItem
       key={task._id}
       tasksIndex={props.tasksIndex}
       taskIndex={taskIndex}
-      tasksId = {props.id}
+      tasksId={props.id}
       id={task._id}
       title={task.cardname}
       isDrag={props.isDrag}
       onDragStart={props.onDragStart}
       onDragging={props.onDragging}
       onDragEnter={props.onDragEnter}
-      onDelete={deleteCardHandler}
+      onRemove = {removeTaskHandler}
     />
   ));
 
-  const addTaskHandler = async () => {
-    if (taskInputRef.current.value.trim() === "") {
-      store.addNotification({
-        title: "Error",
-        message: "The title of the card cannot be empty",
-        type: "danger",
-        insert: "top",
-        container: "bottom-right",
-        animationIn: ["animate__animated", "animate__fadeIn"],
-        animationOut: ["animate_animated", "animate__fadeOut"],
-        dismiss: {
-          duration: 5000,
-          onScreen: true,
-        },
-      });
-      return;
-    }
-    props.tasks.push({ cardname: taskInputRef.current.value, description: "" });
-    //update list with data cardname, description, list id.
-    const BACKEND_URL = process.env.REACT_APP_API_URL;
-    const data = {
-      cardList: {
-        cardname: taskInputRef.current.value,
-        description: "",
-      },
-    };
-
-    try {
-      const Res = await axios.put(BACKEND_URL + "api/list/" + props?.id, data);
-      console.log(Res.data);
-    } catch (e) {
-      console.log(e);
-    }
+  const addTaskHandler = () => {
+    console.log("1212");
+    dispatch(pushCardToGroup(props.id, taskInputRef.current.value, ""));
     setToAddTask(false);
   };
 
@@ -98,7 +84,10 @@ const Tasks = (props) => {
           <button type="button" onClick={closeAddTaskHandler}>
             Close
           </button>
-          <button type = "submit" onClick={addTaskHandler}> Save </button>
+          <button type="submit" onClick={addTaskHandler}>
+            {" "}
+            Save{" "}
+          </button>
         </div>
       </div>
     );
@@ -107,7 +96,7 @@ const Tasks = (props) => {
   return (
     <div className={styles["tasks-container"]}>
       <header>
-        <h3>{props.title}</h3>
+        <h3>{group.listname}</h3>
         <button onClick={() => setIsEdit((state) => !state)}>
           <RiEditBoxLine />
         </button>
@@ -118,17 +107,16 @@ const Tasks = (props) => {
       <div
         className={styles["groups"]}
         onDragEnter={
-          props.isDrag && !props.tasks.length
+          props.isDrag && !group.cardList.length
             ? (e) => {
-              return props.onDragEnter(e, {
-                tasksIndex: props.tasksIndex,
-                taskIndex: 0,
-              });
-            }
+                return props.onDragEnter(e, {
+                  tasksIndex: props.tasksIndex,
+                  taskIndex: 0,
+                });
+              }
             : null
         }
       >
-        <div></div>
         {taskList}
         {toAddTask && <AddTaskForm />}
       </div>
