@@ -1,67 +1,20 @@
 import { useRef, useState, useEffect } from "react";
-import axios from "axios";
-import { store } from "react-notifications-component";
+import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./Dashboard.module.css";
 import Tasks from "../tasks/Tasks";
+import { boardActions } from "../../store/board-slice";
+import { fetchBoardData, pushGroupToBoard } from "../../store/board-actions";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
   const taskListInputRef = useRef();
   const [enterTaskList, setEnterTaskList] = useState(false);
-
-  const [taskList, setTaskList] = useState([
-    {
-      _id: Math.random(),
-      listname: "Group 1",
-      cardList: [
-        {
-          cardname: "1",
-          description: "",
-        },
-        {
-          cardname: "2",
-          description: "",
-        },
-        {
-          cardname: "3",
-          description: "",
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      listname: "Group 2",
-      cardList: [
-        {
-          cardname: "1",
-          description: "",
-        },
-        {
-          cardname: "2",
-          description: "",
-        },
-      ],
-    },
-  ]);
-
-  // Fetch the list, Card data
+  const taskList = useSelector((state) => state.board.groups);
+  console.log(taskList);
   useEffect(() => {
-    let Res;
-    const API_FETCH = async () => {
-      const BACKEND_URL = process.env.REACT_APP_API_URL;
-
-      try {
-        Res = await axios.get(BACKEND_URL + "api/list/get_list");
-        console.log(Res.data);
-      } catch (e) {
-        console.log(e);
-        return;
-      }
-      const loadedTasks = [...Res.data];
-      setTaskList(loadedTasks);
-    };
-    API_FETCH();
-  }, []);
+    dispatch(fetchBoardData());
+  }, [dispatch]);
 
   const openAddTaskListHandler = () => {
     setEnterTaskList(true);
@@ -71,57 +24,8 @@ const Dashboard = () => {
   };
 
   const addTaskListHandler = async () => {
-    if (taskListInputRef.current.value.trim() === "") {
-      store.addNotification({
-        title: "Error",
-        message: "The title of the list cannot be empty",
-        type: "danger",
-        insert: "top",
-        container: "bottom-right",
-        animationIn: ["animate__animated", "animate__fadeIn"],
-        animationOut: ["animate_animated", "animate__fadeOut"],
-        dismiss: {
-          duration: 5000,
-          onScreen: true,
-        },
-      });
-      return;
-    }
-    setTaskList((prevState) => {
-      return [
-        ...prevState,
-        {
-          _id: Math.random(),
-          listname: taskListInputRef.current.value,
-          cardList: [],
-        },
-      ];
-    });
-
-    const BACKEND_URL = process.env.REACT_APP_API_URL;
-    const data = {
-      listname: taskListInputRef.current.value,
-      cardList: [],
-    };
-
-    try {
-      await axios.post(BACKEND_URL + "api/list/create_list", data);
-    } catch (e) {
-      console.log(e);
-
-      return false;
-    }
-
+    dispatch(pushGroupToBoard(taskListInputRef.current.value));
     setEnterTaskList(false);
-  };
-
-  const deleteTaskListHandler = (id) => {
-    console.log(id);
-    setTaskList((state) => state.filter((taskList) => taskList._id !== id));
-  };
-  const deleteCardHandler = (tasksId) => {
-    console.log(taskList.find((item) => item._id === tasksId));
-    return taskList.find((item) => item._id === tasksId);
   };
 
   const dragItem = useRef();
@@ -137,29 +41,32 @@ const Dashboard = () => {
       setDragging(true);
     }, 0);
   };
+
   const dragEnterHandler = (e, targetItem) => {
     if (dragItemNode.current !== e.target) {
-      setTaskList((oldList) => {
-        let newList = [...oldList];
-        newList[targetItem.tasksIndex].cardList.splice(
-          targetItem.taskIndex,
-          0,
-          newList[dragItem.current.tasksIndex].cardList.splice(
-            dragItem.current.taskIndex,
-            1
-          )[0]
-        );
-        dragItem.current = targetItem;
-        return newList;
-      });
+      dispatch(
+        boardActions.dragEnterGroup({
+          dragItem: {
+            groupIndex: dragItem.current.tasksIndex,
+            cardIndex: dragItem.current.taskIndex,
+          },
+          targetItem: {
+            groupIndex: targetItem.tasksIndex,
+            cardIndex: targetItem.taskIndex,
+          },
+        })
+      );
+      dragItem.current = targetItem;
     }
   };
+
   const dragEndHandler = (e) => {
     setDragging(false);
     dragItem.current = null;
     dragItemNode.current.removeEventListener("dragend", dragEndHandler);
     dragItemNode.current = null;
   };
+
   const onDraggingHandler = (item) => {
     if (
       dragItem.current.tasksIndex === item.tasksIndex &&
@@ -170,21 +77,20 @@ const Dashboard = () => {
     return "";
   };
 
-  const dashboard = taskList.map((item, itemIndex) => (
-    <Tasks
-      key={item._id}
-      id={item._id}
-      tasksIndex={itemIndex}
-      title={item.listname}
-      tasks={item.cardList}
-      isDrag={dragging}
-      onDragStart={dragStartHandler}
-      onDragging={onDraggingHandler}
-      onDragEnter={dragEnterHandler}
-      onDelete={deleteTaskListHandler}
-      onDeleteCard={deleteCardHandler}
-    />
-  ));
+  const dashboard = taskList.map((item, itemIndex) => {
+    console.log(item);
+    return (
+      <Tasks
+        key={item._id}
+        id={item._id}
+        tasksIndex={itemIndex}
+        isDrag={dragging}
+        onDragStart={dragStartHandler}
+        onDragging={onDraggingHandler}
+        onDragEnter={dragEnterHandler}
+      />
+    );
+  });
 
   const EnterTaskListForm = () => {
     return (
@@ -203,6 +109,7 @@ const Dashboard = () => {
       </div>
     );
   };
+
   return (
     <div className={styles["dashboard"]}>
       {dashboard}

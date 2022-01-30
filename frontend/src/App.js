@@ -1,4 +1,5 @@
 import React, { Fragment, useContext } from "react";
+import { useDispatch, } from 'react-redux';
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
@@ -11,6 +12,8 @@ import AuthContext from "./store/auth-context";
 
 function App() {
   const authCtx = useContext(AuthContext);
+
+
   return (
     <Fragment>
       <div className="App">
