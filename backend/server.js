@@ -8,6 +8,7 @@ const users = require('./routes/api/users');
 const auth = require('./routes/api/auth');
 const list = require('./routes/api/list')
 const upload = require('./routes/api/upload')
+const board = require('./routes/api/boards')
 const app = express();
 
 dotenv.config()
@@ -29,6 +30,7 @@ app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/list', list);
 app.use('/api/upload', upload);
+app.use('/api/boards',board);
 const port = 5000;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

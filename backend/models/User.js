@@ -27,7 +27,14 @@ const UserSchema = new Schema({
         file: {
             path: String,
         }
-    }
+    },
+
+    boards:[{
+        type:Schema.Types.ObjectId,
+        ref:'boards',
+    }]
+
+
 });
 
 module.exports = User = mongoose.model('user', UserSchema);
