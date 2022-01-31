@@ -7,6 +7,15 @@ import { boardActions } from "../../store/board-slice";
 const TaskItem = (props) => {
   const dispatch = useDispatch();
 
+  const removeTaskHandler = () => {
+    dispatch(
+      boardActions.removeCardFromGroup({
+        groupId: props.tasksId,
+        cardId: props.id,
+      })
+    );
+  };
+
   return (
     <div
       className={`${
@@ -38,7 +47,7 @@ const TaskItem = (props) => {
     >
       <div className={styles.header}>
         <label htmlFor="title">{props.title}</label>
-        <button onClick={() => props.onRemove(props.id)}>
+        <button onClick={removeTaskHandler}>
           <IoTrashSharp />
         </button>
       </div>

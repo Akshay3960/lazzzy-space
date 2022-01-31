@@ -12,14 +12,17 @@ const boardSlice = createSlice({
         listname: "Group 1",
         cardList: [
           {
+            _id: Math.random(),
             cardname: "1",
             description: "",
           },
           {
+            _id: Math.random(),
             cardname: "2",
             description: "",
           },
           {
+            _id: Math.random(),
             cardname: "3",
             description: "",
           },
@@ -30,10 +33,12 @@ const boardSlice = createSlice({
         listname: "Group 2",
         cardList: [
           {
+            _id: Math.random(),
             cardname: "1",
             description: "",
           },
           {
+            _id: Math.random(),
             cardname: "2",
             description: "",
           },
@@ -54,7 +59,7 @@ const boardSlice = createSlice({
     },
     removeGroupFromBoard(state, action) {
       const id = action.payload;
-      state.groups = state.groups.filter((item) => item._id === id);
+      state.groups = state.groups.filter((item) => item._id !== id);
     },
     addCardToGroup(state, action) {
       const newCard = action.payload.item;
@@ -64,12 +69,13 @@ const boardSlice = createSlice({
       changedGroup.push(newCard);
     },
     removeCardFromGroup(state, action) {
-      console.log(state)
       const groupId = action.payload.groupId;
       const cardId = action.payload.cardId;
-      let changedGroup = state.groups.find((item) => item.id === groupId).cardList;
-      changedGroup = changedGroup.filter((item) => item.id !== cardId);
-
+      const changedGroup = state.groups.find(
+        (item) => item._id === groupId
+      ).cardList;
+      state.groups.find((item) => item._id === groupId).cardList =
+        changedGroup.filter((item) => item._id !== cardId);
     },
     dragEnterGroup(state, action) {
       const dragItem = action.payload.dragItem;
@@ -79,7 +85,10 @@ const boardSlice = createSlice({
       state.groups[targetItem.groupIndex].cardList.splice(
         targetItem.cardIndex,
         0,
-        state.groups[dragItem.groupIndex].cardList.splice(dragItem.cardIndex, 1)[0]
+        state.groups[dragItem.groupIndex].cardList.splice(
+          dragItem.cardIndex,
+          1
+        )[0]
       );
     },
   },

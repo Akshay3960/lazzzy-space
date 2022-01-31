@@ -11,7 +11,7 @@ const Dashboard = () => {
   const taskListInputRef = useRef();
   const [enterTaskList, setEnterTaskList] = useState(false);
   const taskList = useSelector((state) => state.board.groups);
-  console.log(taskList);
+
   useEffect(() => {
     dispatch(fetchBoardData());
   }, [dispatch]);
@@ -78,7 +78,6 @@ const Dashboard = () => {
   };
 
   const dashboard = taskList.map((item, itemIndex) => {
-    console.log(item);
     return (
       <Tasks
         key={item._id}
