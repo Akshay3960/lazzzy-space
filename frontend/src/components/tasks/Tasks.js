@@ -34,17 +34,6 @@ const Tasks = (props) => {
     },
   ];
 
-
-  const removeTaskHandler = (taskId) => {
-    console.log("124");
-    dispatch(
-      boardActions.removeCardFromGroup({
-        groupId: props.id,
-        cardId: taskId,
-      })
-    );
-  };
-
   const taskList = group.cardList.map((task, taskIndex) => (
     <TaskItem
       key={task._id}
@@ -57,12 +46,10 @@ const Tasks = (props) => {
       onDragStart={props.onDragStart}
       onDragging={props.onDragging}
       onDragEnter={props.onDragEnter}
-      onRemove = {removeTaskHandler}
     />
   ));
 
   const addTaskHandler = () => {
-    console.log("1212");
     dispatch(pushCardToGroup(props.id, taskInputRef.current.value, ""));
     setToAddTask(false);
   };
