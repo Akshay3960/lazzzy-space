@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { IoTrashSharp } from "react-icons/io5";
-
+import {popCardFromGroup} from "../../store/board-actions";
 import styles from "./TaskItem.module.css";
 import { boardActions } from "../../store/board-slice";
 
@@ -9,7 +9,7 @@ const TaskItem = (props) => {
 
   const removeTaskHandler = () => {
     dispatch(
-      boardActions.removeCardFromGroup({
+      popCardFromGroup({
         groupId: props.tasksId,
         cardId: props.id,
       })
