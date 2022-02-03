@@ -34,8 +34,8 @@ const upload = multer({storage,  fileFilter, limits :{
         }
     }
 )
-
-router.post('/upload', upload.single('files'), async(req, res)=> {
+const arr = upload.array("files",10)
+router.post('/upload', arr, async(req, res)=> {
     const file = req.file
     try{
 
@@ -46,13 +46,13 @@ router.post('/upload', upload.single('files'), async(req, res)=> {
     }
     console.log(file.path)
     const file_name = await new Files({
-        image: 
-        {
+        files: 
+        [{
             file:{
 
             path: file.path
         }
-        }
+        }]
     })
 
     const saveFile = await file_name.save()
