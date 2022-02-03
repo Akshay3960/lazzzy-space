@@ -4,6 +4,7 @@ const AuthContext = React.createContext({
   name: "",
   email: "",
   password: "",
+  profileImage: "",
   openRegister: false,
   isLoggedIn: false,
   onLogout: () => {},
@@ -17,6 +18,7 @@ const defaultUserState = {
   name: "",
   email: "",
   password: "",
+  profileImage: "https://i.stack.imgur.com/frlIf.png"
 };
 
 const userReducer = (state, action) => {
@@ -26,10 +28,11 @@ const userReducer = (state, action) => {
       name: action.name,
       email: action.email,
       password: action.password,
+      profileImage: action.profileImage? action.profileImage : state.profileImage
     };
   }
   if (action.type === "LOG_OUT") {
-    return { isLoggedIn: false, name: "", email: "", password: "" };
+    return { isLoggedIn: false, name: "", email: "", password: "", profileImage:""};
   }
 
   return defaultUserState;

@@ -4,7 +4,7 @@ import { RiEditBoxLine } from "react-icons/ri";
 import { MdModeEdit } from "react-icons/md";
 import { IoTrashSharp } from "react-icons/io5";
 
-import { pushCardToGroup } from "../../store/board-actions";
+import { popGroupFromBoard, pushCardToGroup } from "../../store/board-actions";
 import { boardActions } from "../../store/board-slice";
 import DropdownMenu from "../UI/DropdownMenu";
 import styles from "./Tasks.module.css";
@@ -20,7 +20,7 @@ const Tasks = (props) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const deleteTaskListHandler = (tasksId) => {
-    dispatch(boardActions.removeGroupFromBoard(tasksId));
+    dispatch(popGroupFromBoard(tasksId));
   };
 
   const isEditList = [

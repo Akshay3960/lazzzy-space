@@ -76,6 +76,28 @@ export const pushGroupToBoard = (name, id) => {
   };
 };
 
+export const popGroupFromBoard = (id) => {
+
+  return async(dispatch) => {
+    const BACKEND_URL = process.env.REACT_APP_API_URL;
+
+    let Res;
+    try{
+      Res = await axios.delete(BACKEND_URL + "api/list/"+id);
+      console.log(Res.data);
+
+    }
+    catch(err)
+    {
+      console.log(err);
+
+    }
+    dispatch(
+      boardActions.removeGroupFromBoard(id)
+    )
+  }
+}
+
 export const pushCardToGroup = (id, name, description) => {
   if (name === "") {
     store.addNotification({
@@ -116,3 +138,30 @@ export const pushCardToGroup = (id, name, description) => {
     );
   };
 };
+
+export const popCardFromGroup = ({groupId:lid, cardId:cid}) => {
+  return async(dispatch) => {
+    const BACKEND_URL = process.env.REACT_APP_API_URL;
+    let Res;
+    try {
+
+      Res = await axios.
+      delete(BACKEND_URL + "api/list/"+ lid + "/" + cid);
+      console.log(Res.data);
+      
+
+    } catch (err) {
+      console.error(err);
+      
+    }
+    dispatch(
+      boardActions.removeCardFromGroup(
+        {
+          groupId: lid,
+          cardId: cid
+        }
+      )
+    )
+
+  }
+}
