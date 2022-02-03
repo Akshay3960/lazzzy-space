@@ -40,11 +40,11 @@ const profile = multer({
 router.post("/signup", profile.single("pic"), async (req, res) => {
     try {
         //check if user already exist
-        const fetched_user = await User.findOne({
-            username: req.body.username,
+        const fetched_user = await User.find({
+            $or:[{email: req.body.email},{username: req.body.username}]
         })
-        if (fetched_user) {
-            console.log("user already exist")
+        if (fetched_user.length != 0) {
+            console.log(fetched_user)
             return res.status(500).json("User already exist")
         }
         if (req.file) {
@@ -81,6 +81,7 @@ router.post("/signup", profile.single("pic"), async (req, res) => {
 
     } catch (err) {
         console.log(err)
+        res.status(500).json(err);
     }
 });
 
