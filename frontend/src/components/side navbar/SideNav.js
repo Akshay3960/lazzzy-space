@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { MdSend } from "react-icons/md";
 import { RiArrowRightSFill } from "react-icons/ri";
 import { BsDot } from "react-icons/bs";
@@ -6,10 +6,16 @@ import { IconContext } from "react-icons";
 
 import styles from "./SideNav.module.css";
 
-const SideNav = ({ windows, onSelect }) => {
+const SideNav = ({ onAdd, windows, onSelect }) => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
   const openSideBarHandler = () => setIsSideBarOpen(true);
   const closeSideBarHandler = () => setIsSideBarOpen(false);
+  const windowInputRef = useRef();
+  const [openFormHandler, setOpenFormHandler] = useState(false);
+
+  const onOpenFormHandler = () => setOpenFormHandler(true);
+  const onCloseFormHandler = () => setOpenFormHandler(false);
+
   const windowsManager = windows.map((item, itemIndex) => {
     return (
       <div
@@ -25,6 +31,28 @@ const SideNav = ({ windows, onSelect }) => {
       </div>
     );
   });
+
+  const EnterWindowForm = () => {
+    return (
+      <div className={styles["form-content"]}>
+        <div className={styles["form-control"]}>
+          <label htmlFor="value">Enter Value:</label>
+          <input type="text" id="title" ref={windowInputRef} />
+        </div>
+
+        <div className={styles["form-actions"]}>
+          <button type="button" onClick={onCloseFormHandler}>
+            Close
+          </button>
+          <button onClick={() => onAdd(windowInputRef.current.value)}>
+            {" "}
+            Save{" "}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div
       className={`${styles["container"]} ${
@@ -63,6 +91,16 @@ const SideNav = ({ windows, onSelect }) => {
               </header>
             </div>
             <div className={styles["others-content"]}>{windowsManager}</div>
+            {!openFormHandler && (
+              <button
+                className={styles["add-button"]}
+                onClick={onOpenFormHandler}
+              >
+                {" "}
+                Add new Workspace
+              </button>
+            )}
+            {openFormHandler && <EnterWindowForm/>}
           </div>
         </IconContext.Provider>
       )}

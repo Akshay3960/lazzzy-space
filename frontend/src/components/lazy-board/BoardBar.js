@@ -1,11 +1,15 @@
+import { useSelector } from 'react-redux';
+
 import styles from "./BoardBar.module.css";
 
 const BoardBar = (props) => {
+  const title = useSelector((state) => state.board.title);
+
   return (
     <div className={styles["nav-container"]}>
       <div className={styles["nav-left"]}>
         <div className={styles["nav-item"]}>
-          <h2> {props.title} </h2>
+          <h2> {title} </h2>
         </div>
         <div className={styles["nav-item"]}>
           <button> members </button>

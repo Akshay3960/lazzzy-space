@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { IoTrashSharp } from "react-icons/io5";
-import {popCardFromGroup} from "../../store/board-actions";
+import { popCardFromGroup } from "../../store/board-actions";
 import styles from "./TaskItem.module.css";
 import { boardActions } from "../../store/board-slice";
 
@@ -31,7 +31,9 @@ const TaskItem = (props) => {
       draggable="true"
       onDragStart={(e) =>
         props.onDragStart(e, {
+          tasksId: props.tasksId,
           tasksIndex: props.tasksIndex,
+          taskId: props.id,
           taskIndex: props.taskIndex,
         })
       }
@@ -39,7 +41,9 @@ const TaskItem = (props) => {
         props.isDrag
           ? (e) =>
               props.onDragEnter(e, {
+                tasksId: props.tasksId,
                 tasksIndex: props.tasksIndex,
+                taskId: props.id,
                 taskIndex: props.taskIndex,
               })
           : undefined

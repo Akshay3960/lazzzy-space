@@ -79,6 +79,63 @@
   color: white;
 }
 
-.item:hover{
-  background-color:#7652c9af
+.item:hover {
+  background-color: #7652c9af;
+}
+
+.add-button {
+  box-sizing: border-box;
+  margin: 1rem;
+  width: 91%;
+  padding: 0.5rem;
+  height: 2.5rem;
+  background-color: #7652c9;
+  color: white;
+}
+
+.add-button:hover {
+  background-color: #6840c7;
+}
+
+.form-content {
+  margin: 10px 0px 0px 6px;
+  background-color: rgb(228, 227, 227);
+  position: relative;
+  width: 264px;
+  height: fit-content;
+  width: 264px;
+  padding: 10px;
+}
+.form-control label {
+  font-weight: bold;
+  font-size: 13.5px;
+}
+.form-control input {
+  height: 30px;
+  border-radius: 6px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+  padding-right: 2rem;
+  padding-left: 10px;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  gap: 20px;
+}
+
+.form-actions button {
+  color: #240370;
+  font-size: 12px;
+  border: 1px solid #240370;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-actions button:hover,
+.form-actions button:active {
+  background-color: #33059e;
+  border-color: #33059e;
+  color: white;
 }
