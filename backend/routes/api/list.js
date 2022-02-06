@@ -7,66 +7,106 @@ router.post("/create_list", async (req, res) => {
     const cardList = req.body.cardList;
 
     try {
-      //  console.log(req.body.listname);
+        //  console.log(req.body.listname);
         const new_list = await new List({
             listname: req.body.listname,
             cardList: cardList,
-            
+
         });
         const result = await new_list.save();
         res.status(200).json(result);
     }
-    catch(err) {
+    catch (err) {
         console.log(err)
     }
 });
 
-router.get('/get_list',async(req,res)=>{
-    try{
+router.get('/get_list', async (req, res) => {
+    try {
         const getList = await List.find();
         res.status(200).json(getList)
     }
-    catch(err){
+    catch (err) {
         res.status(500).json(err)
     }
 })
 
-router.put('/:id',async(req,res)=>{
-    try{
+router.put('/:id', async (req, res) => {
+    try {
         await List.findByIdAndUpdate(
-            {_id:req.params.id},
-            {$push: {cardList:req.body.cardList}}
+            { _id: req.params.id },
+            { $push: { cardList: req.body.cardList } }
         );
         res.status(200).json("List updated")
     }
-    catch(err){
+    catch (err) {
         res.status(500).json(err)
     }
 })
 
 //Delete list
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         await List.findByIdAndDelete(req.params.id);
         res.status(200).json("List deleted");
     }
-    catch(e){
+    catch (e) {
         res.status(500)("Deletion not successful", e);
     }
 });
 //Delete cardList element
-router.delete('/:list/:card', async(req, res) => {
+router.delete('/:list/:card', async (req, res) => {
     try {
         await List.findByIdAndUpdate(
-            {_id:req.params.list},
-            {$pull:{cardList:{_id:req.params.card}}}
-            );
-            res.status(200).json("deletion successful")
+            { _id: req.params.list },
+            { $pull: { cardList: { _id: req.params.card } } }
+        );
+        res.status(200).json("deletion successful")
     }
-    catch(e){
+    catch (e) {
         res.status(500).json("Deletion not successful");
     }
 });
 
+router.post('/:deleteList/:card/:addList', async (req, res) => {
+
+    const delList = await List.findById(req.params.deleteList)
+    const cardAdd = delList.cardList.filter((cards) => {
+
+        console.log("entered list");
+        return cards._id == req.params.card;
+    });
+     console.log(cardAdd);
+  
+    try {
+        await List.findByIdAndUpdate(
+            { _id: req.params.deleteList },
+            { $pull: { cardList: { _id: req.params.card } } },
+        );
+    }
+
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).json("delete from previous list unsuccessful");
+    }
+
+    try {
+        await List.findByIdAndUpdate(
+            { _id: req.params.addList },
+            { $push: { cardList: cardAdd }  },
+        )
+        
+    }
+
+    catch (err) {
+        console.log(err);
+        res.status(500).json("add to new list unsuccessful");
+    }
+
+    res.status(200).json("addition successful");
+
+
+})
 
 module.exports = router;
