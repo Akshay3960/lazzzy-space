@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./Dashboard.module.css";
 import Tasks from "../tasks/Tasks";
-import { boardActions } from "../../store/board-slice";
+import { moveEnterGroup } from "../../store/board-actions";
 import { fetchBoardData, pushGroupToBoard } from "../../store/board-actions";
 
 const Dashboard = () => {
@@ -45,13 +45,17 @@ const Dashboard = () => {
   const dragEnterHandler = (e, targetItem) => {
     if (dragItemNode.current !== e.target) {
       dispatch(
-        boardActions.dragEnterGroup({
+        moveEnterGroup({
           dragItem: {
+            groupId: dragItem.current.tasksId,
             groupIndex: dragItem.current.tasksIndex,
+            cardId: dragItem.current.taskId,
             cardIndex: dragItem.current.taskIndex,
           },
           targetItem: {
+            groupId:targetItem.tasksId,
             groupIndex: targetItem.tasksIndex,
+            cardId: targetItem.taskId,
             cardIndex: targetItem.taskIndex,
           },
         })

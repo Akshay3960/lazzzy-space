@@ -77,26 +77,19 @@ export const pushGroupToBoard = (name, id) => {
 };
 
 export const popGroupFromBoard = (id) => {
-
-  return async(dispatch) => {
+  return async (dispatch) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
 
     let Res;
-    try{
-      Res = await axios.delete(BACKEND_URL + "api/list/"+id);
+    try {
+      Res = await axios.delete(BACKEND_URL + "api/list/" + id);
       console.log(Res.data);
-
-    }
-    catch(err)
-    {
+    } catch (err) {
       console.log(err);
-
     }
-    dispatch(
-      boardActions.removeGroupFromBoard(id)
-    )
-  }
-}
+    dispatch(boardActions.removeGroupFromBoard(id));
+  };
+};
 
 export const pushCardToGroup = (id, name, description) => {
   if (name === "") {
@@ -139,29 +132,47 @@ export const pushCardToGroup = (id, name, description) => {
   };
 };
 
-export const popCardFromGroup = ({groupId:lid, cardId:cid}) => {
-  return async(dispatch) => {
+export const popCardFromGroup = ({ groupId: lid, cardId: cid }) => {
+  return async (dispatch) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     let Res;
     try {
-
-      Res = await axios.
-      delete(BACKEND_URL + "api/list/"+ lid + "/" + cid);
+      Res = await axios.delete(BACKEND_URL + "api/list/" + lid + "/" + cid);
       console.log(Res.data);
-      
-
     } catch (err) {
       console.error(err);
-      
     }
     dispatch(
-      boardActions.removeCardFromGroup(
-        {
-          groupId: lid,
-          cardId: cid
-        }
-      )
-    )
+      boardActions.removeCardFromGroup({
+        groupId: lid,
+        cardId: cid,
+      })
+    );
+  };
+};
 
-  }
-}
+export const moveEnterGroup = ({ dragItem, targetItem }) => {
+  return async (dispatch) => {
+    const BACKEND_URL = process.env.REACT_APP_API_URL;
+    console.log("dragItem" , dragItem)
+    console.log("targetItem", targetItem)
+    
+        dispatch(
+          boardActions.dragEnterGroup({
+            dragItem,
+            targetItem,
+          })
+        );
+
+  //   let Res;
+  //   try{
+  //     Res = await axios.put(BACKEND_URL + 'api/list/' + targetItem.groupId)
+  //   } catch(e){
+  //     console.log("addition operation failed!")
+  //     console.log(e)
+  //   }
+  //   try{
+  //     Res = await axios.put(BACKEND_URL + 'api/list/' + dragItem.groupId)
+  //   }
+  };
+};

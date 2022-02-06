@@ -5,6 +5,7 @@ const boardSlice = createSlice({
   initialState: {
     _id: "",
     title: "Academic Tasks",
+    isFavorite: true,
     members: [],
     groups: [
       {
@@ -90,6 +91,9 @@ const boardSlice = createSlice({
           1
         )[0]
       );
+    },
+    toggleFavorites(state) {
+      state.isFavorite = !state.isFavorite;
     },
   },
 });
