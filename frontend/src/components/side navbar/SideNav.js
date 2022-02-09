@@ -16,7 +16,25 @@ const SideNav = ({ onAdd, windows, onSelect }) => {
   const onOpenFormHandler = () => setOpenFormHandler(true);
   const onCloseFormHandler = () => setOpenFormHandler(false);
 
-  const windowsManager = windows.map((item, itemIndex) => {
+  const otherWindows = windows.filter((item) => !item.isFavorite);
+  const favoriteWindows = windows.filter((item) => item.isFavorite);
+
+  const favoriteWindowsManager = favoriteWindows.map((item, itemIndex) => {
+    return (
+      <div
+        className={styles["item"]}
+        key={item._id}
+        onClick={() => {
+          onSelect(itemIndex);
+          closeSideBarHandler();
+        }}
+      >
+        <BsDot />
+        {item.title}
+      </div>
+    );
+  });
+  const otherWindowsManager = otherWindows.map((item, itemIndex) => {
     return (
       <div
         className={styles["item"]}
@@ -84,13 +102,14 @@ const SideNav = ({ onAdd, windows, onSelect }) => {
                 Favorites
               </header>
             </div>
+            <div>{favoriteWindowsManager}</div>
             <div className={styles["header"]}>
               <header>
                 <RiArrowRightSFill />
                 Others
               </header>
             </div>
-            <div className={styles["others-content"]}>{windowsManager}</div>
+            <div>{otherWindowsManager}</div>
             {!openFormHandler && (
               <button
                 className={styles["add-button"]}
@@ -100,7 +119,7 @@ const SideNav = ({ onAdd, windows, onSelect }) => {
                 Add new Workspace
               </button>
             )}
-            {openFormHandler && <EnterWindowForm/>}
+            {openFormHandler && <EnterWindowForm />}
           </div>
         </IconContext.Provider>
       )}

@@ -154,25 +154,28 @@ export const popCardFromGroup = ({ groupId: lid, cardId: cid }) => {
 export const moveEnterGroup = ({ dragItem, targetItem }) => {
   return async (dispatch) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
-    console.log("dragItem" , dragItem)
-    console.log("targetItem", targetItem)
-    
-        dispatch(
-          boardActions.dragEnterGroup({
-            dragItem,
-            targetItem,
-          })
-        );
+    console.log("dragItem", dragItem);
+    console.log("targetItem", targetItem);
+    try {
+      const Res = await axios.post(
+        BACKEND_URL +
+          "api/list/" +
+          dragItem.groupId +
+          "/" +
+          dragItem.cardId +
+          "/" +
+          targetItem.groupId
+      );
+    } catch (e) {
+      console.log("error in moveEnterGroup");
+      console.log(e);
+    }
 
-  //   let Res;
-  //   try{
-  //     Res = await axios.put(BACKEND_URL + 'api/list/' + targetItem.groupId)
-  //   } catch(e){
-  //     console.log("addition operation failed!")
-  //     console.log(e)
-  //   }
-  //   try{
-  //     Res = await axios.put(BACKEND_URL + 'api/list/' + dragItem.groupId)
-  //   }
+    dispatch(
+      boardActions.dragEnterGroup({
+        dragItem,
+        targetItem,
+      })
+    );
   };
 };

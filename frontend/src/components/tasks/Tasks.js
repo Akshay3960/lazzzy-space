@@ -97,7 +97,9 @@ const Tasks = (props) => {
           props.isDrag && !group.cardList.length
             ? (e) => {
                 return props.onDragEnter(e, {
+                  tasksId: props.id,
                   tasksIndex: props.tasksIndex,
+                  taskId: Math.random(),
                   taskIndex: 0,
                 });
               }
