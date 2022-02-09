@@ -13,7 +13,7 @@ const BoardPage = () => {
     {
       _id: Math.random(),
       title: " Academic Tasks",
-      isFavorite: true,
+      isFavorite: false,
       members: [],
       groups: [
         {
@@ -84,7 +84,7 @@ const BoardPage = () => {
       groups: [],
     },
   ];
-  const [windowList, setWindowList] = useState(DUMMY_WINDOWS);
+  const [windowList, setWindowList] = useState(DUMMY_WINDOWS)
 
   const selectWindowHandler = (windowIndex) => {
     dispatch(boardActions.replaceBoard(windowList[windowIndex]));

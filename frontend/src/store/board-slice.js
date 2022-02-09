@@ -5,7 +5,7 @@ const boardSlice = createSlice({
   initialState: {
     _id: "",
     title: "Academic Tasks",
-    isFavorite: true,
+    isFavorite: false,
     members: [],
     groups: [
       {
