@@ -62,14 +62,14 @@ router.put("/:id", profile.single("pic"), async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
-        res.status(200).json(user.image.file)
+        res.status(200).json(user)
     }
     catch (err) {
         res.status(500).json(err)
     }
 })
 
-// GET api/items
+// GET user
 router.get('/getuser', (req, res) => {
     User.find()
         .sort({ date: -1 })

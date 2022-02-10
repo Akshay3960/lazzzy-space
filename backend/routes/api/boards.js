@@ -1,107 +1,131 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../../models/User");
-const Board = require("../../models/Board");
+const User = require('../../models/User');
+const Board = require('../../models/Board')
 
-router.post("/create_board", async (req, res) => {
-    try {
-    //create and save the board
-    const newBoard = new Board({
-        title: req.body.title,
-        backgroundURL: req.body.backgroundURL,
-    });
+router.post('/create_board/:id',
+    async (req, res) => {
+        try {
+            //create and save the board
+            const newBoard = new Board({
+                title: req.body.title,
+                backgroundURL: req.body.backgroundURL,
+            });
 
-    const board = await newBoard.save();
+            const board = await newBoard.save();
 
-    //add board to user's boards
-    const user = await User.findById(req.body.id);
-    user.boards.unshift(board._id);
-    await user.save();
+            //add board to user's boards
+            const user = await User.findById(req.params.id);
+            await User.findByIdAndUpdate(
+                { _id: user._id },
+                { $set: { boards: { bid: board._id } } }
+            )
 
-    //add user to board members
-    await Board.findByIdAndUpdate(
-        { _id: board._id },
-        { $set: { members: { user: user._id } } }
-    );
+            //add user to board members
+            await Board.findByIdAndUpdate(
+                { _id: board._id },
+                { $set: { members: { user: user._id } } }
+            )
 
-    res.status(200).json(board);
-    } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
+            res.status(200).json(board);
+
+        }
+        catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error');
+        }
     }
-});
+);
 
 //get user's boards
-router.get("/get_boards", async (req, res) => {
+router.get('/:uid', async (req, res) => {
+
     try {
-    const user = await User.findById(req.body.id);
-    const boards = [];
-    for (const boardId of user.boards) {
-        boards.push(await Board.findById(boardId));
+        const user = await User.findById(req.params.uid);
+        const boards = [];
+        for (const boardId of user.boards) {
+            boards.push(await Board.findById(boardId.bid));
+        }
+        res.status(200).json(boards);
+
     }
-    res.status(200).json(boards);
-    } catch (err) {
-    console.error(err.message);
-    res.status(500).send("server error");
+    catch (err) {
+        console.error(err.message);
+        res.status(500).send('server error');
     }
 });
 
 //get board by id
-router.get("/id", async (req, res) => {
+router.get("/:bid", async (req, res) => {
     try {
-    const board = await Board.findById(req.body.id);
-    if (!board) {
-        return res.status(404).json("Board is not found");
+        const board = await Board.findById(req.params.bid);
+        if (!board) {
+
+            return res.status(404).json('Board is not found');
+        }
+        res.status(200).json(board);
     }
-    res.status(200).json(board);
-    } catch (err) {
-    console.error(err.message);
-    res.status(500).json.send("server error");
+    catch (err) {
+        console.error(err.message);
+        res.status(500).json.send("server error");
     }
 });
 
 //change a board's title
 
-router.put("/rename/id", async (req, res) => {
+router.put('/rename/:bid', async (req, res) => {
+
     try {
-    const board = await Board.findById(req.body.id);
-    if (!board) {
-        return res.status(404).json("board is not found");
-    }
+        const board = await Board.findById(req.params.bid);
+        if (!board) {
+            return res.status(404).json("board is not found");
+        }
 
-    board.title = req.body.title;
-    await board.save();
-    res.status(200).json(board);
-    } 
+        board.title = req.body.title;
+        await board.save();
+        res.status(200).json(board);
+    }
     catch (err) {
-    console.error(err.message);
-    res.status(500).send("server error");
+        console.error(err.message);
+        res.status(500).send("server error");
     }
 });
 
-router.put("/addmember/:uid/:bid", async (req, res) => {
-try {
-    const board = await Board.findById(req.params.bid);
-    const user = await User.findById(req.params.uid);
-    //see if user already member
-    if (board.members.user.findById(user._id)) {
-        return res.status(400).json("already a member");
+// add member to the board
+router.put('/:bid/:uid', async (req, res) => {
+    try {
+        const board = await Board.findById(req.params.bid);
+        const user = await User.findById(req.params.uid);
+        if (!user) {
+            return res.status(404).json("user not found");
+        }
+        //see if user already member
+        const memberId = board.members.filter((member) => {
+            return member == req.params.uid;
+        })
+        console.log(memberId);
+        if (memberId.length != 0) {
+            return res.status(400).json("already member");
+        }
+        // add board to user's boards
+        await User.findByIdAndUpdate(
+            { _id: user._id },
+            { $push: { boards: { bid: board._id } } }
+        )
+
+        // add user to board members
+        await Board.findByIdAndUpdate(
+            { _id: board._id },
+            { $push: { members: { user: user._id } } }
+        )
+
+
+        res.status(200).json(board);
+
     }
-    // add board to user's boards
-    user.boards.unshift(board._id);
-    await user.save();
-
-    // add user to board members
-    board.members.unshift(user._id);
-    await board.save();
-
-    res.status(200).json(board);
-
-    } 
     catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
+        console.error(err.message);
+        res.status(500).send('Server Error');
     }
 });
-
 module.exports = router;
