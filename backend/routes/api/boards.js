@@ -22,7 +22,7 @@ router.post('/create_board/:id',
             const user = await User.findById(req.params.id);
             await User.findByIdAndUpdate(
                 { _id: user._id },
-                { $set: { boards: { bid: board._id } } }
+                { $push: { boards: { bid: board._id } } }
             )
 
             //add user to board members
