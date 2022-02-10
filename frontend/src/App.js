@@ -4,7 +4,7 @@ import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
 import "./App.css";
-//import pic from "./images/0137.jpg";
+// import pic from "./images/0137.jpg";
 import BoardPage from "./components/lazy-board/BoardPage";
 import LoginForm from "./components/log-reg/LoginForm";
 import RegisterForm from "./components/log-reg/RegisterForm";
