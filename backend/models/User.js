@@ -37,6 +37,10 @@ const UserSchema = new Schema({
                 type: String,
                 ref: 'boards',
             },
+            isFavourite: {
+                type: Boolean,
+                default: false,
+            }
         },
 
     ],

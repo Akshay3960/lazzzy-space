@@ -72,8 +72,11 @@ const Login = (props) => {
       return false;
     }
 
-    console.log(Res.data)
-    authCtx.onLogin("",Res._id,Res.name, Res.email);
+    //console.log(Res.data)
+    authCtx.onLogin(
+      Res.data._id,
+      Res.data.username, 
+      Res.data.email);
 
 
     store.addNotification({

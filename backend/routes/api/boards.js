@@ -7,6 +7,10 @@ router.post('/create_board/:id',
     async (req, res) => {
         try {
             //create and save the board
+            if(req.params.id=== undefined)
+            {
+                res.status(400).json("no user id")
+            }
             const newBoard = new Board({
                 title: req.body.title,
                 backgroundURL: req.body.backgroundURL,
@@ -43,8 +47,14 @@ router.get('/:uid', async (req, res) => {
     try {
         const user = await User.findById(req.params.uid);
         const boards = [];
-        for (const boardId of user.boards) {
-            boards.push(await Board.findById(boardId.bid));
+        for (const board of user.boards) {
+            let resBoard = await Board.findById(board.bid);
+            
+            boards.push({
+                board: resBoard,
+                isFavourite: board.isFavourite
+
+            });
         }
         res.status(200).json(boards);
 
