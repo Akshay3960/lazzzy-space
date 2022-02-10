@@ -1,19 +1,17 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+
 import BoardBar from "./BoardBar";
 import Dashboard from "./Dashboard";
 import styles from "./BoardPage.module.css";
 import SideNav from "../side navbar/SideNav";
-import boardSlice, { boardActions } from "../../store/board-slice";
-import AuthContext from '../../store/auth-context';
-import { useEffect } from "react";
+import { boardActions } from "../../store/board-slice";
+import AuthContext from "../../store/auth-context";
 
 const BoardPage = () => {
-
   const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
-  let windows = []
   const DUMMY_WINDOWS = [
     {
       _id: Math.random(),
@@ -97,44 +95,44 @@ const BoardPage = () => {
     DUMMY_WINDOWS.filter((item) => !item.isFavorite)
   );
 
-  useEffect(()=> {
+  useEffect(() => {
     let Res;
-    const API_FETCH = async() => {
+    let windows = [];
+
+    const API_FETCH = async () => {
       const BACKEND_URL = process.env.REACT_APP_API_URL;
       const user_id = authCtx._id;
-      try{
-        Res = await axios.get(BACKEND_URL+'api/boards/' + user_id);
-        console.log("Here",Res.data);
-        Res.data.map((board) => {
-          let data = {
-            _id: board.board._id,
-            title: board.board.title,
-            isFavorite: board.isFavourite,
-            members: board.board.members,
-            groups: board.board.lists,
-            
-          }
-          windows.push(data)
-
+      try {
+        Res = await axios.get(BACKEND_URL + "api/boards/" + user_id);
+        console.log("Here", Res.data);
+        Res.data.forEach((item) => {
+          return windows.push({
+            _id: item.board._id,
+            title: item.board.title,
+            isFavorite: item.isFavourite,
+            members: item.board.members,
+            groups: item.board.lists,
+          });
         });
-      }
-      catch(err){
+        
+        setFavoriteWindows(windows.filter((item) => item.isFavorite));
+        setOtherWindows(
+          windows.filter((item) => {
+            return !item.isFavorite;
+          })
+        );
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
+
     API_FETCH();
-    if (authCtx.isLoggedIn){
-      console.log("windows",windows)
-    }
-    setFavoriteWindows(windows.filter((item) => item.isFavorite))
-    setOtherWindows(windows.filter((item) => !item.isFavorite))
-    
-  },[authCtx])
+  }, [authCtx]);
 
   const selectFavoriteWindowHandler = (windowIndex) => {
     dispatch(
       boardActions.replaceBoard({
-        ...favoriteWindows[windowIndex], 
+        ...favoriteWindows[windowIndex],
         isFavorite: true,
       })
     );
@@ -143,7 +141,7 @@ const BoardPage = () => {
   const selectOtherWindowHandler = (windowIndex) => {
     dispatch(boardActions.replaceBoard(otherWindows[windowIndex]));
   };
-  const onAddWindowHandler = async(title) => {
+  const onAddWindowHandler = async (title) => {
     console.log("onAddWIndowHere");
 
     setOtherWindows((state) => {
@@ -160,25 +158,21 @@ const BoardPage = () => {
       ];
     });
 
-    
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     const user_id = authCtx._id;
     let Res;
     const data = {
-      title: title 
+      title: title,
     };
-    try{
-
-      Res = await axios.post(BACKEND_URL + 
-        'api/boards/create_board/' + user_id,
+    try {
+      Res = await axios.post(
+        BACKEND_URL + "api/boards/create_board/" + user_id,
         data
       );
       console.log(Res.data);
-    }
-    catch(err){
+    } catch (err) {
       console.error(err);
     }
-
   };
 
   const onAddFavoriteWindowHandler = (id) => {

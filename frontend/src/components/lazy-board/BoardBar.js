@@ -9,18 +9,16 @@ const BoardBar = (props) => {
   const title = useSelector((state) => state.board.title);
   const boardId = useSelector((state) => state.board._id);
   const isFavorite = useSelector((state) => state.board.isFavorite);
-  console.log(isFavorite)
 
   const toggleFavoritesHandler = () => {
-
-    if(isFavorite){
+    if (isFavorite) {
       props.onOthers(boardId);
-    }else{
+    } else {
       props.onFavorite(boardId);
     }
     dispatch(boardActions.toggleFavorites());
-  }
-  
+  };
+
   return (
     <div className={styles["nav-container"]}>
       <div className={styles["nav-left"]}>
@@ -28,7 +26,13 @@ const BoardBar = (props) => {
           <h2> {title} </h2>
         </div>
         <div className={styles["nav-item"]}>
-          <button onClick = {toggleFavoritesHandler}>{isFavorite ? <BsFillStarFill className = {`${styles.favorites}`}/> : <BsStar className = {`${styles.favorites}`}/>}</button>
+          <button onClick={toggleFavoritesHandler}>
+            {isFavorite ? (
+              <BsFillStarFill className={`${styles.favorites}`} />
+            ) : (
+              <BsStar className={`${styles.favorites}`} />
+            )}
+          </button>
         </div>
         <div className={styles["nav-item"]}>
           <button> members </button>
