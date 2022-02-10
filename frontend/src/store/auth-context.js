@@ -14,7 +14,7 @@ const AuthContext = React.createContext({
 });
 
 const defaultUserState = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   _id:"",
   name: "",
   email: "",
@@ -25,7 +25,7 @@ const userReducer = (state, action) => {
   if (action.type === "LOG_IN") {
     return {
       isLoggedIn: true,
-      _id: action.id,
+      _id: action._id,
       name: action.name,
       email: action.email,
       profileImage: action.profileImage
