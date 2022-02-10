@@ -48,9 +48,9 @@ const Login = (props) => {
       email: email,
       password: password,
     };
-
+    let Res;
     try {
-      await axios.post(BACKEND_URL + "api/auth/login", data);
+      Res = await axios.post(BACKEND_URL + "api/auth/login", data);
     } catch (e) {
       console.log(e);
       store.addNotification({
@@ -66,11 +66,16 @@ const Login = (props) => {
           onScreen: true,
         },
       });
+
       resetEmail();
       resetPassword();
       return false;
     }
-    authCtx.onLogin("", email, password);
+
+    console.log(Res.data)
+    authCtx.onLogin("",Res._id,Res.name, Res.email);
+
+
     store.addNotification({
       title: "Success",
       message: "Login Successful",

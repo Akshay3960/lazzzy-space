@@ -1,9 +1,9 @@
 import React, { useState, useReducer } from "react";
 
 const AuthContext = React.createContext({
+  _id:"",
   name: "",
   email: "",
-  password: "",
   profileImage: "",
   openRegister: false,
   isLoggedIn: false,
@@ -15,24 +15,32 @@ const AuthContext = React.createContext({
 
 const defaultUserState = {
   isLoggedIn: true,
+  _id:"",
   name: "",
   email: "",
-  password: "",
-  profileImage: "https://i.stack.imgur.com/frlIf.png"
+  profileImage: "https://avatars.githubusercontent.com/u/68094522?s=88&v=4",
 };
 
 const userReducer = (state, action) => {
   if (action.type === "LOG_IN") {
     return {
       isLoggedIn: true,
+      _id: action.id,
       name: action.name,
       email: action.email,
-      password: action.password,
-      profileImage: action.profileImage? action.profileImage : state.profileImage
+      profileImage: action.profileImage
+        ? action.profileImage
+        : state.profileImage,
     };
   }
   if (action.type === "LOG_OUT") {
-    return { isLoggedIn: false, name: "", email: "", password: "", profileImage:""};
+    return {
+      isLoggedIn: false,
+      _id: "",
+      name: "",
+      email: "",
+      profileImage: "",
+    };
   }
 
   return defaultUserState;
@@ -60,21 +68,22 @@ export const AuthContextProvider = (props) => {
     });
   };
 
-  const loginHandler = (name, email, password) => {
+  const loginHandler = (_id, name, email) => {
     dispatchUserAction({
       type: "LOG_IN",
+      _id,
       name,
       email,
-      password,
     });
   };
 
   return (
     <AuthContext.Provider
       value={{
+        _id:userState._id,
         name: userState.name,
         email: userState.email,
-        password: userState.password,
+        profileImage:userState.profileImage,
         isLoggedIn: userState.isLoggedIn,
         openRegister: openRegister,
         onLogout: logoutHandler,

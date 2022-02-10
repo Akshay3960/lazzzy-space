@@ -84,15 +84,32 @@ const BoardPage = () => {
       groups: [],
     },
   ];
-  const [windowList, setWindowList] = useState(DUMMY_WINDOWS)
 
-  const selectWindowHandler = (windowIndex) => {
-    dispatch(boardActions.replaceBoard(windowList[windowIndex]));
+  dispatch(boardActions.replaceBoard(DUMMY_WINDOWS[0]))
+  const [favoriteWindows, setFavoriteWindows] = useState(
+    DUMMY_WINDOWS.filter((item) => item.isFavorite)
+  );
+  const [otherWindows, setOtherWindows] = useState(
+    DUMMY_WINDOWS.filter((item) => !item.isFavorite)
+  );
+
+  const selectFavoriteWindowHandler = (windowIndex) => {
+    dispatch(
+      boardActions.replaceBoard({
+        ...favoriteWindows[windowIndex],
+        isFavorite: true,
+      })
+    );
+  };
+
+  const selectOtherWindowHandler = (windowIndex) => {
+    dispatch(boardActions.replaceBoard(otherWindows[windowIndex]));
   };
 
   const onAddWindowHandler = (title) => {
     console.log("onAddWIndowHere");
-    setWindowList((state) => {
+
+    setOtherWindows((state) => {
       console.log(state);
       return [
         ...state,
@@ -107,15 +124,36 @@ const BoardPage = () => {
     });
   };
 
+  const onAddFavoriteWindowHandler = (id) => {
+    const favoriteWindow = otherWindows.find((item) => {
+      console.log(item, id);
+      return item._id === id;
+    });
+    console.log(favoriteWindow);
+    setFavoriteWindows((state) => [...state, favoriteWindow]);
+    setOtherWindows((state) => state.filter((item) => item._id !== id));
+  };
+
+  const onAddOtherWindowHandler = (id) => {
+    const otherWindow = favoriteWindows.find((item) => item._id === id);
+    setOtherWindows((state) => [...state, otherWindow]);
+    setFavoriteWindows((state) => state.filter((item) => item._id !== id));
+  };
+
   return (
     <div className={styles["container"]}>
       <SideNav
         onAdd={onAddWindowHandler}
-        windows={windowList}
-        onSelect={selectWindowHandler}
+        favoriteWindows={favoriteWindows}
+        otherWindows={otherWindows}
+        onSelectFavorite={selectFavoriteWindowHandler}
+        onSelectOthers={selectOtherWindowHandler}
       />
       <div className={styles["content"]}>
-        <BoardBar />
+        <BoardBar
+          onFavorite={onAddFavoriteWindowHandler}
+          onOthers={onAddOtherWindowHandler}
+        />
         <Dashboard />
       </div>
     </div>

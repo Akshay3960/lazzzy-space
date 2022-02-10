@@ -30,11 +30,15 @@
   justify-content: flex-end;
 }
 .profile {
-  width: 40px;
-  height: 40px;
+  width: 43px;
+  height: 43px;
   border-radius: 50px;
   background-color: #ffffff;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index: 10;
 }
 
 .icon {
@@ -68,10 +72,14 @@
 .user:hover {
   background-color: #2403707e;
 }
-.profile {
-  background-color: white !important;
-  z-index: 10;
-}
+
 .spacer {
   width: 40px;
+}
+
+.profile img{
+  width:37px;
+  height:37px;
+  border-radius:100px;
+  z-index:1
 }
