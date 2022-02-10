@@ -6,7 +6,7 @@ import { IconContext } from "react-icons";
 
 import styles from "./SideNav.module.css";
 
-const SideNav = ({ onAdd, windows, onSelect }) => {
+const SideNav = ({ onAdd, favoriteWindows, otherWindows, onSelectFavorite, onSelectOthers }) => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
   const openSideBarHandler = () => setIsSideBarOpen(true);
   const closeSideBarHandler = () => setIsSideBarOpen(false);
@@ -16,16 +16,13 @@ const SideNav = ({ onAdd, windows, onSelect }) => {
   const onOpenFormHandler = () => setOpenFormHandler(true);
   const onCloseFormHandler = () => setOpenFormHandler(false);
 
-  const otherWindows = windows.filter((item) => !item.isFavorite);
-  const favoriteWindows = windows.filter((item) => item.isFavorite);
-
   const favoriteWindowsManager = favoriteWindows.map((item, itemIndex) => {
     return (
       <div
         className={styles["item"]}
         key={item._id}
         onClick={() => {
-          onSelect(itemIndex);
+          onSelectFavorite(itemIndex);
           closeSideBarHandler();
         }}
       >
@@ -40,7 +37,7 @@ const SideNav = ({ onAdd, windows, onSelect }) => {
         className={styles["item"]}
         key={item._id}
         onClick={() => {
-          onSelect(itemIndex);
+          onSelectOthers(itemIndex);
           closeSideBarHandler();
         }}
       >

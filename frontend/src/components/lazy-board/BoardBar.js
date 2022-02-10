@@ -7,10 +7,17 @@ import { boardActions } from "../../store/board-slice";
 const BoardBar = (props) => {
   const dispatch = useDispatch();
   const title = useSelector((state) => state.board.title);
+  const boardId = useSelector((state) => state.board._id);
   const isFavorite = useSelector((state) => state.board.isFavorite);
   console.log(isFavorite)
 
   const toggleFavoritesHandler = () => {
+
+    if(isFavorite){
+      props.onOthers(boardId);
+    }else{
+      props.onFavorite(boardId);
+    }
     dispatch(boardActions.toggleFavorites());
   }
   

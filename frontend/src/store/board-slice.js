@@ -4,53 +4,16 @@ const boardSlice = createSlice({
   name: "board",
   initialState: {
     _id: "",
-    title: "Academic Tasks",
+    title: "",
     isFavorite: false,
     members: [],
-    groups: [
-      {
-        _id: Math.random(),
-        listname: "Group 1",
-        cardList: [
-          {
-            _id: Math.random(),
-            cardname: "1",
-            description: "",
-          },
-          {
-            _id: Math.random(),
-            cardname: "2",
-            description: "",
-          },
-          {
-            _id: Math.random(),
-            cardname: "3",
-            description: "",
-          },
-        ],
-      },
-      {
-        _id: Math.random(),
-        listname: "Group 2",
-        cardList: [
-          {
-            _id: Math.random(),
-            cardname: "1",
-            description: "",
-          },
-          {
-            _id: Math.random(),
-            cardname: "2",
-            description: "",
-          },
-        ],
-      },
-    ],
+    groups: [],
   },
   reducers: {
     replaceBoard(state, action) {
       state._id = action.payload._id;
       state.title = action.payload.title;
+      state.isFavorite = action.payload.isFavorite;
       state.members = action.payload.members;
       state.groups = action.payload.groups;
     },
