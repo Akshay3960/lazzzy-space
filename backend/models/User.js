@@ -30,10 +30,16 @@ const UserSchema = new Schema({
         }
     },
 
-    boards:[{
-        type:Schema.Types.ObjectId,
-        ref:'boards',
-    }]
+    boards: [
+        {
+            _id: false,
+            bid: {
+                type: String,
+                ref: 'boards',
+            },
+        },
+
+    ],
 
 
 });
