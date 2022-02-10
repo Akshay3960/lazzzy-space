@@ -69,6 +69,23 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+// set isFavourite
+router.put('/setfav/:uid/:bid', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.uid);
+        const fav = !req.body.isFavourite;
+        await User.updateOne(
+            { _id: user._id, "boards.bid": req.params.bid },
+            { $set: {"boards.$.isFavourite": fav} }
+        )
+        res.status(200).json("Fav set Successfull")
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json(err)
+    }
+})
+
 // GET user
 router.get('/getuser', (req, res) => {
     User.find()
