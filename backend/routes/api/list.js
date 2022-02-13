@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const List = require('../../models/List');
+const Board = require('../../models/Board');
 
-router.post("/create_list", async (req, res) => {
+router.post("/create_list/:bid", async (req, res) => {
     const cardList = req.body.cardList;
 
     try {
@@ -14,6 +15,10 @@ router.post("/create_list", async (req, res) => {
 
         });
         const result = await new_list.save();
+        await Board.findByIdAndUpdate(
+            { _id: req.params.bid },
+            { $push: { lists: { list: result._id } } }
+        )
         res.status(200).json(result);
     }
     catch (err) {
@@ -21,10 +26,17 @@ router.post("/create_list", async (req, res) => {
     }
 });
 
-router.get('/get_list', async (req, res) => {
+router.get('/get_list/:bid', async (req, res) => {
     try {
-        const getList = await List.find();
-        res.status(200).json(getList)
+        const getBoard = await Board.findById(req.params.bid);
+        const col_list = []
+        for (const group of getBoard.lists) {
+            let group_res = await List.findById(group.list)
+            col_list.push(
+                group_res
+            );
+        }
+        res.status(200).json(col_list)
     }
     catch (err) {
         res.status(500).json(err)
@@ -45,9 +57,13 @@ router.put('/:id', async (req, res) => {
 })
 
 //Delete list
-router.delete('/:id', async (req, res) => {
+router.delete('/:lid/:bid', async (req, res) => {
     try {
-        await List.findByIdAndDelete(req.params.id);
+        await List.findByIdAndDelete(req.params.lid);
+        await Board.findByIdAndUpdate(
+            { _id: req.params.bid },
+            { $pull: { lists: { list: req.params.lid } } }
+        )
         res.status(200).json("List deleted");
     }
     catch (e) {
@@ -76,8 +92,8 @@ router.post('/:deleteList/:card/:addList', async (req, res) => {
         console.log("entered list");
         return cards._id == req.params.card;
     });
-     console.log(cardAdd);
-  
+    console.log(cardAdd);
+
     try {
         await List.findByIdAndUpdate(
             { _id: req.params.deleteList },
@@ -85,8 +101,7 @@ router.post('/:deleteList/:card/:addList', async (req, res) => {
         );
     }
 
-    catch(err)
-    {
+    catch (err) {
         console.log(err);
         res.status(500).json("delete from previous list unsuccessful");
     }
@@ -94,9 +109,9 @@ router.post('/:deleteList/:card/:addList', async (req, res) => {
     try {
         await List.findByIdAndUpdate(
             { _id: req.params.addList },
-            { $push: { cardList: cardAdd }  },
+            { $push: { cardList: cardAdd } },
         )
-        
+
     }
 
     catch (err) {

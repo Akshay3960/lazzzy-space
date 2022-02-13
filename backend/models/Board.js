@@ -2,27 +2,29 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const BoardSchema = new Schema({
-    title:{
-        type:String,
-        required:true,
+    title: {
+        type: String,
+        required: true,
     },
-    lists:[
+    lists: [
         {
-            type: Schema.Types.ObjectId,
-            ref:'lists',
+            _id: false,
+            list: {
+                type: String,
+            }
         },
     ],
-    
-    backgroundURL:{
+
+    backgroundURL: {
         type: String,
     },
 
-    members:[
+    members: [
         {
-            _id:false,
-            user:{
+            _id: false,
+            user: {
                 type: String,
-                ref:'users',
+                ref: 'users',
             },
         },
 
@@ -30,4 +32,4 @@ const BoardSchema = new Schema({
 
 });
 
-module.exports = Board = mongoose.model('board',BoardSchema);
+module.exports = Board = mongoose.model('board', BoardSchema);
