@@ -4,17 +4,18 @@ import { useSelector, useDispatch } from "react-redux";
 import styles from "./Dashboard.module.css";
 import Tasks from "../tasks/Tasks";
 import { moveEnterGroup } from "../../store/board-actions";
-import { fetchBoardData, pushGroupToBoard } from "../../store/board-actions";
+import { fetchGroupData, pushGroupToBoard } from "../../store/board-actions";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const taskListInputRef = useRef();
   const [enterTaskList, setEnterTaskList] = useState(false);
   const taskList = useSelector((state) => state.board.groups);
+  const boardId = useSelector((state) => state.board._id);
 
   useEffect(() => {
-    dispatch(fetchBoardData());
-  }, [dispatch]);
+    dispatch(fetchGroupData(boardId));
+  }, [dispatch, boardId]);
 
   const openAddTaskListHandler = () => {
     setEnterTaskList(true);
@@ -24,7 +25,7 @@ const Dashboard = () => {
   };
 
   const addTaskListHandler = async () => {
-    dispatch(pushGroupToBoard(taskListInputRef.current.value));
+    dispatch(pushGroupToBoard(taskListInputRef.current.value, boardId));
     setEnterTaskList(false);
   };
 
@@ -47,13 +48,15 @@ const Dashboard = () => {
       dispatch(
         moveEnterGroup({
           dragItem: {
+            cardName: dragItem.current.taskName,
             groupId: dragItem.current.tasksId,
             groupIndex: dragItem.current.tasksIndex,
             cardId: dragItem.current.taskId,
             cardIndex: dragItem.current.taskIndex,
           },
           targetItem: {
-            groupId:targetItem.tasksId,
+            cardName: targetItem.taskName,
+            groupId: targetItem.tasksId,
             groupIndex: targetItem.tasksIndex,
             cardId: targetItem.taskId,
             cardIndex: targetItem.taskIndex,

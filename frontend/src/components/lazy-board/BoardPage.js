@@ -104,7 +104,6 @@ const BoardPage = () => {
       const user_id = authCtx._id;
       try {
         Res = await axios.get(BACKEND_URL + "api/boards/" + user_id);
-        console.log("Here", Res.data);
         Res.data.forEach((item) => {
           return windows.push({
             _id: item.board._id,
@@ -114,7 +113,7 @@ const BoardPage = () => {
             groups: item.board.lists,
           });
         });
-        
+
         setFavoriteWindows(windows.filter((item) => item.isFavorite));
         setOtherWindows(
           windows.filter((item) => {
@@ -131,10 +130,7 @@ const BoardPage = () => {
 
   const selectFavoriteWindowHandler = (windowIndex) => {
     dispatch(
-      boardActions.replaceBoard({
-        ...favoriteWindows[windowIndex],
-        isFavorite: true,
-      })
+      boardActions.replaceBoard(favoriteWindows[windowIndex])
     );
   };
 

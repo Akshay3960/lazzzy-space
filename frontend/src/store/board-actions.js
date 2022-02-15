@@ -1,25 +1,21 @@
 import axios from "axios";
 import { store } from "react-notifications-component";
+import { useSelector } from "react-redux";
 import { boardActions } from "./board-slice";
 
-export const fetchBoardData = () => {
+export const fetchGroupData = (boardId) => {
   return async (dispatch) => {
     const API_FETCH = async () => {
       const BACKEND_URL = process.env.REACT_APP_API_URL;
-      const response = await axios.get(BACKEND_URL + "api/list/get_list");
+      const response = await axios.get(
+        BACKEND_URL + "api/list/get_list/" + boardId
+      );
       return response.data;
     };
 
     try {
       const boardData = await API_FETCH();
-      dispatch(
-        boardActions.replaceBoard({
-          _id: "",
-          title: "Academic Tasks",
-          members: [],
-          groups: boardData,
-        })
-      );
+      dispatch(boardActions.replaceGroupsData(boardData));
     } catch (error) {
       store.addNotification({
         title: "Error",
@@ -62,7 +58,7 @@ export const pushGroupToBoard = (name, id) => {
       cardList: [],
     };
     try {
-      await axios.post(BACKEND_URL + "api/list/create_list", data);
+      await axios.post(BACKEND_URL + "api/list/create_list/" + id, data);
     } catch (e) {
       console.log(e);
     }
@@ -76,18 +72,20 @@ export const pushGroupToBoard = (name, id) => {
   };
 };
 
-export const popGroupFromBoard = (id) => {
+export const popGroupFromBoard = (groupId, boardId) => {
   return async (dispatch) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
 
     let Res;
     try {
-      Res = await axios.delete(BACKEND_URL + "api/list/" + id);
+      Res = await axios.delete(
+        BACKEND_URL + "api/list/" + groupId + "/" + boardId
+      );
       console.log(Res.data);
     } catch (err) {
       console.log(err);
     }
-    dispatch(boardActions.removeGroupFromBoard(id));
+    dispatch(boardActions.removeGroupFromBoard(groupId));
   };
 };
 
@@ -126,7 +124,7 @@ export const pushCardToGroup = (id, name, description) => {
     dispatch(
       boardActions.addCardToGroup({
         groupId: id,
-        item: { cardname: name, description: description },
+        item: { _id: Math.random(), cardname: name, description: description },
       })
     );
   };
@@ -156,6 +154,14 @@ export const moveEnterGroup = ({ dragItem, targetItem }) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     console.log("dragItem", dragItem);
     console.log("targetItem", targetItem);
+
+    dispatch(
+      boardActions.dragEnterGroup({
+        dragItem,
+        targetItem,
+      })
+    );
+
     // try {
     //   const Res = await axios.post(
     //     BACKEND_URL +
@@ -164,18 +170,14 @@ export const moveEnterGroup = ({ dragItem, targetItem }) => {
     //       "/" +
     //       dragItem.cardId +
     //       "/" +
-    //       targetItem.groupId
+    //       targetItem.groupId +
+    //       "/" +
+    //       targetItem.groupIndex
+
     //   );
     // } catch (e) {
     //   console.log("error in moveEnterGroup");
     //   console.log(e);
     // }
-
-    dispatch(
-      boardActions.dragEnterGroup({
-        dragItem,
-        targetItem,
-      })
-    );
   };
 };
