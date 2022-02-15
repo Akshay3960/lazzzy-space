@@ -84,7 +84,7 @@ router.delete('/:list/:card', async (req, res) => {
     }
 });
 
-router.post('/:deleteList/:card/:addList', async (req, res) => {
+router.post('/:deleteList/:card/:addList/:pos', async (req, res) => {
 
     const delList = await List.findById(req.params.deleteList)
     const cardAdd = delList.cardList.filter((cards) => {
@@ -109,9 +109,9 @@ router.post('/:deleteList/:card/:addList', async (req, res) => {
     try {
         await List.findByIdAndUpdate(
             { _id: req.params.addList },
-            { $push: { cardList: cardAdd } },
+            { $push: { cardList: { $each: cardAdd, $position: req.params.pos } } },
         )
-
+        res.status(200).json("addition successful");
     }
 
     catch (err) {
@@ -119,7 +119,6 @@ router.post('/:deleteList/:card/:addList', async (req, res) => {
         res.status(500).json("add to new list unsuccessful");
     }
 
-    res.status(200).json("addition successful");
 
 
 })
