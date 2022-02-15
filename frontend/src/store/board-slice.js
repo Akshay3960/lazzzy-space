@@ -11,11 +11,14 @@ const boardSlice = createSlice({
   },
   reducers: {
     replaceBoard(state, action) {
+      console.log("replace board here", action);
       state._id = action.payload._id;
       state.title = action.payload.title;
       state.isFavorite = action.payload.isFavorite;
       state.members = action.payload.members;
-      state.groups = action.payload.groups;
+    },
+    replaceGroupsData(state, action) {
+      state.groups = action.payload;
     },
     addGroupToBoard(state, action) {
       const group = action.payload;
@@ -44,8 +47,6 @@ const boardSlice = createSlice({
     dragEnterGroup(state, action) {
       const dragItem = action.payload.dragItem;
       const targetItem = action.payload.targetItem;
-      console.log("DragItem", dragItem, "targetItem", targetItem);
-      console.log("groups:", state.groups);
       state.groups[targetItem.groupIndex].cardList.splice(
         targetItem.cardIndex,
         0,

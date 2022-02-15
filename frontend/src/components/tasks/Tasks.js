@@ -18,9 +18,10 @@ const Tasks = (props) => {
   const [toAddTask, setToAddTask] = useState(false);
   const taskInputRef = useRef();
   const [isEdit, setIsEdit] = useState(false);
-
+  const boardId = useSelector((state) => state.board._id);
+  
   const deleteTaskListHandler = (tasksId) => {
-    dispatch(popGroupFromBoard(tasksId));
+    dispatch(popGroupFromBoard(tasksId, boardId));
   };
 
   const isEditList = [

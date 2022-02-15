@@ -31,6 +31,7 @@ const TaskItem = (props) => {
       draggable="true"
       onDragStart={(e) =>
         props.onDragStart(e, {
+          taskName: props.title,
           tasksId: props.tasksId,
           tasksIndex: props.tasksIndex,
           taskId: props.id,
@@ -41,6 +42,7 @@ const TaskItem = (props) => {
         props.isDrag
           ? (e) =>
               props.onDragEnter(e, {
+                taskName: props.title,
                 tasksId: props.tasksId,
                 tasksIndex: props.tasksIndex,
                 taskId: props.id,
