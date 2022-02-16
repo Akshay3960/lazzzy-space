@@ -154,30 +154,35 @@ export const moveEnterGroup = ({ dragItem, targetItem }) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     console.log("dragItem", dragItem);
     console.log("targetItem", targetItem);
-
-    dispatch(
-      boardActions.dragEnterGroup({
-        dragItem,
-        targetItem,
-      })
-    );
-
-    // try {
-    //   const Res = await axios.post(
-    //     BACKEND_URL +
-    //       "api/list/" +
-    //       dragItem.groupId +
-    //       "/" +
-    //       dragItem.cardId +
-    //       "/" +
-    //       targetItem.groupId +
-    //       "/" +
-    //       targetItem.groupIndex
-
-    //   );
-    // } catch (e) {
-    //   console.log("error in moveEnterGroup");
-    //   console.log(e);
-    // }
-  };
-};
+    try {
+        if(!dragItem.cardName){
+          throw new Error("card is undefined")
+        }
+        try {
+            const Res = await axios.post(
+                BACKEND_URL +
+                  "api/list/" +
+                  dragItem.groupId +
+                  "/" +
+                  dragItem.cardId +
+                  "/" +
+                  targetItem.groupId +
+                  "/" +
+                  targetItem.groupIndex
+              );
+            } catch (e) {
+                console.log("error in moveEnterGroup");
+                console.log(e);
+              }
+              dispatch(
+                boardActions.dragEnterGroup({
+                  dragItem,
+                  targetItem,
+                })
+              );
+    } 
+    catch (err) {
+        console.log(err)
+    }
+        };
+      };
