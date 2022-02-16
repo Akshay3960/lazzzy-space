@@ -72,6 +72,8 @@ const Dashboard = () => {
     dragItem.current = null;
     dragItemNode.current.removeEventListener("dragend", dragEndHandler);
     dragItemNode.current = null;
+    setTimeout(() => { }, 100)
+
   };
 
   const onDraggingHandler = (item) => {

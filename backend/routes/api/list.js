@@ -43,13 +43,19 @@ router.get('/get_list/:bid', async (req, res) => {
     }
 })
 
+// router.get('/get_card/:lid', async (req, res) => )
+
 router.put('/:id', async (req, res) => {
+    let Res;
     try {
-        await List.findByIdAndUpdate(
+        Res = await List.findByIdAndUpdate(
             { _id: req.params.id },
-            { $push: { cardList: req.body.cardList } }
+            { $push: { cardList: req.body.cardList } },
+            { new: true }
         );
-        res.status(200).json("List updated")
+        const newCards = Res.cardList
+        console.log("here",newCards[newCards.length -1].id)
+        res.status(200).json(newCards[newCards.length - 1].id)
     }
     catch (err) {
         res.status(500).json(err)
@@ -67,7 +73,7 @@ router.delete('/:lid/:bid', async (req, res) => {
         res.status(200).json("List deleted");
     }
     catch (e) {
-        res.status(500)("Deletion not successful", e);
+        res.status(500).json("Deletion not successful", e);
     }
 });
 //Delete cardList element
@@ -85,14 +91,11 @@ router.delete('/:list/:card', async (req, res) => {
 });
 
 router.post('/:deleteList/:card/:addList/:pos', async (req, res) => {
-
     const delList = await List.findById(req.params.deleteList)
     const cardAdd = delList.cardList.filter((cards) => {
 
-        console.log("entered list");
         return cards._id == req.params.card;
     });
-    console.log(cardAdd);
 
     try {
         await List.findByIdAndUpdate(
@@ -120,7 +123,37 @@ router.post('/:deleteList/:card/:addList/:pos', async (req, res) => {
     }
 
 
-
 })
+
+// code that didn't work
+// router.post('/:deleteList/:addList', async (req, res) => {
+//     const delList = await List.findById(req.params.deleteList)
+//     const addList = await List.findById(req.params.addList)
+//     const delListData = req.body.delListData
+//     const addListData = req.body.addListData
+//     console.log(delListData)
+//     try {
+//         await List.find(
+//             { _id: delList },
+//             { $set: { cardList: delListData.cardList } },
+//             { upsert: true }
+//         )
+//     }
+//     catch (err) {
+//         console.log(err)
+//         res.status(500).json("couldn't replace delList")
+//     }
+//     try {
+//         await List.findByIdAndUpdate(
+//             { _id: addList },
+//             { $set: { cardList: addListData.cardList } },
+//             { upsert: true }
+//         )
+//     }
+//     catch (err) {
+//         console.log(err)
+//         res.status(500).json("couldn't replace addList")
+//     }
+// })
 
 module.exports = router;
