@@ -113,7 +113,7 @@ router.put('/:bid/:uid', async (req, res) => {
         const memberId = board.members.filter((member) => {
             return member == req.params.uid;
         })
-        console.log(memberId);
+        // console.log(memberId);
         if (memberId.length != 0) {
             return res.status(400).json("already member");
         }
