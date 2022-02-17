@@ -8,7 +8,6 @@ router.post("/create_list/:bid", async (req, res) => {
   const cardList = req.body.cardList;
 
   try {
-    //  console.log(req.body.listname);
     const new_list = await new List({
       listname: req.body.listname,
       cardList: cardList,
@@ -49,7 +48,6 @@ router.put("/:id", async (req, res) => {
       { new: true }
     );
     const newCards = Res.cardList;
-    console.log("here", newCards[newCards.length - 1].id);
     res.status(200).json({ id: newCards[newCards.length - 1].id });
   } catch (err) {
     res.status(500).json(err);

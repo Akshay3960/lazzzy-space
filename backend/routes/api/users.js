@@ -42,7 +42,6 @@ router.put("/:id", profile.single("pic"), async (req, res) => {
         }
     };
     if (req.file) {
-        console.log()
         updates.image.file = req.file.path
     }
     try {
