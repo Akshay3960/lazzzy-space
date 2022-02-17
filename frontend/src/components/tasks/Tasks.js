@@ -1,11 +1,11 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Droppable } from "react-beautiful-dnd";
 import { RiEditBoxLine } from "react-icons/ri";
 import { MdModeEdit } from "react-icons/md";
 import { IoTrashSharp } from "react-icons/io5";
 
 import { popGroupFromBoard, pushCardToGroup } from "../../store/board-actions";
-import { boardActions } from "../../store/board-slice";
 import DropdownMenu from "../UI/DropdownMenu";
 import styles from "./Tasks.module.css";
 import TaskItem from "./TaskItem";
@@ -19,7 +19,7 @@ const Tasks = (props) => {
   const taskInputRef = useRef();
   const [isEdit, setIsEdit] = useState(false);
   const boardId = useSelector((state) => state.board._id);
-  
+
   const deleteTaskListHandler = (tasksId) => {
     dispatch(popGroupFromBoard(tasksId, boardId));
   };
@@ -43,10 +43,6 @@ const Tasks = (props) => {
       tasksId={props.id}
       id={task._id}
       title={task.cardname}
-      isDrag={props.isDrag}
-      onDragStart={props.onDragStart}
-      onDragging={props.onDragging}
-      onDragEnter={props.onDragEnter}
     />
   ));
 
@@ -92,24 +88,18 @@ const Tasks = (props) => {
           <DropdownMenu className={styles["editmenu"]} items={isEditList} />
         ) : undefined}
       </header>
-      <div
-        className={styles["groups"]}
-        onDragEnter={
-          props.isDrag && !group.cardList.length
-            ? (e) => {
-                return props.onDragEnter(e, {
-                  tasksId: props.id,
-                  tasksIndex: props.tasksIndex,
-                  taskId: Math.random(),
-                  taskIndex: 0,
-                });
-              }
-            : null
-        }
-      >
-        {taskList}
-        {toAddTask && <AddTaskForm />}
-      </div>
+      <Droppable droppableId = {props.id}>
+        {provided => ( 
+          <div className={styles["groups"]}
+            ref = {provided.innerRef}
+            {...provided.droppableProps}        
+          >
+            {taskList}
+            {provided.placeholder}
+            {toAddTask && <AddTaskForm />}
+          </div>
+          )}
+      </Droppable>
       <footer>
         {!toAddTask && <button onClick={toEnterTaskHandler}>Add a card</button>}
       </footer>

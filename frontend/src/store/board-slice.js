@@ -45,13 +45,13 @@ const boardSlice = createSlice({
         changedGroup.filter((item) => item._id !== cardId);
     },
     dragEnterGroup(state, action) {
-      const dragItem = action.payload.dragItem;
-      const targetItem = action.payload.targetItem;
-      state.groups[targetItem.groupIndex].cardList.splice(
-        targetItem.cardIndex,
+      const source = action.payload.source;
+      const destination = action.payload.destination;
+      state.groups.find(item => item._id === destination.droppableId).cardList.splice(
+        destination.index,
         0,
-        state.groups[dragItem.groupIndex].cardList.splice(
-          dragItem.cardIndex,
+        state.groups.find(item => item._id === source.droppableId).cardList.splice(
+          source.index,
           1
         )[0]
       );
