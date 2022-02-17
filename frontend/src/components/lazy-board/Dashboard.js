@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { DragDropContext } from "react-beautiful-dnd";
 
 import styles from "./Dashboard.module.css";
 import Tasks from "../tasks/Tasks";
@@ -8,10 +9,10 @@ import { fetchGroupData, pushGroupToBoard } from "../../store/board-actions";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const taskListInputRef = useRef();
   const [enterTaskList, setEnterTaskList] = useState(false);
   const taskList = useSelector((state) => state.board.groups);
   const boardId = useSelector((state) => state.board._id);
+  const taskListInputRef = useRef();
 
   useEffect(() => {
     dispatch(fetchGroupData(boardId));
@@ -29,75 +30,12 @@ const Dashboard = () => {
     setEnterTaskList(false);
   };
 
-  const dragItem = useRef();
-  const dragItemNode = useRef();
-  const [dragging, setDragging] = useState(false);
-
-  const dragStartHandler = (e, item) => {
-    dragItemNode.current = e.target;
-    dragItemNode.current.addEventListener("dragend", dragEndHandler);
-    dragItem.current = item;
-
-    setTimeout(() => {
-      setDragging(true);
-    }, 0);
-  };
-
-  const dragEnterHandler = (e, targetItem) => {
-    if (dragItemNode.current !== e.target) {
-      dispatch(
-        moveEnterGroup({
-          dragItem: {
-            cardName: dragItem.current.taskName,
-            groupId: dragItem.current.tasksId,
-            groupIndex: dragItem.current.tasksIndex,
-            cardId: dragItem.current.taskId,
-            cardIndex: dragItem.current.taskIndex,
-          },
-          targetItem: {
-            cardName: targetItem.taskName,
-            groupId: targetItem.tasksId,
-            groupIndex: targetItem.tasksIndex,
-            cardId: targetItem.taskId,
-            cardIndex: targetItem.taskIndex,
-          },
-        })
-      );
-      dragItem.current = targetItem;
-    }
-  };
-
-  const dragEndHandler = (e) => {
-    setDragging(false);
-    dragItem.current = null;
-    dragItemNode.current.removeEventListener("dragend", dragEndHandler);
-    dragItemNode.current = null;
-    setTimeout(() => { }, 100)
-
-  };
-
-  const onDraggingHandler = (item) => {
-    if (
-      dragItem.current.tasksIndex === item.tasksIndex &&
-      dragItem.current.taskIndex === item.taskIndex
-    ) {
-      return "drag";
-    }
-    return "";
-  };
+  const onDragEndHandler = (result) => {
+    dispatch(moveEnterGroup(result));
+  }
 
   const dashboard = taskList.map((item, itemIndex) => {
-    return (
-      <Tasks
-        key={item._id}
-        id={item._id}
-        tasksIndex={itemIndex}
-        isDrag={dragging}
-        onDragStart={dragStartHandler}
-        onDragging={onDraggingHandler}
-        onDragEnter={dragEnterHandler}
-      />
-    );
+    return <Tasks key={item._id} id={item._id} tasksIndex={itemIndex} />;
   });
 
   const EnterTaskListForm = () => {
@@ -120,7 +58,9 @@ const Dashboard = () => {
 
   return (
     <div className={styles["dashboard"]}>
-      {dashboard}
+      <DragDropContext onDragEnd={onDragEndHandler}>
+        {dashboard}
+      </DragDropContext>
       {enterTaskList && <EnterTaskListForm />}
       {!enterTaskList && (
         <button

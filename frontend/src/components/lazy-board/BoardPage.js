@@ -129,9 +129,7 @@ const BoardPage = () => {
   }, [authCtx]);
 
   const selectFavoriteWindowHandler = (windowIndex) => {
-    dispatch(
-      boardActions.replaceBoard(favoriteWindows[windowIndex])
-    );
+    dispatch(boardActions.replaceBoard(favoriteWindows[windowIndex]));
   };
 
   const selectOtherWindowHandler = (windowIndex) => {
@@ -139,20 +137,6 @@ const BoardPage = () => {
   };
   const onAddWindowHandler = async (title) => {
     console.log("onAddWIndowHere");
-
-    setOtherWindows((state) => {
-      console.log(state);
-      return [
-        ...state,
-        {
-          _id: Math.random(),
-          title: title,
-          isFavorite: false,
-          members: [],
-          groups: [],
-        },
-      ];
-    });
 
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     const user_id = authCtx._id;
@@ -165,7 +149,19 @@ const BoardPage = () => {
         BACKEND_URL + "api/boards/create_board/" + user_id,
         data
       );
-      console.log(Res.data);
+      setOtherWindows((state) => {
+        console.log(state);
+        return [
+          ...state,
+          {
+            _id: Res.data._id,
+            title: Res.data.title,
+            isFavorite: false,
+            members: Res.data.members,
+            groups: Res.data.groups,
+          },
+        ];
+      });
     } catch (err) {
       console.error(err);
     }
@@ -173,10 +169,8 @@ const BoardPage = () => {
 
   const onAddFavoriteWindowHandler = (id) => {
     const favoriteWindow = otherWindows.find((item) => {
-      console.log(item, id);
       return item._id === id;
     });
-    console.log(favoriteWindow);
     setFavoriteWindows((state) => [...state, favoriteWindow]);
     setOtherWindows((state) => state.filter((item) => item._id !== id));
   };

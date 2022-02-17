@@ -57,14 +57,16 @@ export const pushGroupToBoard = (name, id) => {
       listname: name,
       cardList: [],
     };
+
+    let Res;
     try {
-      await axios.post(BACKEND_URL + "api/list/create_list/" + id, data);
+      Res = await axios.post(BACKEND_URL + "api/list/create_list/" + id, data);
     } catch (e) {
       console.log(e);
     }
     dispatch(
       boardActions.addGroupToBoard({
-        _id: Math.random(),
+        _id: Res.data.id,
         listname: name,
         cardList: [],
       })
@@ -79,7 +81,7 @@ export const popGroupFromBoard = (groupId, boardId) => {
     let Res;
     try {
       Res = await axios.delete(
-        BACKEND_URL + "api/list/" + groupId + "/" + boardId
+        BACKEND_URL + "api/list/delete_list/" + groupId + "/" + boardId
       );
       console.log(Res.data);
     } catch (err) {
@@ -114,17 +116,16 @@ export const pushCardToGroup = (id, name, description) => {
         description: description,
       },
     };
-
+    let Res;
     try {
-      const Res = await axios.put(BACKEND_URL + "api/list/" + id, data);
-      console.log(Res.data);
+      Res = await axios.put(BACKEND_URL + "api/list/" + id, data);
     } catch (e) {
       console.log(e);
     }
     dispatch(
       boardActions.addCardToGroup({
         groupId: id,
-        item: { _id: Math.random(), cardname: name, description: description },
+        item: { _id: Res.data.id, cardname: name, description: description },
       })
     );
   };
@@ -134,8 +135,9 @@ export const popCardFromGroup = ({ groupId: lid, cardId: cid }) => {
   return async (dispatch) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     let Res;
+    console.log(lid,cid)
     try {
-      Res = await axios.delete(BACKEND_URL + "api/list/" + lid + "/" + cid);
+      Res = await axios.delete(BACKEND_URL + "api/list/delete_card/" + lid + "/" + cid);
       console.log(Res.data);
     } catch (err) {
       console.error(err);
@@ -149,40 +151,39 @@ export const popCardFromGroup = ({ groupId: lid, cardId: cid }) => {
   };
 };
 
-export const moveEnterGroup = ({ dragItem, targetItem }) => {
+export const moveEnterGroup = ({ source, destination, draggableId }) => {
   return async (dispatch) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
-    console.log("dragItem", dragItem);
-    console.log("targetItem", targetItem);
-    try {
-        if(!dragItem.cardName){
-          throw new Error("card is undefined")
-        }
-        try {
-            const Res = await axios.post(
-                BACKEND_URL +
-                  "api/list/" +
-                  dragItem.groupId +
-                  "/" +
-                  dragItem.cardId +
-                  "/" +
-                  targetItem.groupId +
-                  "/" +
-                  targetItem.groupIndex
-              );
-            } catch (e) {
-                console.log("error in moveEnterGroup");
-                console.log(e);
-              }
-              dispatch(
-                boardActions.dragEnterGroup({
-                  dragItem,
-                  targetItem,
-                })
-              );
-    } 
-    catch (err) {
-        console.log(err)
+    
+    if (!destination){
+      return ;
     }
-        };
-      };
+
+    if ( destination.droppableId === source.droppableId &&
+      destination.index === source.index){
+        return;
+      }
+    
+      try {
+        const Res = await axios.post(
+          BACKEND_URL +
+            "api/list/" +
+            source.droppableId +
+            "/" +
+            draggableId +
+            "/" +
+            destination.droppableId +
+            "/" +
+            destination.index
+        );
+      } catch (e) {
+        console.log("error in moveEnterGroup");
+        console.log(e);
+      }
+      dispatch(
+        boardActions.dragEnterGroup({
+          source, destination, draggableId
+        })
+      );
+  };
+};
