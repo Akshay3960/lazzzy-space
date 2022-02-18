@@ -14,8 +14,13 @@ const ListSchema = new Schema({
         description: {
             type: String,
             required: false
-        }
+        },
+        files: [{
+            file: {
+                path: String,
+            }
+        }]
     }]
 })
 
-module.exports = List = mongoose.model('list',ListSchema);
+module.exports = List = mongoose.model('list', ListSchema);
