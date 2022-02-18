@@ -37,7 +37,6 @@ router.get("/get_list/:bid", async (req, res) => {
   }
 });
 
-// router.get('/get_card/:lid', async (req, res) => )
 
 router.put("/:id", async (req, res) => {
   let Res;
@@ -108,35 +107,5 @@ router.post("/:deleteList/:card/:addList/:pos", async (req, res) => {
   }
 });
 
-// code that didn't work
-// router.post('/:deleteList/:addList', async (req, res) => {
-//     const delList = await List.findById(req.params.deleteList)
-//     const addList = await List.findById(req.params.addList)
-//     const delListData = req.body.delListData
-//     const addListData = req.body.addListData
-//     console.log(delListData)
-//     try {
-//         await List.find(
-//             { _id: delList },
-//             { $set: { cardList: delListData.cardList } },
-//             { upsert: true }
-//         )
-//     }
-//     catch (err) {
-//         console.log(err)
-//         res.status(500).json("couldn't replace delList")
-//     }
-//     try {
-//         await List.findByIdAndUpdate(
-//             { _id: addList },
-//             { $set: { cardList: addListData.cardList } },
-//             { upsert: true }
-//         )
-//     }
-//     catch (err) {
-//         console.log(err)
-//         res.status(500).json("couldn't replace addList")
-//     }
-// })
 
 module.exports = router;
