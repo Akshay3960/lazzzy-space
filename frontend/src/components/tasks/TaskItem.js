@@ -1,12 +1,18 @@
+import { useState } from 'react';
 import { useDispatch } from "react-redux";
 import { IoTrashSharp } from "react-icons/io5";
 import { Draggable } from "react-beautiful-dnd";
 
 import { popCardFromGroup } from "../../store/board-actions";
 import styles from "./TaskItem.module.css";
+import TaskModal from './TaskModal';
 
 const TaskItem = (props) => {
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onOpenHandler = () => setIsOpen(true);
+  const onCloseHandler = () => setIsOpen(false);
 
   const removeTaskHandler = () => {
     dispatch(
@@ -22,6 +28,7 @@ const TaskItem = (props) => {
       {(provided) => (
         <div className={` ${styles["card-container"]}`}
           ref = {provided.innerRef}
+          onClick = {onOpenHandler}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
@@ -31,6 +38,7 @@ const TaskItem = (props) => {
               <IoTrashSharp />
             </button>
           </div>
+          {isOpen && <TaskModal onClose = {onCloseHandler} opened = {isOpen} title = {props.title} description = {props.description}/>}
         </div>
       )}
     </Draggable>

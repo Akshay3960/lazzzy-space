@@ -7,6 +7,23 @@ import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
 import AuthContext from "../../store/auth-context";
 
+const randomColor = [
+  "dark",
+  "gray",
+  "red",
+  "pink",
+  "grape",
+  "violet",
+  "indigo",
+  "blue",
+  "cyan",
+  "teal",
+  "green",
+  "lime",
+  "yellow",
+  "orange",
+];
+
 const Backdrop = (props) => {
   return <div className={styles.backdrop} />;
 };
@@ -65,7 +82,9 @@ const ModalOverlay = (props) => {
       username: name,
       email: email,
       password: password,
+      color: randomColor[Math.floor(Math.random() * 13)]
     };
+    console.log('data',data.color);
 
     // const config = {
     //   headers: {

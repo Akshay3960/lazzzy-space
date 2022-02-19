@@ -24,7 +24,10 @@
 .tasks-container button:hover {
   background-color: #41455cab;
 }
-
+.form-control{
+  display:flex;
+  flex-direction: column;
+}
 .form-actions {
   position: absolute;
   bottom: -55px;
@@ -45,7 +48,8 @@
   height: 23px;
   border-radius: 6px;
   margin-top: 5px;
-  padding: 10px;
+  padding-left:10px;
+  color:black;
 }
 .form-control label {
   color: white;

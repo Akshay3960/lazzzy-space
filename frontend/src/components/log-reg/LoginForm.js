@@ -72,11 +72,12 @@ const Login = (props) => {
       return false;
     }
 
-    //console.log(Res.data)
+    console.log(Res.data)
     authCtx.onLogin(
       Res.data._id,
       Res.data.username, 
-      Res.data.email);
+      Res.data.email,
+      Res.data.color);
 
 
     store.addNotification({
