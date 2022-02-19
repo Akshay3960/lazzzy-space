@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@mantine/core": "^3.6.9",
+    "@mantine/hooks": "^3.6.9",
     "react-icons": "^4.3.1"
   }
 }

@@ -54,6 +54,7 @@ router.post("/signup", profile.single("pic"), async (req, res) => {
                 email: req.body.email,
                 username: req.body.username,
                 password: hashedpass,
+                color: req.body.color,
                 image:
                 {
                     file: {
@@ -73,6 +74,7 @@ router.post("/signup", profile.single("pic"), async (req, res) => {
                 email: req.body.email,
                 username: req.body.username,
                 password: hashedpass,
+                color: req.body.color,
             });
 
             const result = await new_user.save();

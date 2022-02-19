@@ -4,7 +4,8 @@ const AuthContext = React.createContext({
   _id:"",
   name: "",
   email: "",
-  profileImage: "",
+  color: "",
+  profileImage: "https://avatars.githubusercontent.com/u/68094522?s=88&v=4",
   openRegister: false,
   isLoggedIn: false,
   onLogout: () => {},
@@ -18,6 +19,7 @@ const defaultUserState = {
   _id:"",
   name: "",
   email: "",
+  color:"",
   profileImage: "https://avatars.githubusercontent.com/u/68094522?s=88&v=4",
 };
 
@@ -28,6 +30,7 @@ const userReducer = (state, action) => {
       _id: action._id,
       name: action.name,
       email: action.email,
+      color:action.color,
       profileImage: action.profileImage
         ? action.profileImage
         : state.profileImage,
@@ -39,6 +42,7 @@ const userReducer = (state, action) => {
       _id: "",
       name: "",
       email: "",
+      color: "",
       profileImage: "",
     };
   }
@@ -68,12 +72,13 @@ export const AuthContextProvider = (props) => {
     });
   };
 
-  const loginHandler = (_id, name, email) => {
+  const loginHandler = (_id, name, email,color) => {
     dispatchUserAction({
       type: "LOG_IN",
       _id,
       name,
       email,
+      color
     });
   };
 
@@ -83,6 +88,7 @@ export const AuthContextProvider = (props) => {
         _id:userState._id,
         name: userState.name,
         email: userState.email,
+        color: userState.color,
         profileImage:userState.profileImage,
         isLoggedIn: userState.isLoggedIn,
         openRegister: openRegister,

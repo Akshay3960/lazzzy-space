@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ScrollArea } from "@mantine/core";
 import { Droppable } from "react-beautiful-dnd";
 import { RiEditBoxLine } from "react-icons/ri";
 import { MdModeEdit } from "react-icons/md";
@@ -9,6 +10,8 @@ import { popGroupFromBoard, pushCardToGroup } from "../../store/board-actions";
 import DropdownMenu from "../UI/DropdownMenu";
 import styles from "./Tasks.module.css";
 import TaskItem from "./TaskItem";
+
+
 
 const Tasks = (props) => {
   const dispatch = useDispatch();
@@ -38,6 +41,7 @@ const Tasks = (props) => {
   const taskList = group.cardList.map((task, taskIndex) => (
     <TaskItem
       key={task._id}
+      description = {task.description}
       tasksIndex={props.tasksIndex}
       taskIndex={taskIndex}
       tasksId={props.id}
@@ -88,19 +92,24 @@ const Tasks = (props) => {
           <DropdownMenu className={styles["editmenu"]} items={isEditList} />
         ) : undefined}
       </header>
-      <Droppable droppableId = {props.id}>
-        {provided => ( 
-          <div className={styles["groups"]}
-            ref = {provided.innerRef}
-            {...provided.droppableProps}        
-          >
-            {taskList}
-            {provided.placeholder}
-            {toAddTask && <AddTaskForm />}
-          </div>
-          )}
-      </Droppable>
+      <ScrollArea style={{ maxHeight: 300, marginBottom:10}}>
+        <div style = {{ width: 100, maxHeight: 300}}>
+          <Droppable droppableId={props.id}>
+            {(provided) => (
+              <div
+                className={styles["groups"]}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {taskList}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </div>
+      </ScrollArea>
       <footer>
+        {toAddTask && <AddTaskForm />}
         {!toAddTask && <button onClick={toEnterTaskHandler}>Add a card</button>}
       </footer>
     </div>

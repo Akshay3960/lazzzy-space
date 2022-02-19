@@ -1,0 +1,36 @@
+.header{
+  margin-bottom:1rem;
+  font-size:20px;
+}
+.module{
+  padding:1rem;
+  margin:1rem;
+  padding-left:0;
+  margin-left:0;
+  border-bottom:2px solid rgba(128, 128, 128, 0.274);
+}
+.form-button{
+  margin:10px;
+}
+
+.file{
+  color:rgb(49, 47, 47);
+  display:flex;
+  gap:10px;
+}
+
+.files{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.add-file{
+  display:flex;
+  background-color:#1e74c0;
+}
+
+
+.column{
+  color:grey;
+}
