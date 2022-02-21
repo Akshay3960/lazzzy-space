@@ -35,25 +35,23 @@ const upload = multer({
 }
 )
 
-const arr = upload.array("files", 10)
-router.post('/file_upload/:cid', arr, async (req, res) => {
-    let Res;
+router.post('/file_upload/:cid',upload.single("file") , async (req, res) => {
+    const file = req.file.path
+    const dummy = req.file
+    console.log(dummy)
     try {
-        filePaths = []
-        for (const file of req.files) {
             if (!file) {
                 console.log("Upload file")
                 return
             }
-            filePaths.push({
+            const filePath = {
                 file: {
-                    path: file.path
+                    path: file
                 }
-            })
-        }
-        Res = await List.findOneAndUpdate(
+            }
+        await List.findOneAndUpdate(
             { 'cardList._id': req.params.cid },
-            { $push: { 'cardList.$.files': filePaths } },
+            { $push: { 'cardList.$.files': filePath } },
         );
         res.status(200).json("success")
     }
