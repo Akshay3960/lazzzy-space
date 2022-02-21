@@ -9,84 +9,85 @@ import SideNav from "../side navbar/SideNav";
 import { boardActions } from "../../store/board-slice";
 import AuthContext from "../../store/auth-context";
 
+export const DUMMY_WINDOWS = [
+  {
+    _id: Math.random(),
+    title: " Academic Tasks",
+    isFavorite: false,
+    members: [],
+    groups: [
+      {
+        _id: Math.random(),
+        listname: "Group 1",
+        cardList: [
+          {
+            _id: Math.random(),
+            cardname: "1",
+            description: "",
+          },
+          {
+            _id: Math.random(),
+            cardname: "2",
+            description: "",
+          },
+          {
+            _id: Math.random(),
+            cardname: "3",
+            description: "",
+          },
+        ],
+      },
+      {
+        _id: Math.random(),
+        listname: "Group 2",
+        cardList: [
+          {
+            _id: Math.random(),
+            cardname: "1",
+            description: "",
+          },
+          {
+            _id: Math.random(),
+            cardname: "2",
+            description: "",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    _id: Math.random(),
+    title: "ron",
+    isFavorite: false,
+    members: [],
+    groups: [],
+  },
+  {
+    _id: Math.random(),
+    title: "akshay",
+    isFavorite: false,
+    members: [],
+    groups: [],
+  },
+  {
+    _id: Math.random(),
+    title: "anand",
+    isFavorite: false,
+    members: [],
+    groups: [],
+  },
+  {
+    _id: Math.random(),
+    title: "ananthan",
+    isFavorite: false,
+    members: [],
+    groups: [],
+  },
+];
+
 const BoardPage = () => {
   const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
-  const DUMMY_WINDOWS = [
-    {
-      _id: Math.random(),
-      title: " Academic Tasks",
-      isFavorite: false,
-      members: [],
-      groups: [
-        {
-          _id: Math.random(),
-          listname: "Group 1",
-          cardList: [
-            {
-              _id: Math.random(),
-              cardname: "1",
-              description: "",
-            },
-            {
-              _id: Math.random(),
-              cardname: "2",
-              description: "",
-            },
-            {
-              _id: Math.random(),
-              cardname: "3",
-              description: "",
-            },
-          ],
-        },
-        {
-          _id: Math.random(),
-          listname: "Group 2",
-          cardList: [
-            {
-              _id: Math.random(),
-              cardname: "1",
-              description: "",
-            },
-            {
-              _id: Math.random(),
-              cardname: "2",
-              description: "",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      _id: Math.random(),
-      title: "ron",
-      isFavorite: false,
-      members: [],
-      groups: [],
-    },
-    {
-      _id: Math.random(),
-      title: "akshay",
-      isFavorite: false,
-      members: [],
-      groups: [],
-    },
-    {
-      _id: Math.random(),
-      title: "anand",
-      isFavorite: false,
-      members: [],
-      groups: [],
-    },
-    {
-      _id: Math.random(),
-      title: "ananthan",
-      isFavorite: false,
-      members: [],
-      groups: [],
-    },
-  ];
 
   const [favoriteWindows, setFavoriteWindows] = useState(
     DUMMY_WINDOWS.filter((item) => item.isFavorite)

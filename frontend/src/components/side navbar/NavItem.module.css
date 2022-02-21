@@ -1,0 +1,48 @@
+.container {
+  position: relative;
+  width: 260px;
+  background-color: #202231;
+  height: 125px;
+  margin: 1rem;
+  margin-bottom: 0rem;
+  border-radius: 7px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.527);
+}
+
+.avatar {
+  font-size: 0.8rem;
+  margin: 0.3rem 0 0.2rem 0.5rem;
+}
+.container header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.068);
+  margin: 0.5rem !important;
+  padding-left: 0.5rem !important;
+}
+
+
+.container p {
+  color: white;
+  padding: 0 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.button {
+  color: white;
+  background-color: rgba(172, 172, 172, 0.185);
+  padding: 4px;
+  border-radius: 3px;
+}
+
+.button:hover {
+  background-color: rgba(172, 172, 172, 0.555);
+}
+
+.owner{
+  position:absolute;
+  bottom:8%;
+  right:5%;
+  font-size:0.8rem;
+}

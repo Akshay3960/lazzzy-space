@@ -1,9 +1,10 @@
 .container {
-  height: 100vh;
+  height: 88.3%;
   width:99vh;
   position: relative;
   display:flex;
 }
+
 
 .content{
   position: absolute;

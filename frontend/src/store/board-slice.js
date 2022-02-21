@@ -11,7 +11,6 @@ const boardSlice = createSlice({
   },
   reducers: {
     replaceBoard(state, action) {
-      console.log("replace board here", action);
       state._id = action.payload._id;
       state.title = action.payload.title;
       state.isFavorite = action.payload.isFavorite;
