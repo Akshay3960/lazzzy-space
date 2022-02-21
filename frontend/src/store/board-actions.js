@@ -1,6 +1,5 @@
 import axios from "axios";
 import { store } from "react-notifications-component";
-import { useSelector } from "react-redux";
 import { boardActions } from "./board-slice";
 
 export const fetchGroupData = (boardId) => {
@@ -165,7 +164,7 @@ export const moveEnterGroup = ({ source, destination, draggableId }) => {
       }
     
       try {
-        const Res = await axios.post(
+        await axios.post(
           BACKEND_URL +
             "api/list/" +
             source.droppableId +

@@ -93,7 +93,7 @@ const Tasks = (props) => {
         ) : undefined}
       </header>
       <ScrollArea style={{ maxHeight: 300, marginBottom:10}}>
-        <div style = {{ width: 100, maxHeight: 300}}>
+        <div style = {{ width: 255, maxHeight: 300}}>
           <Droppable droppableId={props.id}>
             {(provided) => (
               <div

@@ -1,0 +1,52 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100vw;
+  background-color: #00000028;
+  height: 5rem;
+  position: absolute;
+  border-radius: 50% 50% 0% 0% / 100% 100% 0% 0%;
+  transition-duration: 250ms;
+  transition-property: transform;
+}
+
+.open-button {
+  position: absolute;
+  top: 20%;
+  color: white;
+  transform: rotate(-90deg);
+  font-size: 1.5rem;
+}
+
+.bar:hover {
+  transform: scale(1.5);
+}
+
+.drawer{
+  background-color: #202231;
+  border-top:1rem solid #5a63a30a;
+  border-radius:0% 100% 100% 0% / 0% 50% 0% 0% 
+}
+
+.title{
+  width:63%;
+  color:white;
+  font-weight:bold;
+  font-size: 1.7rem;
+  padding:1rem;
+  margin:1rem 0 0 2rem;
+  border-bottom: 3px solid #ffffff0a
+}
+
+.lists{
+  display:flex;
+}
+
+.divider{
+  background-color: #ffffff0a;
+  height:40vh;
+  width:7px;
+}
+
