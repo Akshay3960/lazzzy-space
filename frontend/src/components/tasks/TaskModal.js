@@ -14,6 +14,8 @@ import { BsFileEarmarkText } from "react-icons/bs";
 import { IoTrashSharp } from "react-icons/io5";
 import { BiAddToQueue } from "react-icons/bi";
 import { ImageIcon, UploadIcon, CrossCircledIcon } from "@modulz/radix-icons";
+import axios from "axios";
+
 
 import styles from "./TaskModal.module.css";
 
@@ -122,6 +124,24 @@ const TaskModal = (props) => {
         : theme.black;
     }
 
+    async function onDropFile(files) {
+      const BACKEND_URL = process.env.REACT_APP_API_URL;
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const cardId = props.id
+      const data = new FormData()
+      data.append("file",files[0])
+      try {
+        await axios.post(BACKEND_URL+'api/upload/file_upload/'+ cardId,data,config)
+      }
+      catch(err) {
+        console.log(err)
+      }
+    }
+
     return (
       <Modal
         size = "sm"
@@ -131,7 +151,7 @@ const TaskModal = (props) => {
         title= "File Upload"
       >
         <Dropzone
-          onDrop={(files) => console.log("accepted files", files)}
+          onDrop={(files) => onDropFile(files)}
           onReject={(files) => console.log("rejected files", files)}
           maxSize={20 * 1024 ** 2}
           accept={FILE_MIME_TYPE}

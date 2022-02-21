@@ -38,7 +38,7 @@ const TaskItem = (props) => {
               <IoTrashSharp />
             </button>
           </div>
-          {isOpen && <TaskModal onClose = {onCloseHandler} opened = {isOpen} title = {props.title} description = {props.description}/>}
+          {isOpen && <TaskModal id = {props.id} onClose = {onCloseHandler} opened = {isOpen} title = {props.title} description = {props.description}/>}
         </div>
       )}
     </Draggable>
