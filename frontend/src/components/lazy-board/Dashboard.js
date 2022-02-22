@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { ScrollArea } from "@mantine/core";
 import { useSelector, useDispatch } from "react-redux";
 import { DragDropContext } from "react-beautiful-dnd";
 
@@ -32,7 +33,7 @@ const Dashboard = () => {
 
   const onDragEndHandler = (result) => {
     dispatch(moveEnterGroup(result));
-  }
+  };
 
   const dashboard = taskList.map((item, itemIndex) => {
     return <Tasks key={item._id} id={item._id} tasksIndex={itemIndex} />;
@@ -57,20 +58,22 @@ const Dashboard = () => {
   };
 
   return (
-    <div className={styles["dashboard"]}>
-      <DragDropContext onDragEnd={onDragEndHandler}>
-        {dashboard}
-      </DragDropContext>
-      {enterTaskList && <EnterTaskListForm />}
-      {!enterTaskList && (
-        <button
-          className={styles["dash-button"]}
-          onClick={openAddTaskListHandler}
-        >
-          Add another list
-        </button>
-      )}
-    </div>
+    <ScrollArea classNames={{ viewport: styles.scroll, scrollbar: styles.scrollbar}}>
+      <div className={styles["dashboard"]}>
+        <DragDropContext onDragEnd={onDragEndHandler}>
+          {dashboard}
+        </DragDropContext>
+        {enterTaskList && <EnterTaskListForm />}
+        {!enterTaskList && (
+          <button
+            className={styles["dash-button"]}
+            onClick={openAddTaskListHandler}
+          >
+            Add another list
+          </button>
+        )}
+      </div>
+    </ScrollArea>
   );
 };
 

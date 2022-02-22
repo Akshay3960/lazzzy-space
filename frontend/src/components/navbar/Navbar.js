@@ -11,14 +11,6 @@ const Navbar = (props) => {
   const authCtx = useContext(AuthContext);
   console.log(authCtx.color);
 
-  const createAcronym = () => {
-    if (!authCtx.name) {
-      return;
-    }
-    const acronym = authCtx.name.toUpperCase().match(/\b(\w)/g).slice(0,2);
-
-    return acronym;
-  };
 
   return (
     <div className={styles.container}>
@@ -38,7 +30,7 @@ const Navbar = (props) => {
         </div>
         <div className={styles.user}>
           <Avatar color={authCtx.color} size="40px" radius="xl">
-            {createAcronym()}
+            {authCtx.nameAcronym}
           </Avatar>
         </div>
         <div className={styles.spacer}></div>

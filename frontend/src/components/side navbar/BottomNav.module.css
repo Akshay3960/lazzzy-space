@@ -3,10 +3,11 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 100vw;
+  width: 98%;
   background-color: #00000028;
   height: 5rem;
   position: absolute;
+  bottom:-2.5%;
   border-radius: 50% 50% 0% 0% / 100% 100% 0% 0%;
   transition-duration: 250ms;
   transition-property: transform;
@@ -30,23 +31,36 @@
   border-radius:0% 100% 100% 0% / 0% 50% 0% 0% 
 }
 
-.title{
-  width:63%;
-  color:white;
-  font-weight:bold;
-  font-size: 1.7rem;
+.header{
+  width:72%;
+  display:flex;
+  gap:1rem;
   padding:1rem;
   margin:1rem 0 0 2rem;
   border-bottom: 3px solid #ffffff0a
+
+}
+.header p{
+  color:rgba(255, 255, 255, 0.37);
+}
+
+.title{
+  color:white;
+  font-weight:bold;
+  font-size: 1.5rem;
+
 }
 
 .lists{
-  display:flex;
+  width:100vw;
+  display:grid;
+  grid-template-columns: 48% 1% 48%;
 }
 
 .divider{
   background-color: #ffffff0a;
-  height:40vh;
+  height:100%;
+  margin-top:1.5rem;
   width:7px;
 }
 

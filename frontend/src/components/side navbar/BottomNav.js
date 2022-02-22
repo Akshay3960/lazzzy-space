@@ -1,6 +1,6 @@
 import { Fragment, useState, useContext, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Drawer } from "@mantine/core";
+import { Drawer, Avatar } from "@mantine/core";
 import { MdDoubleArrow } from "react-icons/md";
 import axios from "axios";
 
@@ -15,9 +15,8 @@ const BottomNav = (props) => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const closeDrawerHandler = () => {
-    setOpenDrawer(false)
-  }
-
+    setOpenDrawer(false);
+  };
 
   useEffect(() => {
     let Res;
@@ -47,26 +46,39 @@ const BottomNav = (props) => {
     };
 
     API_FETCH();
-  }, [authCtx,dispatch]);
-
+  }, [authCtx, dispatch]);
 
   return (
     <Fragment>
       <Drawer
-        classNames={{ drawer: styles.drawer, title: styles.title }}
+        classNames={{ drawer: styles.drawer }}
         position="bottom"
         transitionDuration={750}
         transitionTimingFunction="ease"
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}
         size="xl"
-        title={authCtx.name}
         hideCloseButton
       >
+        <div className={styles.header}>
+          <Avatar color ={authCtx.color} styles = {{"root":{ fontSize:"1.5rem"}}}size="3rem">{authCtx.nameAcronym}</Avatar>
+          <div className={styles.title}>
+            <header>{authCtx.name}</header>
+            <p style={ {fontSize: '0.8rem',}}>{`id:${authCtx._id.slice(17)}`}</p>
+          </div>
+        </div>
         <div className={styles.lists}>
-          <BoardsContainer onClose = {closeDrawerHandler} title="Favorites" boardIds= "favoriteBoards" />
+          <BoardsContainer
+            onClose={closeDrawerHandler}
+            title="Favorites"
+            boardIds="favoriteBoards"
+          />
           <div className={styles.divider} />
-          <BoardsContainer onClose  = {closeDrawerHandler} title="Others" boardIds= "otherBoards" />
+          <BoardsContainer
+            onClose={closeDrawerHandler}
+            title="Others"
+            boardIds="otherBoards"
+          />
         </div>
       </Drawer>
       <div onClick={() => setOpenDrawer(true)} className={styles["bar"]}>

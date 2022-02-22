@@ -1,8 +1,9 @@
 import React, { useState, useReducer } from "react";
 
 const AuthContext = React.createContext({
-  _id:"",
+  _id: "",
   name: "",
+  nameAcronym: "",
   email: "",
   color: "",
   profileImage: "https://avatars.githubusercontent.com/u/68094522?s=88&v=4",
@@ -16,10 +17,10 @@ const AuthContext = React.createContext({
 
 const defaultUserState = {
   isLoggedIn: false,
-  _id:"",
+  _id: "",
   name: "",
   email: "",
-  color:"",
+  color: "",
   profileImage: "https://avatars.githubusercontent.com/u/68094522?s=88&v=4",
 };
 
@@ -29,8 +30,13 @@ const userReducer = (state, action) => {
       isLoggedIn: true,
       _id: action._id,
       name: action.name,
+      nameAcronym: action.name
+        .toUpperCase()
+        .match(/\b(\w)/g)
+        .slice(0, 2),
+
       email: action.email,
-      color:action.color,
+      color: action.color,
       profileImage: action.profileImage
         ? action.profileImage
         : state.profileImage,
@@ -41,6 +47,7 @@ const userReducer = (state, action) => {
       isLoggedIn: false,
       _id: "",
       name: "",
+      nameAcronym:"",
       email: "",
       color: "",
       profileImage: "",
@@ -72,24 +79,25 @@ export const AuthContextProvider = (props) => {
     });
   };
 
-  const loginHandler = (_id, name, email,color) => {
+  const loginHandler = (_id, name, email, color) => {
     dispatchUserAction({
       type: "LOG_IN",
       _id,
       name,
       email,
-      color
+      color,
     });
   };
 
   return (
     <AuthContext.Provider
       value={{
-        _id:userState._id,
+        _id: userState._id,
         name: userState.name,
+        nameAcronym:userState.nameAcronym,
         email: userState.email,
         color: userState.color,
-        profileImage:userState.profileImage,
+        profileImage: userState.profileImage,
         isLoggedIn: userState.isLoggedIn,
         openRegister: openRegister,
         onLogout: logoutHandler,
@@ -103,3 +111,7 @@ export const AuthContextProvider = (props) => {
   );
 };
 export default AuthContext;
+
+{ 
+
+}
