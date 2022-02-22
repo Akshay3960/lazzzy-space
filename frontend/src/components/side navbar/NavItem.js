@@ -1,20 +1,28 @@
+import { useContext } from "react";
 import { AvatarsGroup, Avatar } from "@mantine/core";
 import { IoTrashSharp } from "react-icons/io5";
 
 import styles from "./NavItem.module.css";
+import AuthContext from "../../store/auth-context";
 
 const NavItem = (props) => {
+  const authCtx = useContext(AuthContext);
+
   return (
-    <div className={styles.container} onClick = {props.onClick}>
+    <div className={styles.container} onClick={props.onClick}>
       <header>
-        {props.title}
-        <button onClick = {props.onDelete} className={styles["button"]}>
+        <div className={styles.title}>{props.title}</div>
+        <button onClick={props.onDelete} className={styles["button"]}>
           <IoTrashSharp />
         </button>
       </header>
       <div>
         <p>Members:</p>
-        <AvatarsGroup classNames={{"root":styles["avatar"]}} size="1.5rem" limit={2}>
+        <AvatarsGroup
+          classNames={{ root: styles["avatar"] }}
+          size="1.5rem"
+          limit={2}
+        >
           <Avatar size="s" color="red">
             RJ
           </Avatar>
@@ -29,7 +37,13 @@ const NavItem = (props) => {
           </Avatar>
         </AvatarsGroup>
       </div>
-      <Avatar size = "1.8rem" classNames = {{"root": styles["owner"]}}>RJ</Avatar>
+      <Avatar
+        color={authCtx.color}
+        size="1.5rem"
+        classNames={{ root: styles["owner"] }}
+      >
+        {authCtx.nameAcronym}
+      </Avatar>
     </div>
   );
 };

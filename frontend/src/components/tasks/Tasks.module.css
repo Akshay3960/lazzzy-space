@@ -5,7 +5,7 @@
   padding: 9px;
   height: fit-content;
   position: relative;
-  min-width: 268px;
+  width:268px;
 }
 .tasks-container header {
   font-weight: bold;

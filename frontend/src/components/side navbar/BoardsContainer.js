@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { Grid, Button, ScrollArea } from "@mantine/core";
+import { Button, ScrollArea } from "@mantine/core";
 
 import styles from "./BoardsContainer.module.css";
 import { boardsActions } from "../../store/boards-slice";
@@ -14,11 +14,11 @@ const BoardsContainer = (props) => {
   const deleteBoardHandler = (id) => {
     dispatch(boardsActions.deleteBoard(id));
   };
-  
+
   const selectBoardHandler = (id) => {
     dispatch(boardActions.replaceBoard(boards[id]));
     props.onClose();
-  }
+  };
 
   return (
     <div className={styles.module}>
@@ -28,21 +28,20 @@ const BoardsContainer = (props) => {
           <p>Add Workspace</p>
         </Button>
       </header>
-      <ScrollArea>
-        <div className={styles["nav-container"]}>
-          <Grid>
+      <div className={styles["nav-container"]}>
+        <ScrollArea classNames={{ root: styles.scroll }}>
+          <div className={styles["nav-grid"]}>
             {boardIds.map((item, itemIndex) => (
-              <Grid.Col key={item} span={4}>
-                <NavItem
-                  onClick = {selectBoardHandler.bind(null,item)}
-                  title={boards[item].title}
-                  onDelete={deleteBoardHandler.bind(null, item)}
-                />
-              </Grid.Col>
+              <NavItem
+                key={item}
+                onClick={selectBoardHandler.bind(null, item)}
+                title={boards[item].title}
+                onDelete={deleteBoardHandler.bind(null, item)}
+              />
             ))}
-          </Grid>
-        </div>
-      </ScrollArea>
+          </div>
+        </ScrollArea>
+      </div>
     </div>
   );
 };

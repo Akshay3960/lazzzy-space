@@ -2,10 +2,11 @@
   display: flex;
   width: 100vw;
   justify-content: space-between;
+  flex-wrap:wrap;
   align-items: center;
   color: white;
   background-color: #654ca1be;
-  height: 55px;
+  height: auto;
 }
 
 .nav-left,
