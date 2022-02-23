@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { AvatarsGroup, Avatar } from "@mantine/core";
 import { IoTrashSharp } from "react-icons/io5";
 
+
 import styles from "./NavItem.module.css";
 import AuthContext from "../../store/auth-context";
 

@@ -4,6 +4,7 @@ import { BsFillStarFill, BsStar } from "react-icons/bs";
 
 import styles from "./BoardBar.module.css";
 import { boardActions } from "../../store/board-slice";
+import { boardsActions } from "../../store/boards-slice";
 import AuthContext from "../../store/auth-context";
 import axios from "axios";
 
@@ -15,12 +16,8 @@ const BoardBar = (props) => {
   const isFavorite = useSelector((state) => state.board.isFavorite);
 
   const toggleFavoritesHandler = async() => {
-    if (isFavorite) {
-      props.onOthers(boardId);
-    } else {
-      props.onFavorite(boardId);
-    }
     dispatch(boardActions.toggleFavorites());
+    dispatch(boardsActions.toggleFavorites({id: boardId}))
     
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     const user_id = authCtx._id;

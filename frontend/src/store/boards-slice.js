@@ -19,6 +19,7 @@ const boardsSlice = createSlice({
             title: board.board.title,
             isFavorite: board.isFavourite,
             members: board.board.members,
+            groups:board.board.groups,
           },
         };
       });
@@ -26,6 +27,7 @@ const boardsSlice = createSlice({
       state.otherBoards = Object.keys(state.boards).filter((key) => !state.boards[key].isFavorite);
     },
     addBoard(state, action) {
+      console.log("ctoins here", action.payload);
       state.boards = {
         ...state.boards,
         [action.payload.id]: {
@@ -33,8 +35,10 @@ const boardsSlice = createSlice({
           title: action.payload.title,
           isFavorite: action.payload.isFavorite,
           members: action.payload.members,
+          groups: action.payload.groups,
         },
       };
+      state.otherBoards.push(action.payload.id)
     },
     deleteBoard(state, action) {
       const id = action.payload;
@@ -45,6 +49,18 @@ const boardsSlice = createSlice({
       }
 
       delete state.boards[`${id}`];
+    },
+    toggleFavorites(state,action) {
+      const id = action.payload.id
+      if(state.boards[id].isFavorite){
+        state.favoriteBoards = state.favoriteBoards.filter(boardId => boardId !== id)
+        state.otherBoards.push(id);
+      }else{
+        state.otherBoards = state.otherBoards.filter(boardId => boardId !== id)
+        state.favoriteBoards.push(id);
+      }
+      state.boards[id].isFavorite = !state.boards[id].isFavorite;
+
     },
   },
 });

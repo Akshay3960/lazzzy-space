@@ -53,7 +53,7 @@ const BottomNav = (props) => {
       <Drawer
         classNames={{ drawer: styles.drawer }}
         position="bottom"
-        transitionDuration={750}
+        transitionDuration={500}
         transitionTimingFunction="ease"
         opened={openDrawer}
         onClose={() => setOpenDrawer(false)}
