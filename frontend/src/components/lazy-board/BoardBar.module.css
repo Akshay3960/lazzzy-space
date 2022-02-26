@@ -37,3 +37,8 @@
 .favorites{
   font-size:1.4em;
 }
+
+
+.menu:hover{
+  background-color: rgba(0, 0, 0, 0.145);
+}

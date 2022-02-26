@@ -4,6 +4,7 @@
 }
 .module header {
   display: flex;
+  flex-wrap:wrap;
   gap: 2rem;
   color: white;
   font-weight: bold;
@@ -12,52 +13,24 @@
   margin: 0 0 0rem 1rem;
 }
 
-.add-button {
-  color: white;
-  background-color: #ffffff2f;
-  border-color: #ffffff2f;
-}
-
-.form-control{
-  font-size:0.9rem;
-}
-
-.form-control input{
-  border: 1px solid rgba(129, 121, 121, 0.527);
-  padding-left:0.5rem;
-  height:2rem;
-  margin-top:0.5rem;
-  margin-bottom:1rem;
-  border-radius: 3px;
-  width:23rem;
-
-}
-
-.form-actions{
-  display:flex;
-  gap:1rem;
-  justify-content:flex-end;
-}
-
 .search{
   display:flex;
   align-items:center;
   gap:0.5rem;
+  color:white;
 }
 
 .search input{
   all:unset;
   width:13rem;
-  font-size:1rem;
+  font-size:0.8rem;
   color:rgb(77, 74, 74);
   height:1.7rem;
   padding-left:0.5rem;
   border-radius:4px;
   background-color:white;
 }
-.add-button:hover {
-  background-color: #ffffff46;
-}
+
 .scroll{
   
   width:100%;
@@ -76,5 +49,5 @@
 }
 .nav-grid{
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }

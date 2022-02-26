@@ -32,6 +32,7 @@
 }
 
 .header{
+  position:relative;
   width:72%;
   display:flex;
   gap:1rem;
@@ -42,6 +43,19 @@
 }
 .header p{
   color:rgba(255, 255, 255, 0.37);
+}
+
+.add-button {
+  position:absolute;
+  bottom:10px;
+  left:240px;
+  color: white;
+  background-color: #ffffff2f;
+  border-color: #ffffff2f;
+}
+
+.add-button:hover {
+  background-color: #ffffff46;
 }
 
 .title{
@@ -63,4 +77,26 @@
   margin-top:1.5rem;
   width:7px;
 }
+
+.form-control{
+  font-size:0.9rem;
+}
+
+.form-control input{
+  border: 1px solid rgba(129, 121, 121, 0.527);
+  padding-left:0.5rem;
+  height:2rem;
+  margin-top:0.5rem;
+  margin-bottom:1rem;
+  border-radius: 3px;
+  width:23rem;
+
+}
+
+.form-actions{
+  display:flex;
+  gap:1rem;
+  justify-content:flex-end;
+}
+
 

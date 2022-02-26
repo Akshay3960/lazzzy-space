@@ -9,6 +9,9 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.527);
 }
 
+.container:hover{
+  border:1px solid white;
+}
 .avatar {
   font-size: 0.8rem;
   margin: 0.3rem 0 0.2rem 0.5rem;
