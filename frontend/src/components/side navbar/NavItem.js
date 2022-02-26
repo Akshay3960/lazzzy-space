@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { AvatarsGroup, Avatar } from "@mantine/core";
-import { IoTrashSharp } from "react-icons/io5";
-
+import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 
 import styles from "./NavItem.module.css";
 import AuthContext from "../../store/auth-context";
@@ -13,8 +12,11 @@ const NavItem = (props) => {
     <div className={styles.container} onClick={props.onClick}>
       <header>
         <div className={styles.title}>{props.title}</div>
-        <button onClick={props.onDelete} className={styles["button"]}>
-          <IoTrashSharp />
+        <button
+          onClick={(e) => props.onFavorite(e)}
+          className={styles["button"]}
+        >
+          {props.isFavorite ? <AiFillStar /> : <AiOutlineStar />}
         </button>
       </header>
       <div>

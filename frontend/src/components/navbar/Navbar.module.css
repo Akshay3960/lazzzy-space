@@ -73,6 +73,15 @@
   background-color: #2403707e;
 }
 
+.menu:hover{
+  background-color: rgba(0, 0, 0, 0.145);
+}
+.editmenu {
+  position: absolute;
+  top:-30px;
+  right:-40px;
+}
+
 .spacer {
   width: 40px;
 }

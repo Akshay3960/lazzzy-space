@@ -1,15 +1,17 @@
 import { useContext } from "react";
 import { FaYoast } from "react-icons/fa";
 import { BsBellFill, BsSearch } from "react-icons/bs";
-import { Avatar } from "@mantine/core";
+import { Avatar, Menu, Divider } from "@mantine/core";
+import { BsImageFill, BsPeopleFill } from "react-icons/bs";
+import { ImUser } from "react-icons/im";
+import { FaPowerOff } from "react-icons/fa";
 
 import styles from "./Navbar.module.css";
 import AuthContext from "../../store/auth-context";
 
 const Navbar = (props) => {
-  // 'dark' | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange' |
   const authCtx = useContext(AuthContext);
-  console.log(authCtx.color);
+
 
 
   return (
@@ -28,11 +30,24 @@ const Navbar = (props) => {
         <div className={styles.item}>
           <BsBellFill />
         </div>
-        <div className={styles.user}>
-          <Avatar color={authCtx.color} size="40px" radius="xl">
-            {authCtx.nameAcronym}
-          </Avatar>
-        </div>
+        <Menu
+          size = "sm"
+          classNames={{ body: styles.editmenu, itemHovered: styles.menu }}
+          control={
+            <div className={styles.user}>
+              <Avatar color={authCtx.color} size="40px" radius="xl">
+                {authCtx.nameAcronym}
+              </Avatar>
+            </div>
+          }
+        >
+          <Menu.Label>Profile Options</Menu.Label>
+          <Divider />
+          <Menu.Item icon = {<BsImageFill/>}>Insert image</Menu.Item>
+          <Menu.Item icon = {<ImUser/>}>Edit Profile</Menu.Item>
+          <Menu.Item  icon = {<BsPeopleFill/>}>Friends</Menu.Item>
+          <Menu.Item onClick = {() => authCtx.onLogout()} icon = {<FaPowerOff/>}>Logout</Menu.Item>
+        </Menu>
         <div className={styles.spacer}></div>
       </div>
     </div>

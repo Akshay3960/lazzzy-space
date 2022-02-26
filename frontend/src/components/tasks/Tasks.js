@@ -1,17 +1,14 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ScrollArea } from "@mantine/core";
+import { ScrollArea, Menu, Divider } from "@mantine/core";
 import { Droppable } from "react-beautiful-dnd";
 import { RiEditBoxLine } from "react-icons/ri";
 import { MdModeEdit } from "react-icons/md";
-import { IoTrashSharp } from "react-icons/io5";
+import { TrashIcon } from "@modulz/radix-icons";
 
 import { popGroupFromBoard, pushCardToGroup } from "../../store/board-actions";
-import DropdownMenu from "../UI/DropdownMenu";
 import styles from "./Tasks.module.css";
 import TaskItem from "./TaskItem";
-
-
 
 const Tasks = (props) => {
   const dispatch = useDispatch();
@@ -27,21 +24,10 @@ const Tasks = (props) => {
     dispatch(popGroupFromBoard(tasksId, boardId));
   };
 
-  const isEditList = [
-    { title: "Edit List", icon: <MdModeEdit />, onClick: () => {} },
-    {
-      title: "Delete List",
-      icon: <IoTrashSharp />,
-      onClick: () => {
-        deleteTaskListHandler(props.id);
-      },
-    },
-  ];
-
   const taskList = group.cardList.map((task, taskIndex) => (
     <TaskItem
       key={task._id}
-      description = {task.description}
+      description={task.description}
       tasksIndex={props.tasksIndex}
       taskIndex={taskIndex}
       tasksId={props.id}
@@ -85,15 +71,22 @@ const Tasks = (props) => {
     <div className={styles["tasks-container"]}>
       <header>
         <h3>{group.listname}</h3>
-        <button onClick={() => setIsEdit((state) => !state)}>
-          <RiEditBoxLine />
-        </button>
-        {isEdit ? (
-          <DropdownMenu className={styles["editmenu"]} items={isEditList} />
-        ) : undefined}
+        <Menu
+          classNames = {{"body": styles.editmenu, "itemHovered": styles.menu}}
+          size = "sm"
+          control={
+            <button>
+              <RiEditBoxLine />
+            </button>
+          }
+        >
+          <Menu.Label>Options</Menu.Label>
+          <Menu.Item icon={<MdModeEdit />}>Edit List</Menu.Item>
+          <Menu.Item onClick = {() => deleteTaskListHandler(props.id)} icon={<TrashIcon />}>Delete list</Menu.Item>
+        </Menu>
       </header>
-      <ScrollArea style={{ maxHeight: 300, marginBottom:10}}>
-        <div style = {{ width: 250, maxHeight: 300}}>
+      <ScrollArea style={{ maxHeight: 300, marginBottom: 10 }}>
+        <div style={{ width: 250, maxHeight: 300 }}>
           <Droppable droppableId={props.id}>
             {(provided) => (
               <div

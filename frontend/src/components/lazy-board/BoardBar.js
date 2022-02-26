@@ -1,6 +1,9 @@
 import { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BsFillStarFill, BsStar } from "react-icons/bs";
+import { Menu, Divider } from "@mantine/core";
+import { TrashIcon } from "@modulz/radix-icons";
+import { MdModeEdit } from "react-icons/md";
 
 import styles from "./BoardBar.module.css";
 import { boardActions } from "../../store/board-slice";
@@ -15,29 +18,28 @@ const BoardBar = (props) => {
   const boardId = useSelector((state) => state.board._id);
   const isFavorite = useSelector((state) => state.board.isFavorite);
 
-  const toggleFavoritesHandler = async() => {
+  const toggleFavoritesHandler = async () => {
     dispatch(boardActions.toggleFavorites());
-    dispatch(boardsActions.toggleFavorites({id: boardId}))
-    
+    dispatch(boardsActions.toggleFavorites({ id: boardId }));
+
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     const user_id = authCtx._id;
 
     const data = {
-      isFavourite: isFavorite
-    }
-    try{
+      isFavourite: isFavorite,
+    };
+    try {
       await axios.put(
-        BACKEND_URL + 
-        'api/users/setfav/' + 
-        user_id +
-        '/' + 
-        boardId
-        , data);
-      
-    }
-    catch(err){
+        BACKEND_URL + "api/users/setfav/" + user_id + "/" + boardId,
+        data
+      );
+    } catch (err) {
       console.log(err);
     }
+  };
+
+  const deleteBoardsHandler = () => {
+    dispatch(boardsActions.deleteBoard(boardId));
   };
 
   return (
@@ -63,9 +65,24 @@ const BoardBar = (props) => {
         <div className={styles["nav-item"]}>
           <button> filter </button>
         </div>
-        <div className={styles["nav-item"]}>
-          <button> Settings </button>
-        </div>
+        <Menu
+          classNames={{ itemHovered: styles.menu }}
+          control={
+            <div className={styles["nav-item"]}>
+              <button> Settings </button>
+            </div>
+          }
+        >
+          <Menu.Label>Board Options</Menu.Label>
+          <Menu.Item icon={<MdModeEdit />}>Edit Title</Menu.Item>
+          <Menu.Item
+            onClick={deleteBoardsHandler}
+            color="red"
+            icon={<TrashIcon />}
+          >
+            Delete Board
+          </Menu.Item>
+        </Menu>
       </div>
     </div>
   );

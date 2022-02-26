@@ -14,7 +14,8 @@ const TaskItem = (props) => {
   const onOpenHandler = () => setIsOpen(true);
   const onCloseHandler = () => setIsOpen(false);
 
-  const removeTaskHandler = () => {
+  const removeTaskHandler = (event) => {
+    event.stopPropagation();
     dispatch(
       popCardFromGroup({
         groupId: props.tasksId,
@@ -34,7 +35,7 @@ const TaskItem = (props) => {
         >
           <div className={styles.header}>
             <label htmlFor="title">{props.title}</label>
-            <button onClick={removeTaskHandler}>
+            <button onClick={(e) => removeTaskHandler(e)}>
               <IoTrashSharp />
             </button>
           </div>
