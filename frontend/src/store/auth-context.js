@@ -43,11 +43,12 @@ const userReducer = (state, action) => {
     };
   }
   if (action.type === "LOG_OUT") {
+
     return {
       isLoggedIn: false,
       _id: "",
       name: "",
-      nameAcronym:"",
+      nameAcronym: "",
       email: "",
       color: "",
       profileImage: "",
@@ -94,7 +95,7 @@ export const AuthContextProvider = (props) => {
       value={{
         _id: userState._id,
         name: userState.name,
-        nameAcronym:userState.nameAcronym,
+        nameAcronym: userState.nameAcronym,
         email: userState.email,
         color: userState.color,
         profileImage: userState.profileImage,
@@ -111,7 +112,3 @@ export const AuthContextProvider = (props) => {
   );
 };
 export default AuthContext;
-
-{ 
-
-}

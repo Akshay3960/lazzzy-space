@@ -1,0 +1,112 @@
+.add-button {
+  position:absolute;
+  bottom:10px;
+  left:240px;
+  color: white;
+  background-color: #ffffff2f;
+  border-color: #ffffff2f;
+}
+
+.add-button:hover {
+  background-color: #ffffff46;
+}
+
+.form-control{
+  display:flex;
+  flex-direction:column;
+  font-size:0.9rem;
+}
+
+.form-control input{
+  border: 1px solid rgba(129, 121, 121, 0.527);
+  padding-left:0.5rem;
+  height:2rem;
+  margin-top:0.5rem;
+  margin-bottom:1rem;
+  border-radius: 3px;
+  width:23rem;
+
+}
+
+.form-actions{
+  display:flex;
+  gap:1rem;
+  justify-content:flex-end;
+}
+
+
+.members-button{
+  width:100%;
+  height:50px;
+  margin:1rem 0rem;
+}
+
+.divider{
+  background-color:rgba(0, 0, 0, 0.118);
+  height:2px;
+  margin:1rem 1rem;
+}
+.search-members{
+  width:100%;
+}
+.member{
+  width:98%;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  margin:1rem 0rem;
+  border:1px solid rgba(0, 0, 0, 0.111);
+  padding:0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.member-name-container{
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+}
+
+.member-name{
+  display:flex;
+  flex-direction:column;
+  margin-left:1rem;
+}
+
+.member-name p{
+  font-size:0.9rem;
+}
+
+.member-name label{
+  font-size:0.5rem;
+  color:grey;
+}
+
+.member-status{
+  display:flex;
+  gap:1rem;
+}
+
+.search-members{
+  position:relative;
+}
+.search-input{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+}
+
+.search-icon{
+  font-size:1.3rem;
+  color:grey;
+}
+.scroll{
+  height:350px;
+  width:100%;
+}
+.search-members input{
+  width:90%;
+  border-radius:6px;
+  font-size:0.9rem;
+  border:1px solid rgba(0, 0, 0, 0.118);
+  padding:0.2rem 0.5rem;
+}
