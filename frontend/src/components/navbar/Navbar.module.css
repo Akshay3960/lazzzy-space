@@ -92,3 +92,77 @@
   border-radius:100px;
   z-index:1
 }
+.note-menu{
+  position: absolute;
+  right:-35px;
+  top:-30px;
+  padding-bottom:1rem;
+}
+.notify{
+  position:relative;
+}
+
+.notify div{
+  position:absolute;
+  top:12px;
+  right:15px;
+  background-color:rgb(245, 208, 0);
+  border-radius:50%;
+  width:20px;
+  height:20px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:black;
+  font-size:0.8rem;
+}
+
+.note-item{
+  position:relative;
+  padding-bottom:0px;
+  padding-bottom:1rem ;
+}
+
+.note-item:hover{
+  background-color:rgba(0, 0, 0, 0.049);
+}
+
+.note-item p{
+  position:absolute;
+  bottom:15px;
+  left:10px;
+  color:grey;
+  font-size:0.8rem;
+}
+
+.note-content{
+  margin:0.7rem 0;
+  color:rgb(107, 107, 107);
+}
+
+.note-item header{
+  font-weight:bold;
+}
+
+.note-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:1rem;
+  font-size:0.7rem;
+}
+
+.note-actions button{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  color:white;
+
+}
+
+.no-notifications {
+  color:grey;
+}
+
