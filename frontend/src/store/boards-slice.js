@@ -72,7 +72,7 @@ const boardsSlice = createSlice({
       state.boards[id].isFavorite = !state.boards[id].isFavorite;
     },
     onSearchBoards(state, action) {
-      const value = action.payload.value.toLowerCase();
+      const value = action.payload.value.toLowerCase().trim();
       const isFavorite = action.payload.isFavorite;
       if (isFavorite) {
         state.favoriteBoards = Object.keys(state.boards).filter(
@@ -88,6 +88,12 @@ const boardsSlice = createSlice({
         );
       }
     },
+    resetBoards(state) {
+      state._id = "";
+      state.favoriteBoards = []
+      state.otherBoards = []
+      state.boards = {}
+    }
   },
 });
 

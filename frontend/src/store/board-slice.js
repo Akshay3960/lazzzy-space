@@ -46,17 +46,24 @@ const boardSlice = createSlice({
     dragEnterGroup(state, action) {
       const source = action.payload.source;
       const destination = action.payload.destination;
-      state.groups.find(item => item._id === destination.droppableId).cardList.splice(
-        destination.index,
-        0,
-        state.groups.find(item => item._id === source.droppableId).cardList.splice(
-          source.index,
-          1
-        )[0]
-      );
+      state.groups
+        .find((item) => item._id === destination.droppableId)
+        .cardList.splice(
+          destination.index,
+          0,
+          state.groups
+            .find((item) => item._id === source.droppableId)
+            .cardList.splice(source.index, 1)[0]
+        );
     },
     toggleFavorites(state) {
       state.isFavorite = !state.isFavorite;
+    },
+    resetBoard(state) {
+      state._id = "";
+      state.title = "";
+      state.members = [];
+      state.groups = [];
     },
   },
 });
