@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const User = require('../../models/User');
-const Board = require('../../models/Board')
+const Board = require('../../models/Board');
+const { set } = require("mongoose");
 
 router.post('/create_board/:id',
     async (req, res) => {
         try {
             //create and save the board
-            if(req.params.id=== undefined)
-            {
+            if (req.params.id === undefined) {
                 res.status(400).json("no user id")
             }
             const newBoard = new Board({
@@ -20,6 +20,7 @@ router.post('/create_board/:id',
 
             //add board to user's boards
             const user = await User.findById(req.params.id);
+            console.log("userid",user.id)
             await User.findByIdAndUpdate(
                 { _id: user._id },
                 { $push: { boards: { bid: board._id } } }
@@ -28,8 +29,40 @@ router.post('/create_board/:id',
             //add user to board members
             await Board.findByIdAndUpdate(
                 { _id: board._id },
-                { $set: { members: { user: user._id } } }
+                { $push: { members: { user: user._id } } }
             )
+            jsonObj = req.body.userIds.map(JSON.stringify)
+            uniqueUser = new Set(jsonObj)
+            userIds = Array.from(uniqueUser).map(JSON.parse)
+            console.log(userIds)
+            const noAdmin = userIds.filter((admin) => {
+                return admin.id != user.id
+            })
+            for(const userId of noAdmin){
+                const user = await User.findById(userId.id);
+            if (!user) {
+                continue
+            }
+            //see if user already member
+            const memberId = board.members.filter((member) => {
+                return member.user == user.id;
+            })
+            if (memberId.length != 0) {
+                continue
+            }
+            // add board to user's boards
+            await User.findByIdAndUpdate(
+                { _id: user._id },
+                { $push: { boards: { bid: board._id } } }
+            )
+    
+            // add user to board members
+            await Board.findByIdAndUpdate(
+                { _id: board._id },
+                { $push: { members: { user: user._id } } }
+            )
+    
+            }
 
             res.status(200).json(board);
 
@@ -49,7 +82,7 @@ router.get('/:uid', async (req, res) => {
         const boards = [];
         for (const board of user.boards) {
             let resBoard = await Board.findById(board.bid);
-            
+
             boards.push({
                 board: resBoard,
                 isFavourite: board.isFavourite
@@ -101,21 +134,26 @@ router.put('/rename/:bid', async (req, res) => {
     }
 });
 
-// add member to the board
-router.put('/:bid/:uid', async (req, res) => {
+// add members to the board
+router.post('/add_users/:bid', async(req, res) => {
     try {
         const board = await Board.findById(req.params.bid);
-        const user = await User.findById(req.params.uid);
+        //https://www.geeksforgeeks.org/how-to-remove-duplicates-from-an-array-of-objects-using-javascript/
+        jsonObj = req.body.userIds.map(JSON.stringify)
+        uniqueUser = new Set(jsonObj)
+        userIds = Array.from(uniqueUser).map(JSON.parse)
+        console.log(userIds)
+        for(const userId of userIds){
+            const user = await User.findById(userId.id);
         if (!user) {
-            return res.status(404).json("user not found");
+            continue
         }
         //see if user already member
         const memberId = board.members.filter((member) => {
-            return member == req.params.uid;
+            return member.user == user.id;
         })
-        // console.log(memberId);
         if (memberId.length != 0) {
-            return res.status(400).json("already member");
+            continue
         }
         // add board to user's boards
         await User.findByIdAndUpdate(
@@ -129,13 +167,13 @@ router.put('/:bid/:uid', async (req, res) => {
             { $push: { members: { user: user._id } } }
         )
 
-
-        res.status(200).json(board);
-
+        }
+        res.status(200).json(board) 
     }
     catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
 });
+ 
 module.exports = router;
