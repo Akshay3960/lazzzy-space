@@ -59,7 +59,7 @@ const BoardsModal = () => {
   const authCtx = useContext(AuthContext);
   const [openModal, setOpenModal] = useState(false);
   const [addMembers, setAddMembers] = useState(false);
-  const [members, setMembers] = useState(DUMMY_MEMBERS)
+  const [members, setMembers] = useState(DUMMY_MEMBERS);
 
   const submitBoardHandler = async (event) => {
     event.preventDefault();
@@ -72,12 +72,15 @@ const BoardsModal = () => {
     const data = {
       title: boardInputRef.current.value,
     };
+
+    console.log(user_id)
     try {
       Res = await axios.post(
         BACKEND_URL + "api/boards/create_board/" + user_id,
         data
       );
-
+      
+      console.log(Res.data)
       dispatch(
         boardsActions.addBoard({
           id: Res.data._id,
@@ -95,9 +98,8 @@ const BoardsModal = () => {
   };
 
   const onDeleteMembersHandler = (id) => {
-    setMembers(state => state.filter(item => item._id !== id))
-  }
-
+    setMembers((state) => state.filter((item) => item._id !== id));
+  };
 
   const membersList = members.map((item) => (
     <div className={styles.member}>
@@ -114,7 +116,10 @@ const BoardsModal = () => {
         <Badge color={item.statusColor} variant="outline">
           {item.status}
         </Badge>
-        <button onClick = {onDeleteMembersHandler.bind(null,item._id)} className={styles["remove-member"]}>
+        <button
+          onClick={onDeleteMembersHandler.bind(null, item._id)}
+          className={styles["remove-member"]}
+        >
           <IoCloseSharp />
         </button>
       </div>
@@ -134,7 +139,10 @@ const BoardsModal = () => {
         size="lg"
         styles={{ title: { fontWeight: "bold" } }}
         opened={openModal}
-        onClose={() => setOpenModal(false)}
+        onClose={() => {
+          setAddMembers(false);
+          setOpenModal(false);
+        }}
         title="Add Workspace"
       >
         <form onSubmit={submitBoardHandler}>
@@ -160,6 +168,10 @@ const BoardsModal = () => {
           </div>
           {addMembers && (
             <div className={styles["members"]}>
+              <h3>Members: </h3>
+              <ScrollArea classNames={{ root: styles.scroll }}>
+                <div className={styles["members-container"]}>{membersList}</div>
+              </ScrollArea>
               <div className={styles["divider"]} />
               <div className={styles["search-members"]}>
                 <div className={styles["search-input"]}>
@@ -169,12 +181,8 @@ const BoardsModal = () => {
                     ref={searchMembersRef}
                     placeholder="Search Members using id"
                   />
+                  <Button classNames = {{ root: styles["search-button"]}}>Search</Button>
                 </div>
-                <ScrollArea classNames={{ root: styles.scroll }}>
-                  <div className={styles["members-container"]}>
-                    {membersList}
-                  </div>
-                </ScrollArea>
                 <div className={styles["divider"]} />
               </div>
             </div>
@@ -184,7 +192,10 @@ const BoardsModal = () => {
               Save
             </Button>
             <Button
-              onClick={() => setOpenModal(false)}
+              onClick={() => {
+                setAddMembers(false);
+                setOpenModal(false);
+              }}
               size="xs"
               variant="default"
             >

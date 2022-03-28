@@ -8,7 +8,7 @@ import styles from "./BottomNav.module.css";
 import AuthContext from "../../store/auth-context";
 import { boardsActions } from "../../store/boards-slice";
 import BoardsContainer from "./BoardsContainer";
-import BoardsModal from "./BoardsModal";
+import BoardsModal from "../modals/BoardsModal";
 
 const BottomNav = (props) => {
   const authCtx = useContext(AuthContext);
@@ -27,6 +27,7 @@ const BottomNav = (props) => {
     const API_FETCH = async () => {
       const BACKEND_URL = process.env.REACT_APP_API_URL;
       const user_id = authCtx._id;
+      
       try {
         Res = await axios.get(BACKEND_URL + "api/boards/" + user_id);
         Res.data.forEach((item) => {
