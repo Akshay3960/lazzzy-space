@@ -5,7 +5,7 @@ import { Draggable } from "react-beautiful-dnd";
 
 import { popCardFromGroup } from "../../store/board-actions";
 import styles from "./TaskItem.module.css";
-import TaskModal from './TaskModal';
+import TaskModal from '../modals/TaskModal';
 
 const TaskItem = (props) => {
   const dispatch = useDispatch();

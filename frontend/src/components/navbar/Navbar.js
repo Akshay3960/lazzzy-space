@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { Fragment,useState, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { store } from "react-notifications-component";
 import { FaYoast } from "react-icons/fa";
@@ -8,10 +8,12 @@ import { BsImageFill, BsPeopleFill } from "react-icons/bs";
 import { ImUser, ImCross } from "react-icons/im";
 import { FaPowerOff, FaCheck } from "react-icons/fa";
 
+
 import styles from "./Navbar.module.css";
 import AuthContext from "../../store/auth-context";
 import { boardActions } from "../../store/board-slice";
 import { boardsActions } from "../../store/boards-slice";
+import DropModal from "../modals/DropModal";
 
 const DUMMY_NOTES = [
   {
@@ -38,6 +40,12 @@ const Navbar = (props) => {
   const dispatch = useDispatch();
   const authCtx = useContext(AuthContext);
   const [notifications, setNotifications] = useState(DUMMY_NOTES);
+  const [ openDropModal, setOpenDropModal ] = useState(false);
+  const FILE_MIME_TYPE  = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png"
+  ]
 
   const onLogoutHandler = () => {
     dispatch(boardActions.resetBoard());
@@ -105,6 +113,15 @@ const Navbar = (props) => {
   ));
 
   return (
+    <Fragment>
+    {openDropModal && (
+      <DropModal
+        files = {FILE_MIME_TYPE}
+        text = "Attach an image, must be below 20mb"
+        isOpen = {openDropModal}
+        isClose = {() => setOpenDropModal(false)}
+      />
+    )}
     <div className={styles.container}>
       <div className={styles.left}>
         <div className={styles.header}>
@@ -147,7 +164,7 @@ const Navbar = (props) => {
         >
           <Menu.Label>Profile Options</Menu.Label>
           <Divider />
-          <Menu.Item icon={<BsImageFill />}>Insert image</Menu.Item>
+          <Menu.Item onClick = {() => setOpenDropModal(true)} icon={<BsImageFill />}>Insert image</Menu.Item>
           <Menu.Item icon={<ImUser />}>Edit Profile</Menu.Item>
           <Menu.Item icon={<BsPeopleFill />}>Friends</Menu.Item>
           <Menu.Item onClick={onLogoutHandler} icon={<FaPowerOff />}>
@@ -157,6 +174,8 @@ const Navbar = (props) => {
         <div className={styles.spacer}></div>
       </div>
     </div>
+
+    </Fragment>
   );
 };
 
