@@ -58,10 +58,17 @@ router.put("/:id", profile.single("pic"), async (req, res) => {
 });
 
 // get user profile
-router.get('/:id', async (req, res) => {
+router.post('/find_user', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        res.status(200).json(user)
+        const users = await User.find()
+        matching_users = []
+        for(let i = 0; i<users.length; i++) {
+            const userId = users[i].id.slice(17)
+            if( userId === req.body.uid) {
+                matching_users.push(users[i])
+            }
+        }
+        res.status(200).json(matching_users)
     }
     catch (err) {
         res.status(500).json(err)
@@ -75,7 +82,7 @@ router.put('/setfav/:uid/:bid', async (req, res) => {
         const fav = !req.body.isFavourite;
         await User.updateOne(
             { _id: user._id, "boards.bid": req.params.bid },
-            { $set: {"boards.$.isFavourite": fav} }
+            { $set: { "boards.$.isFavourite": fav } }
         )
         res.status(200).json("Fav set Successfull")
     }
