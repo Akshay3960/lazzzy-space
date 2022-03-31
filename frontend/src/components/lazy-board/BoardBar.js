@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BsFillStarFill, BsStar } from "react-icons/bs";
+import { BsFillStarFill, BsStar, BsSearch } from "react-icons/bs";
 import { Menu, Divider } from "@mantine/core";
+import { Avatar, AvatarsGroup } from "@mantine/core";
 import { TrashIcon } from "@modulz/radix-icons";
 import { MdModeEdit } from "react-icons/md";
 
@@ -9,7 +10,10 @@ import styles from "./BoardBar.module.css";
 import { boardActions } from "../../store/board-slice";
 import { boardsActions } from "../../store/boards-slice";
 import AuthContext from "../../store/auth-context";
+import useSearch from "../../hooks/use-search";
 import axios from "axios";
+
+const filterFun = () => {}
 
 const BoardBar = (props) => {
   const authCtx = useContext(AuthContext);
@@ -17,6 +21,25 @@ const BoardBar = (props) => {
   const title = useSelector((state) => state.board.title);
   const boardId = useSelector((state) => state.board._id);
   const isFavorite = useSelector((state) => state.board.isFavorite);
+  let membersList = useSelector((state) => state.board.members);
+
+  const [openMembers, setOpenMembers] = useState(false);
+
+  const {
+    initialLoad,
+    isLoading,
+    items: boardMembers,
+    searchItems: searchBoardMembers,
+    searchItemsRef: searchBoardMembersRef,
+    onLoadRestart,
+    submitItem: submitBoardMember,
+    addItems: addMembers,
+    onDeleteItems: onDeleteMembersHandler
+  } = useSearch(membersList, filterFun);
+
+
+
+  const submitSearchMemberHandler = () => {};
 
   const toggleFavoritesHandler = async () => {
     dispatch(boardActions.toggleFavorites());
@@ -42,6 +65,15 @@ const BoardBar = (props) => {
     dispatch(boardsActions.deleteBoard(boardId));
   };
 
+
+  const memberList = () => {
+    boardMembers.map((member) => (
+      <Menu.Item>
+
+      </Menu.Item>
+    ))
+  };
+
   return (
     <div className={styles["nav-container"]}>
       <div className={styles["nav-left"]}>
@@ -58,12 +90,42 @@ const BoardBar = (props) => {
           </button>
         </div>
         <div className={styles["nav-item"]}>
-          <button> members </button>
+          <Menu
+            closeOnItemClick={false}
+            control={
+              <button onClick={() => setOpenMembers(true)}> members </button>
+            }
+            size="lg"
+          >
+            <Menu.Label>Add Members:</Menu.Label>
+            <Menu.Item icon={<BsSearch />}>
+              <input
+                type="search"
+                onSubmit={submitSearchMemberHandler}
+                ref={searchBoardMembersRef}
+                className={styles["members-search"]}
+                placeholder="Enter the id"
+              />
+            </Menu.Item>
+            <Divider />
+          </Menu>
+        </div>
+        <div className={styles["nav-item"]}>
+          <AvatarsGroup size = "md" limit={4}>
+            {membersList.map((member) => {
+              console.log(member);
+              return (
+                <Avatar radius="lg" color={member.color}>
+                  {member.acronym}
+                </Avatar>
+              );
+            })}
+          </AvatarsGroup>
         </div>
       </div>
       <div className={styles["nav-right"]}>
         <div className={styles["nav-item"]}>
-          <button> filter </button>
+          <button> Invite </button>
         </div>
         <Menu
           classNames={{ itemHovered: styles.menu }}

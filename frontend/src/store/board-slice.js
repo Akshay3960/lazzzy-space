@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+import { DUMMY_MEMBERS } from "../components/modals/BoardsModal";
+
+
 const boardSlice = createSlice({
   name: "board",
   initialState: {
     _id: "",
     title: "",
+    owner: "",
     isFavorite: false,
     members: [],
     groups: [],
@@ -13,8 +17,9 @@ const boardSlice = createSlice({
     replaceBoard(state, action) {
       state._id = action.payload._id;
       state.title = action.payload.title;
+      state.owner = action.payload.owner;
       state.isFavorite = action.payload.isFavorite;
-      state.members = action.payload.members;
+      state.members = DUMMY_MEMBERS;
     },
     replaceGroupsData(state, action) {
       state.groups = action.payload;
