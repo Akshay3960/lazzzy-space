@@ -174,37 +174,5 @@ router.post('/add_users/:bid', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-<<<<<<< HEAD
-=======
- 
-router.get('/get_board_users/:bid/',async(req,res) => {
-    try{
-      const board = await Board.findById(req.params.bid)
-      const users = await User.find()
-    //   console.log("this is",users);
-      //const users=[]
-
-    //   for (const member of board.members){
-
-    //     name_user = await User.findById(member.user) 
-    //     users.push([member.user,name_user.username])
-
-    //   }
-       
-       const board_users = board.members.map( (member) => {
-           console.log(member);
-           return users.find(user => user.id === member.user);
-       }  )
-
-      console.log(board_users)
-      res.status(200).json(board_users);
-
-    }
-    catch(err){
-        console.error(err.message);
-        res.status(500).send('Server Error');
-    }
-})
->>>>>>> correct get_board_users api done
 
 module.exports = router;

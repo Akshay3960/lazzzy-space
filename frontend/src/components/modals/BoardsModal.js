@@ -60,46 +60,61 @@ const BoardsModal = () => {
   const [openModal, setOpenModal] = useState(false);
   const [addMembers, setAddMembers] = useState(false);
   const [members, setMembers] = useState(DUMMY_MEMBERS);
-
+  
   const submitBoardHandler = async (event) => {
     event.preventDefault();
-
+    
     if (boardInputRef.current.value.trim() === "") return;
-
+    
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     const user_id = authCtx._id;
     let Res;
     const data = {
       title: boardInputRef.current.value,
     };
-
+    
     console.log(user_id)
     try {
       Res = await axios.post(
         BACKEND_URL + "api/boards/create_board/" + user_id,
         data
-      );
+        );
+        
+        console.log(Res.data)
+        dispatch(
+          boardsActions.addBoard({
+            id: Res.data._id,
+            title: Res.data.title,
+            isFavorite: false,
+            members: Res.data.members,
+            groups: Res.data.groups,
+          })
+          );
+        } catch (err) {
+          console.error(err);
+        }
+        
+        setOpenModal(false);
+      };
       
-      console.log(Res.data)
-      dispatch(
-        boardsActions.addBoard({
-          id: Res.data._id,
-          title: Res.data.title,
-          isFavorite: false,
-          members: Res.data.members,
-          groups: Res.data.groups,
-        })
-      );
-    } catch (err) {
-      console.error(err);
-    }
+      const submitMemberHandler = async () => {
+        const BACKEND_URL = process.env.REACT_APP_API_URL;
+        const user_id = searchMembersRef.current.value;
+        const data = {
+          uid: user_id,
+        };
 
-    setOpenModal(false);
-  };
+         try {
+           const Res = await axios.post(BACKEND_URL + "api/users/find_user",data);
+           console.log(Res.data);
+         }catch(e){
+           console.log(e)
+         }
+      }
 
-  const onDeleteMembersHandler = (id) => {
-    setMembers((state) => state.filter((item) => item._id !== id));
-  };
+      const onDeleteMembersHandler = (id) => {
+        setMembers((state) => state.filter((item) => item._id !== id));
+      };
 
   const membersList = members.map((item) => (
     <div className={styles.member}>
@@ -181,7 +196,7 @@ const BoardsModal = () => {
                     ref={searchMembersRef}
                     placeholder="Search Members using id"
                   />
-                  <Button classNames = {{ root: styles["search-button"]}}>Search</Button>
+                  <Button classNames = {{ root: styles["search-button"]}} onClick = {submitMemberHandler}>Search</Button>
                 </div>
                 <div className={styles["divider"]} />
               </div>
