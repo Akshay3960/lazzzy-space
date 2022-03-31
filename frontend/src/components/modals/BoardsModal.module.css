@@ -1,7 +1,7 @@
 .add-button {
   position:absolute;
   bottom:10px;
-  left:240px;
+  left:350px;
   color: white;
   background-color: #ffffff2f;
   border-color: #ffffff2f;
@@ -29,6 +29,7 @@
 }
 
 .form-actions{
+  margin-top:1rem;
   display:flex;
   gap:1rem;
   justify-content:flex-end;
@@ -45,6 +46,7 @@
   background-color:rgba(0, 0, 0, 0.118);
   height:2px;
   margin:1.5rem 1rem;
+  margin-bottom:1rem;
 }
 .search-members{
   width:100%;
@@ -96,15 +98,15 @@
 }
 
 .search-icon{
-  font-size:1.3rem;
+  font-size:2rem;
   color:grey;
 }
 .scroll{
-  height:350px;
+  height:300px;
   width:100%;
 }
 .search-members input{
-  width:90%;
+  width:45rem;
   border-radius:6px;
   font-size:0.9rem;
   border:1px solid rgba(0, 0, 0, 0.118);
@@ -113,4 +115,12 @@
 
 .search-button{
   background-color:#228be6
+}
+
+.member-error{
+  color:red;
+  font-size:1rem;
+  margin:1rem 0;
+  width:100%;
+  text-align:center;
 }

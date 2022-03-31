@@ -42,3 +42,7 @@
 .menu:hover{
   background-color: rgba(0, 0, 0, 0.145);
 }
+.members-search{
+  padding:5px;
+  padding-left:.5rem;
+}

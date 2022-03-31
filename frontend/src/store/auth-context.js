@@ -24,6 +24,7 @@ const defaultUserState = {
   profileImage: "https://avatars.githubusercontent.com/u/68094522?s=88&v=4",
 };
 
+
 const userReducer = (state, action) => {
   if (action.type === "LOG_IN") {
     return {

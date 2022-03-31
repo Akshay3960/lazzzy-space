@@ -31,7 +31,6 @@ const boardsSlice = createSlice({
       );
     },
     addBoard(state, action) {
-      console.log("ctoins here", action.payload);
       state.boards = {
         ...state.boards,
         [action.payload.id]: {

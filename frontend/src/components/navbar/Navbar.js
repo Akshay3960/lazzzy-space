@@ -89,7 +89,7 @@ const Navbar = (props) => {
   };
 
   const notificationsList = notifications.map((item) => (
-    <Menu.Item>
+    <Menu.Item key = {item._id}>
       <p>{item.time}</p>
       <header>{item.board}</header>
       <div
@@ -135,6 +135,7 @@ const Navbar = (props) => {
           <input placeholder="Search" />
         </div>
         <Menu
+          closeOnItemClick = {false}
           size="lg"
           classNames={{ body: styles["note-menu"], item: styles["note-item"] }}
           control={
