@@ -49,6 +49,27 @@ const UserSchema = new Schema({
 
     ],
 
+    
+    notification: [{
+    notify_type: String,
+    boardName: String,
+    userName: String,
+    sendTime: String,
+    uid: String,
+    bid: String,
+    accept: String
+
+    }],
+
+    // respond_notify: [{
+    //     _id: false,
+    //     uid: String,
+    //     userName: String,
+    //     boardName: String,
+    //     acceptTime: String
+    // }]
+
+
 
 });
 
