@@ -30,39 +30,68 @@ router.post('/create_board/:id',
                 { _id: board._id },
                 { $push: { members: { user: user._id } } }
             )
-            if (typeof req.body.userIds !== 'undefined') {
-                jsonObj = req.body.userIds.map(JSON.stringify)
-                uniqueUser = new Set(jsonObj)
-                userIds = Array.from(uniqueUser).map(JSON.parse)
-                const noAdmin = userIds.filter((admin) => {
-                    return admin.id != user.id
-                })
-                for (const userId of noAdmin) {
-                    const user = await User.findById(userId.id);
-                    if (!user) {
-                        continue
+            // Send Invites to other users
+            if (typeof req.body.ruserIds !== 'undefined') {
+
+                const ruserIds = req.body.ruserIds;
+                
+                for(const ruserId of ruserIds){
+                    let ruser = await User.findById(ruserId);
+                    const notify_msg = {
+                        notify_type: "invite",
+                        boardName: board.title,
+                        userName: user.username,
+                        sendTime: new Date().toLocaleString(),
+                        uid: user._id,
+                        bid: board._id
                     }
-                    //see if user already member
-                    const memberId = board.members.filter((member) => {
-                        return member.user == user.id;
-                    })
-                    if (memberId.length != 0) {
-                        continue
-                    }
-                    // add board to user's boards
+                    // update the recipient user notification box
                     await User.findByIdAndUpdate(
-                        { _id: user._id },
-                        { $push: { boards: { bid: board._id } } }
+                        { _id: ruser._id },
+                        { $push: { notification: notify_msg } }
                     )
-
-                    // add user to board members
-                    await Board.findByIdAndUpdate(
-                        { _id: board._id },
-                        { $push: { members: { user: user._id } } }
-                    )
-
+                    console.log(notify_msg);  
                 }
+                
+            
             }
+
+            // if (typeof req.body.userIds !== 'undefined') {
+            //     jsonObj = req.body.userIds.map(JSON.stringify)
+            //     uniqueUser = new Set(jsonObj)
+            //     userIds = Array.from(uniqueUser).map(JSON.parse)
+            //     // remove admin/creator userId
+            //     const noAdmin = userIds.filter((admin) => {
+            //         return admin.id != user.id
+            //     })
+            //     //OPTIONAL
+            //     for (const userId of noAdmin) {
+            //         const user = await User.findById(userId.id);
+            //         if (!user) {
+            //             continue
+            //         }
+            //         //OPTIONAL: see if user already member
+            //         const memberId = board.members.filter((member) => {
+            //             return member.user == user.id;
+            //         })
+            //         if (memberId.length != 0) {
+            //             continue
+            //         }
+            //         // add board to user's boards
+            //         await User.findByIdAndUpdate(
+            //             { _id: user._id },
+            //             { $push: { boards: { bid: board._id } } }
+            //         )
+
+            //         // add user to board members
+            //         await Board.findByIdAndUpdate(
+            //             { _id: board._id },
+            //             { $push: { members: { user: user._id } } }
+            //         )
+
+            //     } 
+            // }
+
             res.status(200).json(board);
 
         }
