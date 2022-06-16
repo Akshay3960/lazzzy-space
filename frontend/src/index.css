@@ -2,7 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    margin:0px;
-    padding:0px;
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+.notification-above {
+  position: absolute;
+  z-index: 1000;
+}
+
+.centered {
+  margin: 3rem auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -6,7 +6,7 @@ const AuthContext = React.createContext({
   nameAcronym: "",
   email: "",
   color: "",
-  profileImage: "https://avatars.githubusercontent.com/u/68094522?s=88&v=4",
+  profileImage: "",
   openRegister: false,
   isLoggedIn: false,
   onLogout: () => {},
@@ -21,7 +21,7 @@ const defaultUserState = {
   name: "",
   email: "",
   color: "",
-  profileImage: "https://avatars.githubusercontent.com/u/68094522?s=88&v=4",
+  profileImage:"",
 };
 
 
@@ -81,7 +81,13 @@ export const AuthContextProvider = (props) => {
     });
   };
 
-  const loginHandler = (_id, name, email, color) => {
+  const loginHandler = (_id, name, email,  color) => {
+    // let temp = {}
+    // notifications.forEach(item => {
+    //   temp[item._id] = {
+    //     ...item,
+    //   }
+    // })
     dispatchUserAction({
       type: "LOG_IN",
       _id,
@@ -99,6 +105,7 @@ export const AuthContextProvider = (props) => {
         nameAcronym: userState.nameAcronym,
         email: userState.email,
         color: userState.color,
+        notifications:userState.notifications,
         profileImage: userState.profileImage,
         isLoggedIn: userState.isLoggedIn,
         openRegister: openRegister,
