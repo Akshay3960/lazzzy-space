@@ -1,5 +1,4 @@
 import React, { Fragment, useContext } from "react";
-import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
 import "./App.css";
@@ -18,7 +17,6 @@ function App() {
   return (
     <Fragment>
       <div className="App">
-        <ReactNotification />
         {!authCtx.isLoggedIn && authCtx.openRegister && <RegisterForm />}
         {!authCtx.isLoggedIn && !authCtx.openRegister && <LoginForm />}
         <Navbar />

@@ -1,4 +1,4 @@
-import { Fragment, useState, useRef, useContext } from "react";
+import { Fragment, useState, useRef, useReducer, useContext } from "react";
 import { useDispatch } from "react-redux";
 import {
   Modal,
@@ -17,6 +17,8 @@ import styles from "./BoardsModal.module.css";
 import { boardsActions } from "../../store/boards-slice";
 import AuthContext from "../../store/auth-context";
 import useSearch from "../../hooks/use-search";
+import useHttp from "../../hooks/use-http";
+import { searchMembers, addMembersOnCreate } from "../../store/members-actions";
 
 export const DUMMY_MEMBERS = [
   {
@@ -61,48 +63,105 @@ export const DUMMY_MEMBERS = [
   },
 ];
 
-const filterFun = async (value) => {
-  const BACKEND_URL = process.env.REACT_APP_API_URL;
-  
-  const data = {
-    uid: value,
-  };
+// const filterFun = async (value) => {
+//   const BACKEND_URL = process.env.REACT_APP_API_URL;
 
-  try {
-    const Res = await axios.post(BACKEND_URL + "api/users/find_user", data);
-    return Res.data;
-  } catch (e) {
-    console.log(e);
-  }
-}
+//   const data = {
+//     uid: value,
+//   };
 
+//   try {
+//     const Res = await axios.post(BACKEND_URL + "api/users/find_user", data);
+//     return Res.data;
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
 
 const BoardsModal = () => {
   const dispatch = useDispatch();
   const boardInputRef = useRef();
+  const searchMemberIdRef = useRef();
   const authCtx = useContext(AuthContext);
 
-  const [openModal, setOpenModal] = useState(false);
-  const [toAddMembers, setToAddMembers] = useState(false);
-
-  const {
-    initialLoad,
-    isLoading,
-    items: members,
-    searchItems: searchMembers,
-    searchItemsRef: searchMembersRef,
-    onLoadRestart,
-    submitItem: submitMember,
-    addItems: addMembers,
-    onDeleteItems: onDeleteMembersHandler,
-  } = useSearch([{
+  const adminUser = {
     _id: authCtx._id,
     acronym: authCtx.nameAcronym,
     color: authCtx.color,
     name: authCtx.name,
     status: "owner",
     statusColor: "violet",
-  },...DUMMY_MEMBERS],filterFun);
+  };
+
+  const [openModal, setOpenModal] = useState(false);
+  const [toAddMembers, setToAddMembers] = useState(false);
+
+  let temp = {};
+  let tempIds = [];
+  DUMMY_MEMBERS.forEach((item) => {
+    tempIds.push(item._id);
+    temp[item._id] = {
+      ...item,
+    };
+  });
+
+  const [invitedMembers, setInvitedMembers] = useState({
+    ids: [adminUser._id, ...tempIds],
+    members: {
+      [adminUser._id]: adminUser,
+      ...temp,
+    },
+  });
+
+  const {
+    sendRequest: searchRequest,
+    data: searchMembersData,
+    handleException: searchException,
+  } = useHttp(searchMembers);
+
+  const onSearchHandler = () => {
+    let enteredSearch = searchMemberIdRef.current.value;
+
+    if (enteredSearch.trim().length === 0) {
+      return;
+    }
+
+    if (enteredSearch.length < 7) {
+      searchException("Enter 7 characters of Id");
+      return;
+    }
+
+    searchRequest(enteredSearch, invitedMembers);
+
+    if (searchMembersData.length === 0) {
+      searchException("The User Id does not exist");
+      return;
+    }
+  };
+
+  const onAddMembersHandler = (member) => {
+    const invitedMember = {
+      _id: member._id,
+      acronym: member.username
+        .toUpperCase()
+        .match(/\b(\w)/g)
+        .slice(0, 2),
+      color: member.color,
+      name: member.username,
+      status: "sent",
+      statusColor: "yellow",
+    };
+
+    setInvitedMembers((state) => {
+      return {
+        ids: [...state.ids, invitedMember._id],
+        members: {
+          ...state.members,
+          [invitedMember._id]: invitedMember,
+        },
+      };
+    });
+  };
 
   const submitBoardHandler = async (event) => {
     event.preventDefault();
@@ -122,13 +181,13 @@ const BoardsModal = () => {
         data
       );
 
-      console.log(members);
+      console.log(invitedMembers);
       dispatch(
         boardsActions.addBoard({
           id: Res.data._id,
           title: Res.data.title,
           isFavorite: false,
-          members,
+          members: {},
           groups: Res.data.groups,
         })
       );
@@ -139,54 +198,60 @@ const BoardsModal = () => {
     setOpenModal(false);
   };
 
-  const searchMembersList = searchMembers.map((member) => {
+  const memberElement = (item) => {
     return (
-      <div className={styles.member} key={member._id}>
+      <div className={styles.member} key={item._id}>
         <div className={styles["member-name-container"]}>
-          <Avatar size="md" color={member.color}>
-            {member.username
-              .toUpperCase()
-              .match(/\b(\w)/g)
-              .slice(0, 2)}
+          <Avatar size="md" color={item.color}>
+            {item.acronym}
           </Avatar>
           <div className={styles["member-name"]}>
-            {member.username}
-            <label>id: {member._id.slice(17)}</label>
+            <p>{item.name}</p>
+            <label>id: {item._id}</label>
           </div>
         </div>
         <div className={styles["member-status"]}>
-          <button onClick={addMembers.bind(null, member)}>
-            <MdAdd />
-          </button>
+          <Badge color={item.statusColor} variant="outline">
+            {item.status}
+          </Badge>
         </div>
       </div>
     );
-  });
+  };
 
-  const membersList = members.map((item) => (
-    <div className={styles.member} key={item._id}>
-      <div className={styles["member-name-container"]}>
-        <Avatar size="md" color={item.color}>
-          {item.acronym}
-        </Avatar>
-        <div className={styles["member-name"]}>
-          <p>{item.name}</p>
-          <label>id: {item._id}</label>
+  const searchMembersList =
+    searchMembersData &&
+    searchMembersData.map((member) => {
+      if (invitedMembers.ids.includes(member._id)) {
+        return memberElement(invitedMembers["members"][member._id]);
+      }
+      return (
+        <div className={styles.member} key={member._id}>
+          <div className={styles["member-name-container"]}>
+            <Avatar size="md" color={member.color}>
+              {member.username
+                .toUpperCase()
+                .match(/\b(\w)/g)
+                .slice(0, 2)}
+            </Avatar>
+            <div className={styles["member-name"]}>
+              {member.username}
+              <label>id: {member._id.slice(17)}</label>
+            </div>
+          </div>
+          <div className={styles["member-status"]}>
+            <button onClick={onAddMembersHandler.bind(null, member)}>
+              <MdAdd />
+            </button>
+          </div>
         </div>
-      </div>
-      <div className={styles["member-status"]}>
-        <Badge color={item.statusColor} variant="outline">
-          {item.status}
-        </Badge>
-        <button
-          onClick={onDeleteMembersHandler.bind(null, item._id)}
-          className={styles["remove-member"]}
-        >
-          <IoCloseSharp />
-        </button>
-      </div>
-    </div>
-  ));
+      );
+    });
+
+  const membersList = invitedMembers["ids"].map((id) => {
+    let item = invitedMembers["members"][id];
+    return memberElement(item);
+  });
 
   return (
     <Fragment>
@@ -202,7 +267,6 @@ const BoardsModal = () => {
         styles={{ title: { fontWeight: "bold" } }}
         opened={openModal}
         onClose={() => {
-          onLoadRestart();
           setToAddMembers(false);
           setOpenModal(false);
         }}
@@ -241,23 +305,19 @@ const BoardsModal = () => {
                   <FiSearch className={styles["search-icon"]} />
                   <input
                     type="search"
-                    ref={searchMembersRef}
-                    placeholder="Search Members using id"
+                    ref={searchMemberIdRef}
+                    placeholder="Search Members using id(upto 7 characters)"
                   />
                   <Button
                     classNames={{ root: styles["search-button"] }}
-                    onClick={submitMember}
+                    onClick={onSearchHandler}
                   >
                     Search
                   </Button>
                   <div className={styles["divider"]} />
                 </div>
                 <div className={styles["search-members-container"]}>
-                  <LoadingOverlay visible={isLoading} />
-                  {!isLoading && searchMembers.length === 0 && initialLoad && (
-                    <div className={styles["member-error"]}>No Users found</div>
-                  )}
-                  {!isLoading && searchMembers && searchMembersList}
+                  {searchMembersList}
                 </div>
               </div>
             </div>
@@ -268,7 +328,6 @@ const BoardsModal = () => {
             </Button>
             <Button
               onClick={() => {
-                onLoadRestart();
                 setToAddMembers(false);
                 setOpenModal(false);
               }}

@@ -13,7 +13,7 @@ import AuthContext from "../../store/auth-context";
 import useSearch from "../../hooks/use-search";
 import axios from "axios";
 
-const filterFun = () => {}
+const filterFun = () => {};
 
 const BoardBar = (props) => {
   const authCtx = useContext(AuthContext);
@@ -34,10 +34,8 @@ const BoardBar = (props) => {
     onLoadRestart,
     submitItem: submitBoardMember,
     addItems: addMembers,
-    onDeleteItems: onDeleteMembersHandler
+    onDeleteItems: onDeleteMembersHandler,
   } = useSearch(membersList, filterFun);
-
-
 
   const submitSearchMemberHandler = () => {};
 
@@ -65,13 +63,8 @@ const BoardBar = (props) => {
     dispatch(boardsActions.deleteBoard(boardId));
   };
 
-
   const memberList = () => {
-    boardMembers.map((member) => (
-      <Menu.Item>
-
-      </Menu.Item>
-    ))
+    boardMembers.map((member) => <Menu.Item key={member._id}></Menu.Item>);
   };
 
   return (
@@ -111,11 +104,10 @@ const BoardBar = (props) => {
           </Menu>
         </div>
         <div className={styles["nav-item"]}>
-          <AvatarsGroup size = "md" limit={4}>
+          <AvatarsGroup size="md" limit={4}>
             {membersList.map((member) => {
-              console.log(member);
               return (
-                <Avatar radius="lg" color={member.color}>
+                <Avatar key={member._id} radius="lg" color={member.color}>
                   {member.acronym}
                 </Avatar>
               );
