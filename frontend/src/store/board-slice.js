@@ -10,7 +10,7 @@ const boardSlice = createSlice({
     title: "",
     owner: "",
     isFavorite: false,
-    members: [],
+    members: {ids:[], members:{}},
     groups: [],
   },
   reducers: {
@@ -19,10 +19,13 @@ const boardSlice = createSlice({
       state.title = action.payload.title;
       state.owner = action.payload.owner;
       state.isFavorite = action.payload.isFavorite;
-      state.members = action.payload.members;
+      // state.members = action.payload.members;
     },
     replaceGroupsData(state, action) {
       state.groups = action.payload;
+    },
+    replaceMembersData(state, action) {
+      state.members = action.payload;
     },
     addGroupToBoard(state, action) {
       const group = action.payload;

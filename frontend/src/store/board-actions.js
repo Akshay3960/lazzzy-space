@@ -6,7 +6,7 @@ import { boardsActions } from "./boards-slice";
 export const createBoard = (boardTitle, adminId, recipientIds) => {
   return async (dispatch) => {
     const API_FETCH = async () => {
-      console.log(1)
+      console.log(1);
       const BACKEND_URL = process.env.REACT_APP_API_URL;
       const data = {
         title: boardTitle,
@@ -17,7 +17,7 @@ export const createBoard = (boardTitle, adminId, recipientIds) => {
         data
       );
 
-      console.log(response)
+      console.log(response);
 
       return response;
     };
@@ -53,7 +53,7 @@ export const createBoard = (boardTitle, adminId, recipientIds) => {
 
 export const fetchGroupData = (boardId) => {
   return async (dispatch) => {
-    const API_FETCH = async () => {
+    const LIST_FETCH = async () => {
       const BACKEND_URL = process.env.REACT_APP_API_URL;
       const response = await axios.get(
         BACKEND_URL + "api/list/get_list/" + boardId
@@ -62,12 +62,58 @@ export const fetchGroupData = (boardId) => {
     };
 
     try {
-      const boardData = await API_FETCH();
+      const boardData = await LIST_FETCH();
       dispatch(boardActions.replaceGroupsData(boardData));
     } catch (error) {
       store.addNotification({
         title: "Error",
         message: "Failed to the data",
+        type: "danger",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate_animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 5000,
+          onScreen: true,
+        },
+      });
+    }
+  };
+};
+// Fetch member data for board(bid)
+export const fetchMemberData = (boardId) => {
+  return async (dispatch) => {
+    const MEMBER_FETCH = async () => {
+      const BACKEND_URL = process.env.REACT_APP_API_URL;
+      const response = await axios.post(
+        BACKEND_URL + `api/boards/${boardId}/members`
+      );
+      return response.data;
+    };
+
+    try {
+      const memberData = await MEMBER_FETCH();
+      let members = {
+        ids: [],
+        members: {},
+      };
+      memberData.forEach((member) => {
+        console.log("member", member);
+        members.ids.push(member.member._id);
+        members.members[member.member._id] = {
+          ...member.member,
+          acronym: member.member.username
+            .toUpperCase()
+            .match(/\b(\w)/g)
+            .slice(0, 2),
+        };
+      });
+      dispatch(boardActions.replaceMembersData(members));
+    } catch (error) {
+      store.addNotification({
+        title: "Error",
+        message: "Failed to get members",
         type: "danger",
         insert: "top",
         container: "bottom-right",

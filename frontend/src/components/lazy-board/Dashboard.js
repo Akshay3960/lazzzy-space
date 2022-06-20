@@ -6,7 +6,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import styles from "./Dashboard.module.css";
 import Tasks from "../tasks/Tasks";
 import { moveEnterGroup } from "../../store/board-actions";
-import { fetchGroupData, pushGroupToBoard } from "../../store/board-actions";
+import { fetchGroupData, pushGroupToBoard, fetchMemberData } from "../../store/board-actions";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -17,6 +17,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(fetchGroupData(boardId));
+    dispatch(fetchMemberData(boardId))
   }, [dispatch, boardId]);
 
   const openAddTaskListHandler = () => {
