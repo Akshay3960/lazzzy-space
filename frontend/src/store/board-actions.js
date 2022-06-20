@@ -1,6 +1,55 @@
 import axios from "axios";
 import { store } from "react-notifications-component";
 import { boardActions } from "./board-slice";
+import { boardsActions } from "./boards-slice";
+
+export const createBoard = (boardTitle, adminId, recipientIds) => {
+  return async (dispatch) => {
+    const API_FETCH = async () => {
+      console.log(1)
+      const BACKEND_URL = process.env.REACT_APP_API_URL;
+      const data = {
+        title: boardTitle,
+        ruserIds: recipientIds,
+      };
+      const response = await axios.post(
+        BACKEND_URL + "api/boards/create_board/" + adminId,
+        data
+      );
+
+      console.log(response)
+
+      return response;
+    };
+
+    try {
+      const boardData = await API_FETCH();
+      dispatch(
+        boardsActions.addBoard({
+          id: boardData.data._id,
+          title: boardData.data.title,
+          isFavorite: false,
+          members: {},
+          groups: boardData.data.groups,
+        })
+      );
+    } catch (error) {
+      store.addNotification({
+        title: "Error",
+        message: "Failed to the data",
+        type: "danger",
+        insert: "top",
+        container: "bottom-right",
+        animationIn: ["animate__animated", "animate__fadeIn"],
+        animationOut: ["animate_animated", "animate__fadeOut"],
+        dismiss: {
+          duration: 5000,
+          onScreen: true,
+        },
+      });
+    }
+  };
+};
 
 export const fetchGroupData = (boardId) => {
   return async (dispatch) => {
@@ -134,9 +183,11 @@ export const popCardFromGroup = ({ groupId: lid, cardId: cid }) => {
   return async (dispatch) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
     let Res;
-    console.log(lid,cid)
+    console.log(lid, cid);
     try {
-      Res = await axios.delete(BACKEND_URL + "api/list/delete_card/" + lid + "/" + cid);
+      Res = await axios.delete(
+        BACKEND_URL + "api/list/delete_card/" + lid + "/" + cid
+      );
       console.log(Res.data);
     } catch (err) {
       console.error(err);
@@ -153,36 +204,40 @@ export const popCardFromGroup = ({ groupId: lid, cardId: cid }) => {
 export const moveEnterGroup = ({ source, destination, draggableId }) => {
   return async (dispatch) => {
     const BACKEND_URL = process.env.REACT_APP_API_URL;
-    
-    if (!destination){
-      return ;
+
+    if (!destination) {
+      return;
     }
 
-    if ( destination.droppableId === source.droppableId &&
-      destination.index === source.index){
-        return;
-      }
-    
-      try {
-        await axios.post(
-          BACKEND_URL +
-            "api/list/" +
-            source.droppableId +
-            "/" +
-            draggableId +
-            "/" +
-            destination.droppableId +
-            "/" +
-            destination.index
-        );
-      } catch (e) {
-        console.log("error in moveEnterGroup");
-        console.log(e);
-      }
-      dispatch(
-        boardActions.dragEnterGroup({
-          source, destination, draggableId
-        })
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    try {
+      await axios.post(
+        BACKEND_URL +
+          "api/list/" +
+          source.droppableId +
+          "/" +
+          draggableId +
+          "/" +
+          destination.droppableId +
+          "/" +
+          destination.index
       );
+    } catch (e) {
+      console.log("error in moveEnterGroup");
+      console.log(e);
+    }
+    dispatch(
+      boardActions.dragEnterGroup({
+        source,
+        destination,
+        draggableId,
+      })
+    );
   };
 };

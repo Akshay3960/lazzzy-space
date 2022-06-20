@@ -19,7 +19,7 @@ const boardSlice = createSlice({
       state.title = action.payload.title;
       state.owner = action.payload.owner;
       state.isFavorite = action.payload.isFavorite;
-      state.members = DUMMY_MEMBERS;
+      state.members = action.payload.members;
     },
     replaceGroupsData(state, action) {
       state.groups = action.payload;

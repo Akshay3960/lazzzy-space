@@ -6,9 +6,9 @@ const BoardPage = () => {
   return (
     <div className={styles["container"]}>
       <div className={styles["content"]}>
-        <BoardBar />
-        <Dashboard />
+          <Dashboard />
       </div>
+        <BoardBar />
     </div>
   );
 };

@@ -151,7 +151,7 @@
   font-size:0.7rem;
 }
 
-.note-actions button{
+.note-actions div{
   display:flex;
   justify-content:center;
   align-items:center;

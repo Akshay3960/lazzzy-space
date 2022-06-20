@@ -1,17 +1,19 @@
 .nav-container {
   display: flex;
-  width: 100vw;
+  width: 100%;
   justify-content: space-between;
   flex-wrap:wrap;
   align-items: center;
   color: white;
   background-color: #654ca1be;
-  height: auto;
+  height: 3.5rem;
 }
 
 .nav-left,
 .nav-right {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .nav-item {
@@ -39,10 +41,18 @@
 }
 
 
-.menu:hover{
-  background-color: rgba(0, 0, 0, 0.145);
-}
+
 .members-search{
   padding:5px;
   padding-left:.5rem;
 }
+
+.members-menu{
+  position: absolute;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 0 2px rgba(0,0,0,10);
+  background-color:white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
+}
+

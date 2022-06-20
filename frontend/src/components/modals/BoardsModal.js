@@ -1,4 +1,4 @@
-import { Fragment, useState, useRef, useReducer, useContext } from "react";
+import { Fragment, useState, useRef, useContext } from "react";
 import { useDispatch } from "react-redux";
 import {
   Modal,
@@ -6,19 +6,15 @@ import {
   Avatar,
   Badge,
   ScrollArea,
-  LoadingOverlay,
 } from "@mantine/core";
-import { IoCloseSharp } from "react-icons/io5";
 import { FiSearch } from "react-icons/fi";
 import { MdAdd } from "react-icons/md";
-import axios from "axios";
 
 import styles from "./BoardsModal.module.css";
-import { boardsActions } from "../../store/boards-slice";
+import { createBoard } from "../../store/board-actions";
 import AuthContext from "../../store/auth-context";
-import useSearch from "../../hooks/use-search";
 import useHttp from "../../hooks/use-http";
-import { searchMembers, addMembersOnCreate } from "../../store/members-actions";
+import { searchMembers } from "../../store/members-actions";
 
 export const DUMMY_MEMBERS = [
   {
@@ -63,21 +59,6 @@ export const DUMMY_MEMBERS = [
   },
 ];
 
-// const filterFun = async (value) => {
-//   const BACKEND_URL = process.env.REACT_APP_API_URL;
-
-//   const data = {
-//     uid: value,
-//   };
-
-//   try {
-//     const Res = await axios.post(BACKEND_URL + "api/users/find_user", data);
-//     return Res.data;
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
-
 const BoardsModal = () => {
   const dispatch = useDispatch();
   const boardInputRef = useRef();
@@ -88,7 +69,7 @@ const BoardsModal = () => {
     _id: authCtx._id,
     acronym: authCtx.nameAcronym,
     color: authCtx.color,
-    name: authCtx.name,
+    username: authCtx.name,
     status: "owner",
     statusColor: "violet",
   };
@@ -96,28 +77,21 @@ const BoardsModal = () => {
   const [openModal, setOpenModal] = useState(false);
   const [toAddMembers, setToAddMembers] = useState(false);
 
-  let temp = {};
-  let tempIds = [];
-  DUMMY_MEMBERS.forEach((item) => {
-    tempIds.push(item._id);
-    temp[item._id] = {
-      ...item,
-    };
-  });
-
   const [invitedMembers, setInvitedMembers] = useState({
-    ids: [adminUser._id, ...tempIds],
+    ids:[adminUser._id],
     members: {
-      [adminUser._id]: adminUser,
-      ...temp,
+      [adminUser._id]:adminUser
     },
   });
 
   const {
     sendRequest: searchRequest,
-    data: searchMembersData,
-    handleException: searchException,
-  } = useHttp(searchMembers);
+    data: searchedMembersData,
+    clearRequest:clearSearch,
+    handleNotify: searchException,
+  } = useHttp(searchMembers,{});
+
+  const { ids: searchedMembersIds, members: searchedMembers} = searchedMembersData;
 
   const onSearchHandler = () => {
     let enteredSearch = searchMemberIdRef.current.value;
@@ -131,9 +105,11 @@ const BoardsModal = () => {
       return;
     }
 
+    
+
     searchRequest(enteredSearch, invitedMembers);
 
-    if (searchMembersData.length === 0) {
+    if (searchedMembers.length === 0) {
       searchException("The User Id does not exist");
       return;
     }
@@ -141,16 +117,13 @@ const BoardsModal = () => {
 
   const onAddMembersHandler = (member) => {
     const invitedMember = {
-      _id: member._id,
-      acronym: member.username
-        .toUpperCase()
-        .match(/\b(\w)/g)
-        .slice(0, 2),
-      color: member.color,
-      name: member.username,
+      ...member,
       status: "sent",
       statusColor: "yellow",
     };
+
+    console.log(member, invitedMember)
+
 
     setInvitedMembers((state) => {
       return {
@@ -166,35 +139,11 @@ const BoardsModal = () => {
   const submitBoardHandler = async (event) => {
     event.preventDefault();
 
-    if (boardInputRef.current.value.trim() === "") return;
+    let boardTitle = boardInputRef.current.value;
 
-    const BACKEND_URL = process.env.REACT_APP_API_URL;
-    const user_id = authCtx._id;
-    let Res;
-    const data = {
-      title: boardInputRef.current.value,
-    };
-
-    try {
-      Res = await axios.post(
-        BACKEND_URL + "api/boards/create_board/" + user_id,
-        data
-      );
-
-      console.log(invitedMembers);
-      dispatch(
-        boardsActions.addBoard({
-          id: Res.data._id,
-          title: Res.data.title,
-          isFavorite: false,
-          members: {},
-          groups: Res.data.groups,
-        })
-      );
-    } catch (err) {
-      console.error(err);
-    }
-
+    if (boardTitle.trim() === "") return;
+    invitedMembers.ids.shift();
+    dispatch(createBoard(boardTitle, adminUser._id, invitedMembers.ids))
     setOpenModal(false);
   };
 
@@ -206,7 +155,7 @@ const BoardsModal = () => {
             {item.acronym}
           </Avatar>
           <div className={styles["member-name"]}>
-            <p>{item.name}</p>
+            <p>{item.username}</p>
             <label>id: {item._id}</label>
           </div>
         </div>
@@ -220,27 +169,28 @@ const BoardsModal = () => {
   };
 
   const searchMembersList =
-    searchMembersData &&
-    searchMembersData.map((member) => {
-      if (invitedMembers.ids.includes(member._id)) {
-        return memberElement(invitedMembers["members"][member._id]);
+    searchedMembersIds &&
+    searchedMembersIds.map((id) => {
+      if (invitedMembers.ids.includes(id)) {
+        return memberElement(invitedMembers["members"][id]);
+      }
+      
+      if(id === adminUser._id){
+        return memberElement(adminUser)
       }
       return (
-        <div className={styles.member} key={member._id}>
+        <div className={styles.member} key={id}>
           <div className={styles["member-name-container"]}>
-            <Avatar size="md" color={member.color}>
-              {member.username
-                .toUpperCase()
-                .match(/\b(\w)/g)
-                .slice(0, 2)}
+            <Avatar size="md" color={searchedMembers[id].color}>
+              {searchedMembers[id].acronym}
             </Avatar>
             <div className={styles["member-name"]}>
-              {member.username}
-              <label>id: {member._id.slice(17)}</label>
+              {searchedMembers[id].username}
+              <label>id: {id.slice(17)}</label>
             </div>
           </div>
           <div className={styles["member-status"]}>
-            <button onClick={onAddMembersHandler.bind(null, member)}>
+            <button onClick={onAddMembersHandler.bind(null, searchedMembers[id])}>
               <MdAdd />
             </button>
           </div>
@@ -248,7 +198,7 @@ const BoardsModal = () => {
       );
     });
 
-  const membersList = invitedMembers["ids"].map((id) => {
+  const membersList =  invitedMembers["ids"].map((id) => {
     let item = invitedMembers["members"][id];
     return memberElement(item);
   });
@@ -268,6 +218,7 @@ const BoardsModal = () => {
         opened={openModal}
         onClose={() => {
           setToAddMembers(false);
+          clearSearch();
           setOpenModal(false);
         }}
         title="Add Workspace"
@@ -329,6 +280,7 @@ const BoardsModal = () => {
             <Button
               onClick={() => {
                 setToAddMembers(false);
+                clearSearch();
                 setOpenModal(false);
               }}
               size="xs"
@@ -344,4 +296,4 @@ const BoardsModal = () => {
 };
 
 export default BoardsModal;
-//be29875
+//930eadd

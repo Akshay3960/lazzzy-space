@@ -13,6 +13,7 @@ const AuthContext = React.createContext({
   onLogin: (name, email, password) => {},
   onOpenRegister: () => {},
   onCloseRegister: () => {},
+  filterNotifications: (notifyId) => {},
 });
 
 const defaultUserState = {
@@ -21,9 +22,9 @@ const defaultUserState = {
   name: "",
   email: "",
   color: "",
-  profileImage:"",
+  profileImage: "",
+  notifications: [],
 };
-
 
 const userReducer = (state, action) => {
   if (action.type === "LOG_IN") {
@@ -38,13 +39,13 @@ const userReducer = (state, action) => {
 
       email: action.email,
       color: action.color,
+      notifications: action.notifications,
       profileImage: action.profileImage
         ? action.profileImage
         : state.profileImage,
     };
   }
   if (action.type === "LOG_OUT") {
-
     return {
       isLoggedIn: false,
       _id: "",
@@ -53,6 +54,17 @@ const userReducer = (state, action) => {
       email: "",
       color: "",
       profileImage: "",
+      notifications: [],
+    };
+  }
+
+  if (action.type == "SEND_ACK") {
+    let notifications = state.notifications.filter(
+      (item) => item._id !== action.notifyId
+    );
+    return {
+      ...state,
+      notifications,
     };
   }
 
@@ -81,7 +93,7 @@ export const AuthContextProvider = (props) => {
     });
   };
 
-  const loginHandler = (_id, name, email,  color) => {
+  const loginHandler = (_id, name, email, color, notifications) => {
     // let temp = {}
     // notifications.forEach(item => {
     //   temp[item._id] = {
@@ -93,7 +105,15 @@ export const AuthContextProvider = (props) => {
       _id,
       name,
       email,
+      notifications,
       color,
+    });
+  };
+
+  const filterNotifications = (notifyId) => {
+    dispatchUserAction({
+      type: "SEND_ACK",
+      notifyId,
     });
   };
 
@@ -105,7 +125,7 @@ export const AuthContextProvider = (props) => {
         nameAcronym: userState.nameAcronym,
         email: userState.email,
         color: userState.color,
-        notifications:userState.notifications,
+        notifications: userState.notifications,
         profileImage: userState.profileImage,
         isLoggedIn: userState.isLoggedIn,
         openRegister: openRegister,
@@ -113,6 +133,7 @@ export const AuthContextProvider = (props) => {
         onLogin: loginHandler,
         onOpenRegister: onOpenRegisterHandler,
         onCloseRegister: onCloseRegisterHandler,
+        filterNotifications,
       }}
     >
       {props.children}

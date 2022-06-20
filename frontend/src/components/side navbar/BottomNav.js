@@ -10,7 +10,7 @@ import { boardsActions } from "../../store/boards-slice";
 import BoardsContainer from "./BoardsContainer";
 import BoardsModal from "../modals/BoardsModal";
 
-const BottomNav = (props) => {
+const BottomNav = () => {
   const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = useState(false);

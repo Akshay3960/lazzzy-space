@@ -80,6 +80,7 @@ router.put('/setfav/:uid/:bid', async (req, res) => {
     try {
         const user = await User.findById(req.params.uid);
         const fav = !req.body.isFavourite;
+        console.log(fav)
         await User.updateOne(
             { _id: user._id, "boards.bid": req.params.bid },
             { $set: { "boards.$.isFavourite": fav } }

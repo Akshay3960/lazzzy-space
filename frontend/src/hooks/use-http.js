@@ -1,12 +1,11 @@
 import { useReducer, useCallback } from "react";
 import { store } from "react-notifications-component";
-import LoadingSpinner from "../components/UI/LoadingSpinner";
 
 const httpReducer = (state, action) => {
   if (action.type === "SEND") {
     return {
-      data: null,
-      error: null,
+      data: state.data,
+      error: undefined,
       status: "pending",
     };
   }
@@ -20,17 +19,24 @@ const httpReducer = (state, action) => {
   if (action.type === "ERROR") {
     return {
       isLoading: false,
-      data: null,
+      data: state.data,
       error: action.error,
     };
   }
+  if (action.type === "CLEAR"){
+    return {
+      isLoading:false,
+      data:action.value,
+      error:null
+    }
+  }
 };
 
-const useHttp = (requestFunction, startWithPending = false) => {
+const useHttp = (requestFunction, initialValue = null) => {
   const [httpState, dispatch] = useReducer(httpReducer, {
-    status: startWithPending ? "pending" : null,
-    data: null,
-    error: null,
+    status:  undefined,
+    data: initialValue,
+    error: undefined,
   });
 
 
@@ -42,7 +48,6 @@ const useHttp = (requestFunction, startWithPending = false) => {
     } catch (error) {
       store.addNotification({
         title: "Error",
-        className:"notification-above",
         message: error.message || "Something went wrong",
         type: "danger",
         insert: "top",
@@ -63,11 +68,14 @@ const useHttp = (requestFunction, startWithPending = false) => {
     }
   },[requestFunction]);
 
-  const handleException = (exception) => {
+  const clearRequest = () => {
+    dispatch({type:"CLEAR",value: initialValue});
+  }
+
+  const handleNotify = (message) => {
     return store.addNotification({
-      title: "Invalid Input",
-      className:"notification-above",
-      message: exception || "Something went wrong",
+      title: "Info",
+      message: message,
       type: "default",
       insert: "top",
       container: "bottom-right",
@@ -82,7 +90,8 @@ const useHttp = (requestFunction, startWithPending = false) => {
 
   return{
     sendRequest,
-    handleException,
+    handleNotify,
+    clearRequest,
     ...httpState
   }
 };
