@@ -13,39 +13,50 @@ import styles from "./Navbar.module.css";
 import AuthContext from "../../store/auth-context";
 import { boardActions } from "../../store/board-slice";
 import { boardsActions } from "../../store/boards-slice";
+import {  sendAcceptNotify, sendRejectNotify } from "../../store/members-actions";
+import useHttp from "../../hooks/use-http";
 import DropModal from "../modals/DropModal";
 
-const DUMMY_NOTES = [
-  {
-    _id: Math.random(),
-    board: "Academic Tasks",
-    invitee: "Ron Jacob",
-    time: "8:45am",
-  },
-  {
-    _id: Math.random(),
-    board: "Distributed Systems",
-    invitee: "Akshay Babu",
-    time: "6:30pm",
-  },
-  {
-    _id: Math.random(),
-    board: "Computer Security",
-    invitee: "Ananthanan",
-    time: "12:00pm",
-  },
-];
+// const DUMMY_NOTES = [
+//   {
+//     _id: Math.random(),
+//     boardName: "Academic Tasks",
+//     userName: "Ron Jacob",
+//     sendTime: "8:45am",
+//   },
+//   {
+//     _id: Math.random(),
+//     boardName: "Distributed Systems",
+//     userName: "Akshay Babu",
+//     sendTime: "6:30pm",
+//   },
+//   {
+//     _id: Math.random(),
+//     boardName: "Computer Security",
+//     userName: "Ananthanan",
+//     sendTime: "12:00pm",
+//   },
+// ];
 
 const Navbar = (props) => {
   const dispatch = useDispatch();
   const authCtx = useContext(AuthContext);
-  const [notifications, setNotifications] = useState(DUMMY_NOTES);
+  const { _id: adminId, notifications, filterNotifications } = authCtx;
   const [ openDropModal, setOpenDropModal ] = useState(false);
   const FILE_MIME_TYPE  = [
     "image/jpeg",
     "image/jpg",
     "image/png"
   ]
+  
+  const {
+    sendRequest:onAcceptNotify,
+  } = useHttp(sendAcceptNotify);
+
+  const {
+    sendRequest:onRejectNotify,
+  } = useHttp(sendRejectNotify);
+    
 
   const onLogoutHandler = () => {
     dispatch(boardActions.resetBoard());
@@ -53,10 +64,10 @@ const Navbar = (props) => {
     authCtx.onLogout();
   };
 
-  const onAcceptNotification = (id, board) => {
+  const onAcceptNotification = (notification) => {
     store.addNotification({
       title: "Accepted",
-      message: `You have joined ${board}`,
+      message: `You have joined ${notification.boardName}`,
       type: "success",
       insert: "top",
       container: "bottom-right",
@@ -68,13 +79,21 @@ const Navbar = (props) => {
       },
     });
 
-    setNotifications((state) => state.filter((item) => item._id !== id));
+    let notifyData = {
+      adminId,
+      boardId: notification.bid,
+      senderId: notification.uid,
+      notifyId:notification._id
+    }
+    onAcceptNotify(notifyData);
+    filterNotifications(notification._id)
+
   };
 
-  const onRejectNotification = (id, board) => {
+  const onRejectNotification = (notification) => {
     store.addNotification({
       title: "Message Sent",
-      message: `The request to join ${board} has been rejected`,
+      message: `The request to join ${notification.boardName} has been rejected`,
       type: "success",
       insert: "top",
       container: "bottom-right",
@@ -85,30 +104,47 @@ const Navbar = (props) => {
         onScreen: true,
       },
     });
-    setNotifications((state) => state.filter((item) => item._id !== id));
+    console.log(notification)
+
+
+    let notifyData = {
+      adminId,
+      boardId: notification.bid,
+      senderId: notification.uid,
+      notifyId: notification._id
+    }
+
+    onRejectNotify(notifyData)
+    filterNotifications(notification._id)
+
   };
 
+  const deleteNotify = (id) => {
+    authCtx.filterNotifications(id);
+  }
+
   const notificationsList = notifications.map((item) => (
-    <Menu.Item key = {item._id}>
+    <Menu.Item key = {item._id} onClick = {item.notify_type === 'respond' && deleteNotify.bind(null,item._id)}>
+      {console.log(item)}
       <p>{item.time}</p>
-      <header>{item.board}</header>
+      <header>{item.notify_type === 'respond'? "Accepted": item.boardName}</header>
       <div
         className={styles["note-content"]}
-      >{`${item.invitee} has invited you to join ${item.board}`}</div>
-      <div className={styles["note-actions"]}>
-        <button
-          onClick={() => onAcceptNotification(item._id, item.board)}
+      >{item.notify_type === 'respond' ? `${item.userName} has joined ${item.boardName}`:`${item.userName} has invited you to join ${item.boardName}`}</div>
+     {item.notify_type === "invite" && <div className={styles["note-actions"]}>
+        <div
+          onClick={() => onAcceptNotification(item)}
           style={{ backgroundColor: "green" }}
         >
           <FaCheck />
-        </button>
-        <button
-          onClick={() => onRejectNotification(item._id, item.board)}
+        </div>
+        <div
+          onClick={() => onRejectNotification(item)}
           style={{ backgroundColor: "red" }}
         >
           <ImCross />
-        </button>
-      </div>
+        </div>
+      </div>}
     </Menu.Item>
   ));
 
@@ -146,6 +182,7 @@ const Navbar = (props) => {
           }
         >
           {notifications.length === 0 && (
+
             <Menu.Item>
               <p className = {styles["no-notifications"]}>No notifications found</p>
             </Menu.Item>
@@ -181,3 +218,4 @@ const Navbar = (props) => {
 };
 
 export default Navbar;
+//930ea3f

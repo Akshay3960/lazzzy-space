@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ScrollArea, Menu, Divider } from "@mantine/core";
+import { ScrollArea, Menu  } from "@mantine/core";
 import { Droppable } from "react-beautiful-dnd";
 import { RiEditBoxLine } from "react-icons/ri";
 import { MdModeEdit } from "react-icons/md";
@@ -17,7 +17,6 @@ const Tasks = (props) => {
   );
   const [toAddTask, setToAddTask] = useState(false);
   const taskInputRef = useRef();
-  const [isEdit, setIsEdit] = useState(false);
   const boardId = useSelector((state) => state.board._id);
 
   const deleteTaskListHandler = (tasksId) => {

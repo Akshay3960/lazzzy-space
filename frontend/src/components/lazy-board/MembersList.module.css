@@ -1,0 +1,42 @@
+
+.search-content {
+  margin: 0.6rem 0rem;
+  display: flex;
+}
+
+.member-content{
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  gap:0.5rem;
+}
+
+.search {
+  border: 1px solid rgba(128, 128, 128, 0.282);
+  padding: 3px;
+  border-radius:4px;
+}
+
+.menu-item:hover:not(:first-child){
+  background-color: rgba(0, 0, 0, 0.145);
+}
+
+.link{
+  box-sizing: border-box;
+  background-color: #ffffff18;
+  padding: 7px;
+  margin-top: 2px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  margin-right:1rem;
+}
+
+.inactive{
+  pointer-events: none;
+}
+
+.check{
+  color:green;
+  position:absolute;
+  right:1.3rem;
+}

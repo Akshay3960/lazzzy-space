@@ -21,14 +21,20 @@ const BoardsContainer = (props) => {
   const searchInputRef = useRef();
   const boardIds = useSelector((state) => state.boards[props.boardIds]);
 
-  const toggleFavoriteHandler = async (id, event) => {
+  const toggleFavoriteHandler = async (id, isFavorite, event) => {
+    console.log(isFavorite);
     event.stopPropagation();
 
     const user_id = authCtx._id;
+
+    const data = {
+      isFavourite: isFavorite,
+    };
+    
     
     try{
       const BACKEND_URL = process.env.REACT_APP_API_URL
-      await axios.put(BACKEND_URL + `api/users/setfav/${user_id}/${id}`)
+      await axios.put(BACKEND_URL + `api/users/setfav/${user_id}/${id}`,data)
     }catch(err){
       console.log(err);
     }
@@ -75,7 +81,7 @@ const BoardsContainer = (props) => {
                   isFavorite={props.isFavorite}
                   onClick={selectBoardHandler.bind(null, item)}
                   title={boards[item].title}
-                  onFavorite={toggleFavoriteHandler.bind(null, item)}
+                  onFavorite={toggleFavoriteHandler.bind(null, item, boards[item].isFavorite)}
                 />
               </div>
             ))}

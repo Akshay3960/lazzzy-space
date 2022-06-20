@@ -4,36 +4,36 @@ const Board = require('../../models/Board');
 const router = express.Router();
 // send notification
 
-// router.post('/sent_notify/:uid/:bid/:ruid', async(req, res) => {
+router.post('/sent_notify/:uid/:bid/:ruid', async(req, res) => {
 
-//     try{
-//         const user = await User.findById(req.params.uid);
-//         const board = await Board.findById(req.params.bid);
-//         const recpt_user = await User.findById(req.params.ruid);
+    try{
+        const user = await User.findById(req.params.uid);
+        const board = await Board.findById(req.params.bid);
+        const recpt_user = await User.findById(req.params.ruid);
 
-//         const notify_msg = {
-//             notify_type: "invite",
-//             boardName: board.title,
-//             userName: user.username,
-//             sendTime: new Date().toLocaleString(),
-//             uid: req.params.uid,
-//             bid: req.params.bid
-//         }
-//         // update the recipient user notification box
-//         await User.findByIdAndUpdate(
-//             { _id: recpt_user._id },
-//             { $push: { notification: notify_msg } }
-//         )
-//         console.log(notify_msg);
+        const notify_msg = {
+            notify_type: "invite",
+            boardName: board.title,
+            userName: user.username,
+            sendTime: new Date().toLocaleString(),
+            uid: req.params.uid,
+            bid: req.params.bid
+        }
+        // update the recipient user notification box
+        await User.findByIdAndUpdate(
+            { _id: recpt_user._id },
+            { $push: { notification: notify_msg } }
+        )
+        console.log(notify_msg);
         
-//         res.status(200).send("sent successful");
+        res.status(200).send("sent successful");
 
-//     }
-//     catch(err) {
-//         console.error(err.message);
-//         res.status(500).send('Server Error');
-//     }
-// })
+    }
+    catch(err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+})
 
 router.post('/handle_notify/:uid', async(req, res) => {
 

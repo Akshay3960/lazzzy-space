@@ -7,7 +7,7 @@ import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
 import AuthContext from "../../store/auth-context";
 
-const Login = (props) => {
+const Login = () => {
   const authCtx = useContext(AuthContext);
   const isNotEmpty = (value) => {
     return value.trim() !== "";
@@ -76,7 +76,8 @@ const Login = (props) => {
       Res.data._id,
       Res.data.username, 
       Res.data.email,
-      Res.data.color);
+      Res.data.color,
+      Res.data.notification);
 
 
     store.addNotification({
