@@ -162,6 +162,30 @@ router.put('/rename/:bid', async (req, res) => {
     }
 });
 
+// get board members
+
+router.post('/:bid/members', async(req, res)=> {
+    try {
+        const board = await Board.findById(req.params.bid);
+        const board_members = board.members;
+        console.log(board_members);
+        const member_list = []
+        for(const member_id of board_members) {
+            let member = await User.findById(member_id.user);
+
+            member_list.push({
+                member: member
+            });
+
+        }
+        res.status(200).json(member_list);
+        
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("server error");
+    }
+})
+
 // add members to the board
 router.post('/add_users/:bid', async (req, res) => {
     try {

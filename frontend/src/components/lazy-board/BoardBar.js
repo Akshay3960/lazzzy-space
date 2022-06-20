@@ -23,7 +23,7 @@ const BoardBar = () => {
   const boardId = useSelector((state) => state.board._id);
   console.log(boardId,"boardId")
   const isFavorite = useSelector((state) => state.board.isFavorite);
-  let members = useSelector((state) => state.board.members);
+  const {ids:memberIds, members} = useSelector((state) => state.board.members);
 
   const {
     sendRequest: searchRequest,
@@ -54,13 +54,14 @@ const BoardBar = () => {
       searchException("This id is already invited");
       return;
     }
-
-    members.forEach((member) => {
-      if(member._id === search){
+let l=0;
+    memberIds.forEach((id) => {
+      if(id.includes(search)){
         searchException("This id is already invited");
-        return
+        l=1
       }
     })
+    if(l===1){return}
     searchRequest(search);
 
     if (!searchedMemberIds){
@@ -114,13 +115,14 @@ const BoardBar = () => {
             )}
           </button>
         </div>
-        <MembersList button="members" members = {[]}/>
+        <MembersList button="members" members = {{ids:memberIds,
+        members}}/>
         <div className={styles["nav-item"]}>
           <AvatarsGroup size="md" limit={4}>
-            {members.map((member) => {
+            {memberIds.map((id) => {
               return (
-                <Avatar key={member._id} radius="lg" color={member.color}>
-                  {member.acronym}
+                <Avatar key={id} radius="lg" color={members[id].color}>
+                  {members[id].acronym}
                 </Avatar>
               );
             })}

@@ -8,12 +8,14 @@ const MembersList = (props) => {
   const searchMembersRef = useRef();
 
   const { ids, members } = props.members;
+  // console.log(members)
+  // console.log(ids)
 
   const showMembers =
     ids &&
     ids.map((id) => {
       return (
-        <Menu.Item onClick = {props.onAdd.bind(null,id)} className={classes.member}>
+        <Menu.Item onClick = {props.onAdd && props.onAdd.bind(null,id)} className={classes.member}>
           <div key={id} className={classes["member-content"]}>
             <Avatar size="sm" src={null} color={members[id].color}>
               {members[id].acronym}
