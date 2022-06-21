@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 
 const User = require('../../models/User');
+const verifyJWT = require('../../middleware/verifyJWT')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
