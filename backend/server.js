@@ -8,9 +8,10 @@ const list = require('./routes/api/list')
 const upload = require('./routes/api/upload')
 const board = require('./routes/api/boards')
 const notify = require('./routes/api/notify')
+const refresh = require('./routes/api/refresh')
 const connectDB = require('./config/dbConn')
 const corsOptions = require('./config/corsOptions')
-const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser')
 const verifyJWT = require('./middleware/verifyJWT')
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,13 +29,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 //middleware for cookies
-app.use(cookieParser());
+app.use(cookieParser()); 
 
 //Set static file path
 app.use('/images', express.static(__dirname + '/images'));
 
-
+app.use('/api/refresh', refresh);
 app.use('/api/auth', auth);
+
 // Check for access token before any request.
 app.use(verifyJWT);
 app.use('/api/users', users);
