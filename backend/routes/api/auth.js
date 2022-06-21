@@ -114,7 +114,7 @@ router.post("/login", async (req, res) => {
         user.refreshToken = refreshToken;
         const result = await user.save();
         // console.log(result)
-        res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+        res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
 
         // Send authorization roles and access token to user
         res.status(200).json({ result, accessToken });
