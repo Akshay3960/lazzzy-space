@@ -60,14 +60,8 @@ const UserSchema = new Schema({
     accept: String
 
     }],
+    refreshToken: String
 
-    // respond_notify: [{
-    //     _id: false,
-    //     uid: String,
-    //     userName: String,
-    //     boardName: String,
-    //     acceptTime: String
-    // }]
 
 
 

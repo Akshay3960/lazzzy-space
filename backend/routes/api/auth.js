@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../../models/User');
 const bcrypt = require('bcrypt')
 const multer = require('multer');
+const jwt = require('jsonwebtoken')
 
 
 const router = express.Router();
@@ -97,8 +98,26 @@ router.post("/login", async (req, res) => {
 
         const validPass = await bcrypt.compare(req.body.password, user.password)
         !validPass && res.status(400).json("Wrong Password")
+        //Create the JWT
+        const accessToken = jwt.sign({
+            "username": user.username
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn: '30s'}
+        );
+        const refreshToken = jwt.sign(
+            { "username": user.username },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn:'1d' }
+            )
+        // Add new refresh token to user
+        user.refreshToken = refreshToken;
+        const result = await user.save();
+        // console.log(result)
+        res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
-        res.status(200).json(user)
+        // Send authorization roles and access token to user
+        res.status(200).json({ result, accessToken });
 
     } catch (err) {
         console.log(err)
