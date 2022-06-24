@@ -4,7 +4,7 @@ const verifyJWT = (req, res, next) => {
     const authHeader = req.headers.authorization || req.headers.Authorization;
     //If there is not token send from request then status 401 unauthorized
     if (!authHeader?.startsWith('Bearer ')) {
-        console.log("hell")
+        // console.log("hell")
         return res.sendStatus(401)
     };
     const token = authHeader.split(' ')[1];

@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cookieParser = require('cookie-parser')
 const users = require('./routes/api/users');
 const auth = require('./routes/api/auth');
 const list = require('./routes/api/list')
@@ -11,13 +12,18 @@ const notify = require('./routes/api/notify')
 const refresh = require('./routes/api/refresh')
 const connectDB = require('./config/dbConn')
 const corsOptions = require('./config/corsOptions')
-const cookieParser = require('cookie-parser')
+const credentials = require('./middleware/credentials')
 const verifyJWT = require('./middleware/verifyJWT')
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 //Connect to MongoDB
 connectDB();
+
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement, needed to check client as per 
+// CORS policy
+app.use(credentials);
 
 //Cross Origin Resource Sharing
 app.use(cors(corsOptions))

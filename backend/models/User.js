@@ -60,7 +60,7 @@ const UserSchema = new Schema({
     accept: String
 
     }],
-    refreshToken: String
+    refreshToken: [String]
 
 
 
