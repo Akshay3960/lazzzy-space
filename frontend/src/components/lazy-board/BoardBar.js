@@ -13,10 +13,11 @@ import AuthContext from "../../store/auth-context";
 import { searchMembers,sendNotify } from "../../store/members-actions";
 import MembersList from "./MembersList";
 import useHttp from "../../hooks/use-http";
-import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 const BoardBar = () => {
+  const axiosSecure = useAxiosSecure()
   const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
   const title = useSelector((state) => state.board.title);
@@ -80,15 +81,13 @@ let l=0;
     dispatch(boardActions.toggleFavorites());
     dispatch(boardsActions.toggleFavorites({ id: boardId }));
 
-    const BACKEND_URL = process.env.REACT_APP_API_URL;
     const user_id = authCtx._id;
 
     const data = {
       isFavourite: isFavorite,
     };
     try {
-      await axios.put(
-        BACKEND_URL + "api/users/setfav/" + user_id + "/" + boardId,
+      await axiosSecure.put("/api/users/setfav/" + user_id + "/" + boardId,
         data
       );
     } catch (err) {

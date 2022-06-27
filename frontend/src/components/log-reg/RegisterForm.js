@@ -1,6 +1,6 @@
 import { Fragment, useContext } from "react";
 import { store } from "react-notifications-component";
-import axios from "axios";
+import axios from "../../api/axios";
 
 import styles from "./RegisterForm.module.css";
 import Card from "../UI/Card";
@@ -67,7 +67,6 @@ const ModalOverlay = (props) => {
 
   if (nameIsValid && passwordIsValid && emailIsValid) formIsValid = true;
 
-  const BACKEND_URL = process.env.REACT_APP_API_URL;
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -93,7 +92,7 @@ const ModalOverlay = (props) => {
     // };
 
     try {
-      await axios.post(BACKEND_URL + "api/auth/signup", data);
+      await axios.post("api/auth/signup", data);
     } catch (e) {
       console.log(e);
       store.addNotification({

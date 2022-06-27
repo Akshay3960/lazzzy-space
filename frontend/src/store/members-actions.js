@@ -113,6 +113,7 @@ export const sendAcceptNotify= async ({adminId, boardId, senderId,notifyId}) => 
 }
 
 export const sendRejectNotify = async({adminId, boardId, senderId, notifyId}) => {
+
   const data = {
     bid:boardId,
     suid:senderId,

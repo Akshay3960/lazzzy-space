@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     if (!cookies?.jwt) return res.sendStatus(401); //unauthorized
     const refreshToken = cookies.jwt;
     // Delete after one use
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure:false });
+    res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure:true });
     
     //Detected refresh token that is reused again!! 
     //handling token misuse
@@ -74,7 +74,7 @@ router.get('/', async (req, res) => {
             const result = await current_user.save();
 
             // Creates Secure Cookie with refresh token
-            res.cookie('jwt', newRefreshToken, { httpOnly: true,  sameSite: 'None',secure: false, maxAge: 24 * 60 * 60 * 1000 });
+            res.cookie('jwt', newRefreshToken, { httpOnly: true,  sameSite: 'none',secure: true, maxAge: 24 * 60 * 60 * 1000 });
 
             res.json({accessToken})
         }

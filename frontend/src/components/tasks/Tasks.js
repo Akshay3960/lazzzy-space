@@ -9,9 +9,11 @@ import { TrashIcon } from "@modulz/radix-icons";
 import { popGroupFromBoard, pushCardToGroup } from "../../store/board-actions";
 import styles from "./Tasks.module.css";
 import TaskItem from "./TaskItem";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Tasks = (props) => {
   const dispatch = useDispatch();
+  const axiosSecure = useAxiosSecure()
   const group = useSelector((state) => state.board.groups).find(
     (item) => item._id === props.id
   );
@@ -19,8 +21,11 @@ const Tasks = (props) => {
   const taskInputRef = useRef();
   const boardId = useSelector((state) => state.board._id);
 
-  const deleteTaskListHandler = (tasksId) => {
-    dispatch(popGroupFromBoard(tasksId, boardId));
+  const deleteTaskListHandler = async(tasksId) => {
+    let removeCardRes = await axiosSecure.delete(
+      "api/list/delete_list/" + tasksId + "/" + boardId
+    )
+    dispatch(popGroupFromBoard(tasksId,removeCardRes));
   };
 
   const taskList = group.cardList.map((task, taskIndex) => (
@@ -35,8 +40,16 @@ const Tasks = (props) => {
     />
   ));
 
-  const addTaskHandler = () => {
-    dispatch(pushCardToGroup(props.id, taskInputRef.current.value, ""));
+  const addTaskHandler = async() => {
+    let addCardRes = await axiosSecure.put(
+      "api/list/"+ props.id,{
+        cardList: {
+          cardname: taskInputRef.current.value,
+          description: "",
+        },
+      }
+    )
+    dispatch(pushCardToGroup(props.id, taskInputRef.current.value,addCardRes, ""));
     setToAddTask(false);
   };
 

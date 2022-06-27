@@ -1,10 +1,11 @@
 import {  Modal, Group, Text, useMantineTheme } from "@mantine/core";
 import { Dropzone } from "@mantine/dropzone";
 import { ImageIcon, UploadIcon, CrossCircledIcon } from "@modulz/radix-icons";
-import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 const DropModal = (props) => {
+  const axiosSecure = useAxiosSecure()
   const FILE_MIME_TYPE = props.files
   const theme = useMantineTheme();
 
@@ -31,7 +32,6 @@ const DropModal = (props) => {
   }
 
   async function onDropFile(files) {
-    const BACKEND_URL = process.env.REACT_APP_API_URL;
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -41,7 +41,7 @@ const DropModal = (props) => {
     const data = new FormData()
     data.append("file",files[0])
     try {
-      await axios.post(BACKEND_URL+'api/upload/file_upload/'+ cardId,data,config)
+      await axiosSecure.post('/api/upload/file_upload/'+ cardId,data,config)
     }
     catch(err) {
       console.log(err)

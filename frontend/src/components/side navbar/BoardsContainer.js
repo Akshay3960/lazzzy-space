@@ -1,6 +1,6 @@
 import { useRef, useContext  } from "react";
 import { FaSearch } from "react-icons/fa";
-import axios from 'axios';
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 import { useSelector, useDispatch } from "react-redux";
 import { ScrollArea } from "@mantine/core";
@@ -15,6 +15,7 @@ import NavItem from "./NavItem";
 
 
 const BoardsContainer = (props) => {
+  const axiosSecure = useAxiosSecure()
   const dispatch = useDispatch();
   const authCtx = useContext(authContext);
   const boards = useSelector((state) => state.boards.boards);
@@ -33,8 +34,7 @@ const BoardsContainer = (props) => {
     
     
     try{
-      const BACKEND_URL = process.env.REACT_APP_API_URL
-      await axios.put(BACKEND_URL + `api/users/setfav/${user_id}/${id}`,data)
+      await axiosSecure.put(`/api/users/setfav/${user_id}/${id}`,data)
     }catch(err){
       console.log(err);
     }

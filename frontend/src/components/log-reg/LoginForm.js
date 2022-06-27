@@ -1,13 +1,14 @@
 import { useContext } from "react";
 import { store } from "react-notifications-component";
-import axios from "axios";
+import axios from "../../api/axios";
 
 import styles from "./LoginForm.module.css";
 import Card from "../UI/Card";
 import useInput from "../../hooks/use-input";
 import AuthContext from "../../store/auth-context";
-
+// import useRefreshToken from "../../hooks/useRefreshToken";
 const Login = () => {
+  // const refresh = useRefreshToken();
   const authCtx = useContext(AuthContext);
   const isNotEmpty = (value) => {
     return value.trim() !== "";
@@ -37,7 +38,6 @@ const Login = () => {
 
   if (passwordIsValid && emailIsValid) formIsValid = true;
 
-  const BACKEND_URL = process.env.REACT_APP_API_URL;
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -50,7 +50,10 @@ const Login = () => {
     };
     let Res;
     try {
-      Res = await axios.post(BACKEND_URL + "api/auth/login", data);
+      Res = await axios.post("/api/auth/login", data,
+      {
+        withCredentials:true
+      });
     } catch (e) {
       console.log(e);
       store.addNotification({
@@ -73,11 +76,13 @@ const Login = () => {
     }
 
     authCtx.onLogin(
-      Res.data._id,
-      Res.data.username, 
-      Res.data.email,
-      Res.data.color,
-      Res.data.notification);
+      Res.data.result._id,
+      Res.data.result.username, 
+      Res.data.result.email,
+      Res.data.result.color,
+      Res.data.result.notification);
+
+      authCtx.setToken(Res.data.accessToken)
 
 
     store.addNotification({
