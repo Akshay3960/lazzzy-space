@@ -6,6 +6,7 @@ import { Draggable } from "react-beautiful-dnd";
 import { popCardFromGroup } from "../../store/board-actions";
 import styles from "./TaskItem.module.css";
 import TaskModal from '../modals/TaskModal';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const TaskItem = (props) => {
   const dispatch = useDispatch();
@@ -13,13 +14,18 @@ const TaskItem = (props) => {
 
   const onOpenHandler = () => setIsOpen(true);
   const onCloseHandler = () => setIsOpen(false);
+  const axiosSecure = useAxiosSecure()
 
-  const removeTaskHandler = (event) => {
+  const removeTaskHandler = async(event) => {
     event.stopPropagation();
+    let popCardRes = await axiosSecure.delete(
+      "api/list/delete_card/"+ props.tasksId+"/"+props.id
+    );
     dispatch(
       popCardFromGroup({
         groupId: props.tasksId,
         cardId: props.id,
+        popCardRes: popCardRes
       })
     );
   };

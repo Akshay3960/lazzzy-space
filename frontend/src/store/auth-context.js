@@ -7,6 +7,7 @@ const AuthContext = React.createContext({
   email: "",
   color: "",
   profileImage: "",
+  accessToken: "",
   openRegister: false,
   isLoggedIn: false,
   onLogout: () => {},
@@ -14,6 +15,7 @@ const AuthContext = React.createContext({
   onOpenRegister: () => {},
   onCloseRegister: () => {},
   filterNotifications: (notifyId) => {},
+  setToken:(accessToken) => {}
 });
 
 const defaultUserState = {
@@ -23,6 +25,7 @@ const defaultUserState = {
   email: "",
   color: "",
   profileImage: "",
+  accessToken: "",
   notifications: [],
 };
 
@@ -39,6 +42,7 @@ const userReducer = (state, action) => {
 
       email: action.email,
       color: action.color,
+      accessToken: action.accessToken,
       notifications: action.notifications,
       profileImage: action.profileImage
         ? action.profileImage
@@ -54,11 +58,19 @@ const userReducer = (state, action) => {
       email: "",
       color: "",
       profileImage: "",
+      accessToken: "",
       notifications: [],
     };
   }
 
-  if (action.type == "SEND_ACK") {
+  if(action.type==="TOKEN") {
+    return {
+      ...state,
+      accessToken: action.accessToken
+    };
+  }
+
+  if (action.type === "SEND_ACK") {
     let notifications = state.notifications.filter(
       (item) => item._id !== action.notifyId
     );
@@ -93,13 +105,8 @@ export const AuthContextProvider = (props) => {
     });
   };
 
-  const loginHandler = (_id, name, email, color, notifications) => {
-    // let temp = {}
-    // notifications.forEach(item => {
-    //   temp[item._id] = {
-    //     ...item,
-    //   }
-    // })
+  const loginHandler = (_id, name, email, color, notifications, accessToken) => {
+
     dispatchUserAction({
       type: "LOG_IN",
       _id,
@@ -107,6 +114,7 @@ export const AuthContextProvider = (props) => {
       email,
       notifications,
       color,
+      accessToken
     });
   };
 
@@ -116,6 +124,13 @@ export const AuthContextProvider = (props) => {
       notifyId,
     });
   };
+
+  const setAccessToken = (accessToken) => {
+    dispatchUserAction({
+      type: "TOKEN",
+      accessToken,
+    })
+  }
 
   return (
     <AuthContext.Provider
@@ -127,6 +142,7 @@ export const AuthContextProvider = (props) => {
         color: userState.color,
         notifications: userState.notifications,
         profileImage: userState.profileImage,
+        accessToken:userState.accessToken,
         isLoggedIn: userState.isLoggedIn,
         openRegister: openRegister,
         onLogout: logoutHandler,
@@ -134,6 +150,7 @@ export const AuthContextProvider = (props) => {
         onOpenRegister: onOpenRegisterHandler,
         onCloseRegister: onCloseRegisterHandler,
         filterNotifications,
+        setToken: setAccessToken
       }}
     >
       {props.children}

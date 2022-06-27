@@ -2,7 +2,7 @@ import { Fragment, useState, useContext, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Drawer, Avatar } from "@mantine/core";
 import { MdDoubleArrow } from "react-icons/md";
-import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 import styles from "./BottomNav.module.css";
 import AuthContext from "../../store/auth-context";
@@ -11,6 +11,7 @@ import BoardsContainer from "./BoardsContainer";
 import BoardsModal from "../modals/BoardsModal";
 
 const BottomNav = () => {
+  const axiosSecure = useAxiosSecure()
   const authCtx = useContext(AuthContext);
   const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -25,11 +26,10 @@ const BottomNav = () => {
     let windows = [];
 
     const API_FETCH = async () => {
-      const BACKEND_URL = process.env.REACT_APP_API_URL;
       const user_id = authCtx._id;
       
       try {
-        Res = await axios.get(BACKEND_URL + "api/boards/" + user_id);
+        Res = await axiosSecure.get("/api/boards/" + user_id);
         Res.data.forEach((item) => {
           return windows.push({
             _id: item.board._id,

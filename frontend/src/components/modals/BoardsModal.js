@@ -15,6 +15,7 @@ import { createBoard } from "../../store/board-actions";
 import AuthContext from "../../store/auth-context";
 import useHttp from "../../hooks/use-http";
 import { searchMembers } from "../../store/members-actions";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export const DUMMY_MEMBERS = [
   {
@@ -64,6 +65,7 @@ const BoardsModal = () => {
   const boardInputRef = useRef();
   const searchMemberIdRef = useRef();
   const authCtx = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure()
 
   const adminUser = {
     _id: authCtx._id,
@@ -143,7 +145,11 @@ const BoardsModal = () => {
 
     if (boardTitle.trim() === "") return;
     invitedMembers.ids.shift();
-    dispatch(createBoard(boardTitle, adminUser._id, invitedMembers.ids))
+    let boardRes = await axiosSecure.post("api/boards/create_board/" + adminUser._id,{
+      title: boardTitle,
+      ruserIds: invitedMembers.ids
+    })
+    dispatch(createBoard(boardRes))
     setOpenModal(false);
   };
 

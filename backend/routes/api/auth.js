@@ -113,7 +113,7 @@ router.post("/login", async (req, res) => {
     //eg: user goes to login without logging out
     let newRefreshTokenArray = !cookies?.jwt
       ? user.refreshToken
-      : user.refreshToken.filter((rt) => rt !== cookies.jwt);
+      : user.refreshToken.filter((rt) => rt !== cookies?.jwt);
     if (cookies?.jwt) {
       const Token = cookies.jwt;
       const foundToken = await User.findOne({ Token });
@@ -125,8 +125,8 @@ router.post("/login", async (req, res) => {
       }
       res.clearCookie("jwt", {
         httpOnly: true,
-        sameSite: "None",
-        secure: false,
+        sameSite: "none",
+        secure: true,
       });
     }
 
@@ -137,7 +137,7 @@ router.post("/login", async (req, res) => {
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       sameSite: "none",
-      secure: false,
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     }); // set secure to true when its in production
 
@@ -158,7 +158,7 @@ router.post("/logout", async (req, res) => {
   // Is refreshToken in db?
   const foundUser = await User.findOne({ refreshToken });
   if (!foundUser) {
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: false });
+    res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
     return res.sendStatus(204);
   }
 
@@ -169,7 +169,7 @@ router.post("/logout", async (req, res) => {
   const result = await foundUser.save();
   console.log(result);
 
-  res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: false });
+  res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
   res.sendStatus(204);
 });
 
